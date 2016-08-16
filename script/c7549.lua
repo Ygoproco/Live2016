@@ -1,6 +1,7 @@
 --超銀河眼の光波龍
 --Neo Galaxy-Eyes Cipher Dragon
 --Scripted by Eerie Code
+--Credits to sahim for the cost section
 function c7549.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,nil,9,3)
@@ -13,6 +14,7 @@ function c7549.initial_effect(c)
 	e1:SetCountLimit(1)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCondition(c7549.condition)
+	e1:SetCost(c7549.cost)
 	e1:SetTarget(c7549.target)
 	e1:SetOperation(c7549.operation)
 	c:RegisterEffect(e1)
@@ -24,32 +26,19 @@ end
 function c7549.fil(c)
 	return c:IsFaceup() and c:IsControlerCanBeChanged()
 end
-function c7549.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function c7549.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	local mc=Duel.GetMatchingGroupCount(c7549.fil,tp,0,LOCATION_MZONE,nil)
-	mc=math.min(mc,3)
-	local lc=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	mc=math.min(mc,lc)
-	local b1=(mc>=1 and c:CheckRemoveOverlayCard(tp,1,REASON_COST))
-	local b2=(mc>=2 and c:CheckRemoveOverlayCard(tp,2,REASON_COST))
-	local b3=(mc>=3 and c:CheckRemoveOverlayCard(tp,3,REASON_COST))
-	if chk==0 then return b1 or b2 or b3 end
-	if b3 then
-		local opt=Duel.SelectOption(tp,aux.Stringid(7549,1),aux.Stringid(7549,2),aux.Stringid(7549,3))
-		e:SetLabel(opt+1)
-		e:GetHandler():RemoveOverlayCard(tp,opt+1,opt+1,REASON_COST)
-		Duel.SetOperationInfo(0,CATEGORY_CONTROL,nil,opt+1,0,0)
-	elseif b2 then
-		local opt=Duel.SelectOption(tp,aux.Stringid(7549,1),aux.Stringid(7549,2))
-		e:SetLabel(opt+1)
-		e:GetHandler():RemoveOverlayCard(tp,opt+1,opt+1,REASON_COST)
-		Duel.SetOperationInfo(0,CATEGORY_CONTROL,nil,opt+1,0,0)
-	else
-		Duel.SelectOption(tp,aux.Stringid(7549,1))
-		e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
-		e:SetLabel(1)
-		Duel.SetOperationInfo(0,CATEGORY_CONTROL,nil,1,0,0)
-	end
+	local max1=Duel.GetMatchingGroupCount(c7549.filter,tp,0,LOCATION_MZONE,nil)
+	local max2=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	local max3=math.min(max1,max2,3)	
+	if chk==0 then return c:CheckRemoveOverlayCard(tp,1,REASON_COST) and max3>0 end
+	local before=c:GetOverlayCount()
+	c:RemoveOverlayCard(tp,1,max3,REASON_COST)
+	e:SetLabel(before-c:GetOverlayCount())
+end
+function c7549.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_CONTROL,nil,e:GetLabel(),0,0)
 end
 function c7549.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
