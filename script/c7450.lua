@@ -58,12 +58,25 @@ function c7450.accon(e)
 	return Duel.GetAttacker() and Duel.GetAttacker():IsControler(tp)
 end
 
+function c7450.nmfil(c)
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x51)
+end
 function c7450.nmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	local opt=Duel.SelectOption(tp,c7450.gn[1],c7450.gn[2],c7450.gn[3],c7450.gn[4],c7450.gn[5],c7450.gn[6],c7450.gn[7],c7450.gn[8],c7450.gn[9],c7450.gn[10])+1
-	local nm=c7450.gc[opt]
-	e:SetLabel(nm)
-	Duel.SetTargetParam(nm)
+	--local opt=Duel.SelectOption(tp,c7450.gn[1],c7450.gn[2],c7450.gn[3],c7450.gn[4],c7450.gn[5],c7450.gn[6],c7450.gn[7],c7450.gn[8],c7450.gn[9],c7450.gn[10])+1
+	--local nm=c7450.gc[opt]
+	--e:SetLabel(nm)
+	--Duel.SetTargetParam(nm)
+	local ac=0
+	local lp=true
+	while lp do
+		ac=Duel.AnnounceCard(tp,TYPE_MONSTER)
+		local tk=Duel.CreateToken(tp,ac)
+		if c7450.nmfil(tk) then lp=false end
+	end
+	--Debug.Message("Fusion Tag: "..ac)
+	Duel.SetTargetParam(ac)
+	e:SetLabel(ac)
 	Duel.SetOperationInfo(0,CATEGORY_ANNOUNCE,nil,0,tp,ANNOUNCE_CARD)
 end
 function c7450.nmop(e,tp,eg,ep,ev,re,r,rp)

@@ -56,7 +56,7 @@ function c7451.valcheck(e,c)
 end
 
 function c7451.regcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsSummonType(SUMMON_TYPE_ADVANCE)
+	return bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_ADVANCE)==SUMMON_TYPE_ADVANCE
 end
 function c7451.regop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
