@@ -97,5 +97,6 @@ function c7452.aclimit(e,re,tp)
 	return re:IsHasType(EFFECT_TYPE_ACTIVATE) or (re:IsActiveType(TYPE_MONSTER) and not re:GetHandler():IsImmuneToEffect(e))
 end
 function c7452.actcon(e)
-	return Duel.GetAttacker():IsSetCard(0x7) and Duel.GetAttacker():IsControler(e:GetHandlerPlayer())
+	local atk=Duel.GetAttacker()
+	return atk and atk:IsSetCard(0x7) and atk:IsControler(e:GetHandlerPlayer())
 end
