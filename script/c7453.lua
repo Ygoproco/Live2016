@@ -36,12 +36,34 @@ function c7453.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function c7453.thop(e,tp,eg,ep,ev,re,r,rp)
+	--cannot set
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_CANNOT_MSET)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(aux.TRUE)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp)
+	local e2=e1:Clone()
+	e2:SetCode(EFFECT_CANNOT_SSET)
+	Duel.RegisterEffect(e2,tp)
+	local e3=e1:Clone()
+	e3:SetCode(EFFECT_CANNOT_TURN_SET)
+	Duel.RegisterEffect(e3,tp)
+	local e4=e1:Clone()
+	e4:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e4:SetTarget(c7453.sumlimit)
+	Duel.RegisterEffect(e4,tp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,c7453.filter,tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 	end
+end
+function c7453.sumlimit(e,c,sump,sumtype,sumpos,targetp)
+	return bit.band(sumpos,POS_FACEDOWN)~=0
 end
 
 function c7453.aclimit(e,re,tp)
