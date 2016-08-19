@@ -1727,5 +1727,10 @@ end
 function Card.IsSummonType(c,t)
 	return bit.band(c:GetSummonType(),t)==t
 end
+--Cost for effect "You can banish this card from your Graveyard"
+function Auxiliary.bfgcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
+    Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
+end
 
 pcall(dofile,"init.lua")
