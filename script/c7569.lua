@@ -25,6 +25,7 @@ function c7569.checkfil(c,tp)
 	return c:IsSetCard(0xe5) and c:IsType(TYPE_XYZ) and c:IsControler(tp) and c:GetOverlayCount()>0
 end
 function c7569.checkop(e,tp,eg,ep,ev,re,r,rp)
+	if not eg then return end
 	local sg=eg:Filter(c7569.checkfil,nil,tp)
 	local tc=sg:GetFirst()
 	while tc do
