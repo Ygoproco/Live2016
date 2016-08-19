@@ -25,15 +25,10 @@ function c7569.checkfil(c,tp)
 	return c:IsSetCard(0xe5) and c:IsType(TYPE_XYZ) and c:IsControler(tp) and c:GetOverlayCount()>0
 end
 function c7569.checkop(e,tp,eg,ep,ev,re,r,rp)
-	if not eg then 
-		--Debug.Message("No affected group.")
-		return 
-	end
 	local sg=eg:Filter(c7569.checkfil,nil,tp)
 	local tc=sg:GetFirst()
 	while tc do
 		tc:RegisterFlagEffect(7569,RESET_EVENT+0x1fe0000-EVENT_TO_GRAVE,0,1)
-		--Debug.Message("Flag registered on card "..tc:GetCode())
 		tc=sg:GetNext()
 	end
 end
@@ -61,7 +56,6 @@ function c7569.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local g2=Duel.SelectMatchingCard(tp,c7569.fil,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,tc:GetCode())
 		if g2:GetCount()>0 then
-			Duel.BreakEffect() 
 			Duel.SpecialSummon(g2,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
