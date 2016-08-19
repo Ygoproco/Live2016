@@ -1,6 +1,6 @@
 --Card id
 MIN_ID	=1000		--4 digit, by DataManager::GetDesc()
-MAX_ID	=268435455	--9 digit, by DataManager::GetDesc()
+MAX_ID	=999999999	--9 digit, by DataManager::GetDesc()
 --Locations 区域
 LOCATION_DECK		=0x01		--卡组
 LOCATION_HAND		=0x02		--手牌

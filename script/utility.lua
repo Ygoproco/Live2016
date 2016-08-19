@@ -1722,3 +1722,10 @@ end
 function Auxiliary.nvfilter(c)
 	return not c:IsHasEffect(EFFECT_NECRO_VALLEY)
 end
+
+--Function to check the summon method used for the card. Credit goes to Cute-Nekomimi
+function Card.IsSummonType(c,t)
+	return bit.band(c:GetSummonType(),t)==t
+end
+
+pcall(dofile,"init.lua")
