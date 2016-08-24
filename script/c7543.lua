@@ -59,7 +59,7 @@ function c7543.spfil1(c,e,tp)
 	return c:IsFaceup() and c:IsSetCard(0xf0) and Duel.IsExistingMatchingCard(c7543.spfil2,tp,LOCATION_HAND,0,1,nil,e,tp,c:GetLevel())
 end
 function c7543.spfil2(c,e,tp,lv)
-	return c:IsLevelBelow(lv-1) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsLevelBelow(lv) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c7543.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c7543.spfil1(chkc,e,tp) end
