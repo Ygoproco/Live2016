@@ -163,6 +163,21 @@ function Auxiliary.NonTuner(f,a,b,c)
 end
 --Synchro monster, 1 tuner + n or more monsters
 function Auxiliary.AddSynchroProcedure(c,f1,f2,ct)
+	local code=c:GetOriginalCode()
+	local mt=_G["c" .. code]
+	if f1 then
+		mt.tuner_filter=function(mc) return mc and f1(mc) end
+	else
+		mt.tuner_filter=function(mc) return true end
+	end
+	if f2 then
+		mt.nontuner_filter=function(mc) return mc and f2(mc) end
+	else
+		mt.nontuner_filter=function(mc) return true end
+	end
+	mt.minntct=ct
+	mt.maxntct=99
+	mt.sync=true	
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
@@ -217,6 +232,21 @@ function Auxiliary.SynOperation(f1,f2,minct,maxc)
 end
 --Synchro monster, 1 tuner + 1 monster
 function Auxiliary.AddSynchroProcedure2(c,f1,f2)
+	local code=c:GetOriginalCode()
+	local mt=_G["c" .. code]
+	if f1 then
+		mt.tuner_filter=function(mc) return mc and f1(mc) end
+	else
+		mt.tuner_filter=function(mc) return true end
+	end
+	if f2 then
+		mt.nontuner_filter=function(mc) return mc and f2(mc) end
+	else
+		mt.nontuner_filter=function(mc) return true end
+	end
+	mt.minntct=1
+	mt.maxntct=1
+	mt.sync=true
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
@@ -233,6 +263,19 @@ function Auxiliary.XyzAlterFilter(c,alterf,xyzc)
 end
 --Xyz monster, lv k*n
 function Auxiliary.AddXyzProcedure(c,f,lv,ct,alterf,desc,maxct,op)
+	local code=c:GetOriginalCode()
+	local mt=_G["c" .. code]
+	if f then
+		mt.xyz_filter=function(mc) return mc and f(mc) end
+	else
+		mt.xyz_filter=function(mc) return true end
+	end
+	mt.minxyzct=ct
+	if not maxct then
+		mt.maxxyzct=ct
+	else
+		mt.maxxyzct=maxct
+	end
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
