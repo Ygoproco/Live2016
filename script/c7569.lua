@@ -80,7 +80,9 @@ end
 function c7569.cfil(c,e,tp)
 	if c:IsReason(REASON_BATTLE) and not c7569.match_cards_battle[tp]:IsContains(c) then
 		return false
-	elseif c:IsReason(REASON_EFFECT) and not c7569.match_cards_effect[tp]:IsContains(c) then
+	elseif c:IsReason(REASON_EFFECT) and c:GetReasonPlayer()~=tp and not c7569.match_cards_effect[tp]:IsContains(c) then
+		return false
+	elseif not c:IsReason(REASON_BATTLE+REASON_EFFECT) then
 		return false
 	elseif not c:IsLocation(LOCATION_GRAVE) then
 		return false
