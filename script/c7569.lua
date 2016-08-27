@@ -13,30 +13,88 @@ function c7569.initial_effect(c)
 	c:RegisterEffect(e1)
 	if not c7569.global_check then
 		c7569.global_check=true
+		--These group keep informations on the valid targets involved in the current Chain or battle for each player.
+		--The old version used flags, but it was not reliable.
+		c7569.match_cards_battle={}
+		c7569.match_cards_battle[0]=Group.CreateGroup()
+		c7569.match_cards_battle[1]=Group.CreateGroup()
+		c7569.match_cards_battle[0]:KeepAlive()
+		c7569.match_cards_battle[1]:KeepAlive()
+		c7569.match_cards_effect={}
+		c7569.match_cards_effect[0]=Group.CreateGroup()
+		c7569.match_cards_effect[1]=Group.CreateGroup()
+		c7569.match_cards_effect[0]:KeepAlive()
+		c7569.match_cards_effect[1]:KeepAlive()
+		--At the start of a battle, valid cards are added to the newly emptied battle group.
 		local ge1=Effect.CreateEffect(c)
 		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge1:SetCode(EVENT_LEAVE_FIELD_P)
-		ge1:SetOperation(c7569.checkop)
+		ge1:SetCode(EVENT_BATTLE_START)
+		ge1:SetOperation(c7569.checkop_b)
 		Duel.RegisterEffect(ge1,tp)
+		--When a Chain is resolving, all valid cards involved are added to the effect group.
+		local ge2=ge1:Clone()
+		ge2:SetCode(EVENT_CHAIN_SOLVING)
+		ge2:SetOperation(c7569.checkop_e)
+		Duel.RegisterEffect(ge2,tp)
+		--The effect group is emptied whenever a new chain is started, except when the first effect involved is Cipher Spectrum.
+		local ge3=ge1:Clone()
+		ge3:SetCode(EVENT_CHAIN_ACTIVATING)
+		ge3:SetOperation(c7569.reset_e)
+		Duel.RegisterEffect(ge3,tp)
 	end
 end
 
-function c7569.checkfil(c,tp)
-	return c:IsSetCard(0xe5) and c:IsType(TYPE_XYZ) and c:IsControler(tp) and c:GetOverlayCount()>0
+function c7569.checkfil(c)
+	return c:IsSetCard(0xe5) and c:IsType(TYPE_XYZ) and c:GetOverlayCount()>0
 end
-function c7569.checkop(e,tp,eg,ep,ev,re,r,rp)
-	if not eg then return end
-	local sg=eg:Filter(c7569.checkfil,nil,tp)
-	local tc=sg:GetFirst()
+function c7569.checkop_b(e,tp,eg,ep,ev,re,r,rp)
+	c7569.match_cards_battle[0]:Clear()
+	c7569.match_cards_battle[1]:Clear()
+	local a=Duel.GetAttacker()
+	local d=Duel.GetAttackTarget()
+	if a and c7569.checkfil(a) then
+		c7569.match_cards_battle[a:GetControler()]:AddCard(a)
+	end
+	if d and c7569.checkfil(d) then
+		c7569.match_cards_battle[d:GetControler()]:AddCard(d)
+	end
+end
+function c7569.checkop_e(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(c7569.checkfil,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	local tc=g:GetFirst()
 	while tc do
-		tc:RegisterFlagEffect(7569,RESET_EVENT+0x1fe0000-EVENT_TO_GRAVE,0,1)
-		tc=sg:GetNext()
+		if not c7569.match_cards_effect[tc:GetControler()]:IsContains(tc) then
+			c7569.match_cards_effect[tc:GetControler()]:AddCard(tc)
+		end
+		tc=g:GetNext()
+	end
+end
+function c7569.reset_e(e,tp,eg,ep,ev,re,r,rp)
+	local cl=Duel.GetCurrentChain()
+	if cl<=1 and not re:GetHandler():IsCode(7569) then
+		c7569.match_cards_effect[0]:Clear()
+		c7569.match_cards_effect[1]:Clear()
 	end
 end
 
 function c7569.cfil(c,e,tp)
-	return c:GetFlagEffect(7569)~=0 and c:IsLocation(LOCATION_GRAVE) and c:IsControler(tp) and (c:IsReason(REASON_BATTLE) or c:IsReason(REASON_EFFECT) and c:GetReasonPlayer()~=tp) and c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		and Duel.IsExistingMatchingCard(c7569.fil,tp,LOCATION_EXTRA,0,1,nil,e,tp,c:GetCode())
+	if c:IsReason(REASON_BATTLE) and not c7569.match_cards_battle[tp]:IsContains(c) then
+		return false
+	elseif c:IsReason(REASON_EFFECT) and c:GetReasonPlayer()~=tp and not c7569.match_cards_effect[tp]:IsContains(c) then
+		return false
+	elseif not c:IsReason(REASON_BATTLE+REASON_EFFECT) then
+		return false
+	elseif not c:IsLocation(LOCATION_GRAVE) then
+		return false
+	elseif not c:IsControler(tp) then
+		return false
+	elseif not c:IsCanBeEffectTarget(e) then
+		return false
+	elseif not c:IsCanBeSpecialSummoned(e,0,tp,false,false) then
+		return false
+	elseif not Duel.IsExistingMatchingCard(c7569.fil,tp,LOCATION_EXTRA,0,1,nil,e,tp,c:GetCode()) then
+		return false
+	else return true end
 end
 function c7569.fil(c,e,tp,cd)
 	return c:IsType(TYPE_XYZ) and c:IsCode(cd) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
