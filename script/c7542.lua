@@ -52,7 +52,7 @@ function c7542.spcondition(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsLocation(LOCATION_GRAVE) and e:GetHandler():IsReason(REASON_BATTLE)
 end
 function c7542.spfilter(c,e,tp)
-	return c:IsType(TYPE_MONSTER) c:IsSetCard(0x7) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x7) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function c7542.sptarget(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
