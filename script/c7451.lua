@@ -32,7 +32,6 @@ function c7451.initial_effect(c)
 	e4:SetCategory(CATEGORY_DESTROY)
 	e4:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_SINGLE)
 	e4:SetCode(EVENT_DAMAGE_STEP_END)
-	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e4:SetCondition(c7451.descon)
 	e4:SetTarget(c7451.destg)
 	e4:SetOperation(c7451.desop)
@@ -95,17 +94,16 @@ end
 function c7451.desfil(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsDestructable()
 end
-function c7451.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and c7451.desfil(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c7451.desfil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,c7451.desfil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+function c7451.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c7451.desfil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
+	local g=Duel.GetMatchingGroup(c7451.desfil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function c7451.desop(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local tc=Duel.SelectMatchingCard(tp,c7451.desfil,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+	if tc:GetCount()>0 then
+		Duel.HintSelection(tc)
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end

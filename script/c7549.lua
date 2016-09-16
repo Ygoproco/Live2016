@@ -28,7 +28,7 @@ function c7549.fil(c)
 end
 function c7549.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	local max1=Duel.GetMatchingGroupCount(c7549.filter,tp,0,LOCATION_MZONE,nil)
+	local max1=Duel.GetMatchingGroupCount(c7549.fil,tp,0,LOCATION_MZONE,nil)
 	local max2=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	local max3=math.min(max1,max2,3)	
 	if chk==0 then return c:CheckRemoveOverlayCard(tp,1,REASON_COST) and max3>0 end
