@@ -24,6 +24,9 @@ function c7523.initial_effect(c)
 	e2:SetTarget(c7523.drtg)
 	e2:SetOperation(c7523.drop)
 	c:RegisterEffect(e2)
+	local e3=e2:Clone()
+	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
+	c:RegisterEffect(e3)
 end
 
 function c7523.drfil(c)
