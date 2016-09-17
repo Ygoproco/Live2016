@@ -48,7 +48,7 @@ function c7537.ritop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 and Duel.SendtoHand(g,nil,REASON_EFFECT)>0 and mg:GetCount()>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SelectYesNo(tp,aux.Stringid(7537,1)) then
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local sg=g:Select(tp,1,1,nil)
+		local sg=mg:Select(tp,1,1,nil)
 		Duel.SpecialSummon(sg,0,tp,tp,true,false,POS_FACEUP)
 	end
 end
