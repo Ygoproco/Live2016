@@ -20,7 +20,7 @@ function c7614.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_BE_MATERIAL)
-	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e3:SetCountLimit(1,7614+1)
 	e3:SetCondition(c7614.tgcon)
 	e3:SetTarget(c7614.tgtg)
@@ -47,7 +47,7 @@ function c7614.thop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c7614.tgcon(e,tp,eg,ep,ev,re,r,rp)
-	return bit.band(r,REASON_FUSION)==REASON_FUSION and e:GetHandler():IsLocation(LOCATION_GRAVE) and re:GetHandler():IsSetCard(0xad)
+	return bit.band(r,REASON_FUSION)==REASON_FUSION and e:GetHandler():IsLocation(LOCATION_GRAVE) and e:GetHandler():GetReasonCard():IsSetCard(0xad)
 end
 function c7614.tgfil(c)
 	return c:IsFaceup() and c:IsType(TYPE_MONSTER)
