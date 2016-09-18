@@ -97,7 +97,7 @@ function c7537.sprop(e,tp,eg,ep,ev,re,r,rp)
 		if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
 	end 
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and c:IsFaceup() and Duel.SendtoHand(c,nil,REASON_EFFECT)>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>2 and Duel.IsPlayerCanSpecialSummonMonster(tp,7537+1,0,0x4011,1500,1500,4,RACE_WINDBEAST,ATTRIBUTE_WIND) then
+	if c:IsRelateToEffect(e) and c:IsFaceup() and Duel.SendtoHand(c,nil,REASON_EFFECT)>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>=2 and Duel.IsPlayerCanSpecialSummonMonster(tp,7537+1,0,0x4011,1500,1500,4,RACE_WINDBEAST,ATTRIBUTE_WIND) then
 		for i=1,2 do
 			local token=Duel.CreateToken(tp,7537+1)
 			Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP)
