@@ -2,13 +2,7 @@
 --Performage Cup Tricker
 function c700000025.initial_effect(c)
 	--Pendulum Summon
-	aux.AddPendulumProcedure(c)
-	--Activate
-	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(74605254,1))
-	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCode(EVENT_FREE_CHAIN)
-	c:RegisterEffect(e1)
+	aux.EnablePendulumAttribute(c)
 	--Attach
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(12744567,0))

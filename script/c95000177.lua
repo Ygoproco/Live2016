@@ -1,39 +1,48 @@
 --Action Card - Encore
 function c95000177.initial_effect(c)
-	--damage
+	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(55991637,0))
+	e1:SetCategory(CATEGORY_ATKCHANGE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCategory(CATEGORY_DAMAGE)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetHintTiming(TIMING_DAMAGE_STEP)
 	e1:SetCondition(c95000177.condition)
-	e1:SetTarget(c95000177.damtg)
-	e1:SetOperation(c95000177.damop)
+	e1:SetTarget(c95000177.target)
+	e1:SetOperation(c95000177.operation)
 	c:RegisterEffect(e1)
-	--destroy
+	--act in hand
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(55991637,1))
-	e2:SetCategory(CATEGORY_DESTROY)
-	e2:SetType(EFFECT_TYPE_ACTIVATE)
-	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e2:SetCode(EFFECT_SELF_DESTROY)
-	e2:SetTarget(c95000177.destg)
-	e2:SetOperation(c95000177.desop)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetCode(EFFECT_QP_ACT_IN_NTPHAND)
 	c:RegisterEffect(e2)
 end
-function c95000177.cfilter(c)
+function c95000177.condition(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated()
+end
+function c95000177.filter(c)
 	return c:IsSetCard(0xac1) and c:IsType(TYPE_SPELL) and c:CheckActivateEffect(false,false,false)~=nil and not c:IsType(TYPE_FIELD)
 end
-function c95000177.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) or chkc:IsLocation(LOCATION_MZONE) and chkc:GetControler()~=tp and c95000177.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c95000177.filter,tp,0,LOCATION_GRAVE,1,nil) end
+function c95000177.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	local b1=Duel.IsExistingMatchingCard(c95000177.filter,tp,LOCATION_GRAVE,0,1,nil,tp)
+	local op=0
+	if b1 then
+	op=Duel.SelectOption(tp,aux.Stringid(95000177,0),aux.Stringid(95000177,1))
+	else
+	op=Duel.SelectOption(tp,aux.Stringid(95000177,1))+1
+	end
+	if op==0 then
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectTarget(tp,c95000177.filter,tp,0,LOCATION_GRAVE,1,1,nil)
-
+	elso
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
+	end
+	e:SetLabel(op)
 end
-function c95000177.damop(e,tp,eg,ep,ev,re,r,rp)
- local c=e:GetHandler()
+function c95000177.operation(e,tp,eg,ep,ev,re,r,rp)
+	if e:GetLabel()==0 then
+		local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if not tc:IsRelateToEffect(e) then return end
 	if c:IsRelateToEffect(e) and not tc:IsType(TYPE_EQUIP+TYPE_CONTINUOUS)  then
@@ -75,18 +84,9 @@ function c95000177.damop(e,tp,eg,ep,ev,re,r,rp)
 		if op then op(e,tp,eg,ep,ev,re,r,rp) end 
 		c:CancelToGrave()
 	end
-end
-
-
-
-
-
-function c95000177.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
-end
-function c95000177.desop(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetHandler():IsRelateToEffect(e) then
-		Duel.Destroy(e:GetHandler(),REASON_EFFECT)
+	else
+		if e:GetHandler():IsRelateToEffect(e) then
+			Duel.Destroy(e:GetHandler(),REASON_EFFECT)
+		end
 	end
 end

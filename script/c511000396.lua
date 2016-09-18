@@ -23,8 +23,8 @@ function c511000396.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c511000396.atkval(e,c)
-	return c:GetCounter(0x15)*-500
+	return c:GetCounter(0x1015)*-500
 end
 function c511000396.target(e,c)
-	return c:GetCounter(0x15)~=0
+	return c:GetCounter(0x1015)~=0
 end

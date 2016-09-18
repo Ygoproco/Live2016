@@ -41,7 +41,7 @@ function c511000395.activate(e,tp,eg,ep,ev,re,r,rp)
 		local mgs=mg:GetFirst()
 		while mgs do
 			Duel.SpecialSummonStep(mgs,0,1-tp,1-tp,false,false,POS_FACEUP)
-			mgs:AddCounter(0x15,1)
+			mgs:AddCounter(0x1015,1)
 			mgs=mg:GetNext()
 		end
 		Duel.SpecialSummonComplete()
@@ -58,5 +58,5 @@ function c511000395.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c511000395.tg(c)
-	return c:GetCounter(0x15)~=0
+	return c:GetCounter(0x1015)~=0
 end

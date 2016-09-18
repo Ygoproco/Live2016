@@ -1,46 +1,52 @@
 --Gearspring Spirit
 function c511009017.initial_effect(c)
-	--special summon
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_SPSUMMON_PROC)
-	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-	e1:SetRange(LOCATION_HAND)
-	e1:SetCondition(c511009017.spcon)
-	e1:SetOperation(c511009017.spop)
-	c:RegisterEffect(e1)
-	--0 atk
+	--atk
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(2137678,0))
+	e2:SetDescription(aux.Stringid(45458027,0))
 	e2:SetCategory(CATEGORY_ATKCHANGE)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
-	e2:SetTarget(c511009017.target)
-	e2:SetOperation(c511009017.operation)
+	e2:SetTarget(c45458027.target)
+	e2:SetOperation(c45458027.operation)
 	c:RegisterEffect(e2)
+	--spsummon
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_FIELD)
+	e5:SetCode(EFFECT_SPSUMMON_PROC)
+	e5:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e5:SetRange(LOCATION_HAND)
+	e5:SetCondition(c511009017.spcon)
+	e5:SetOperation(c511009017.spop)
+	c:RegisterEffect(e5)
+	
 end
+
 function c511009017.spcon(e,c)
 	if c==nil then return true end
-	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0 and Duel.IsCanRemoveCounter(c:GetControler(),1,0,0x108,3,REASON_COST)
+	local tp=c:GetControler()
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsCanRemoveCounter(tp,1,0,0x108,3,REASON_COST)
 end
 function c511009017.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.RemoveCounter(tp,1,0,0x108,3,REASON_COST)
 end
-function c511009017.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil) end
-end
-function c511009017.operation(e,tp,eg,ep,ev,re,r,rp)
+
+function c45458027.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsControler(1-tp) and chkc:IsFaceup() and chkc:IsLocation(LOCATION_MZONE) end
+	if chk==0 then return Duel.IsExistingTarget(aux.nzatk,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	local g=Duel.SelectMatchingCard(tp,Card.IsFaceup,tp,0,LOCATION_MZONE,1,1,nil)
-	local tc=g:GetFirst()
-	if tc then
-		Duel.HintSelection(g)
+	Duel.SelectTarget(tp,aux.nzatk,tp,0,LOCATION_MZONE,1,1,nil)
+end
+function c45458027.operation(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsFaceup() and tc:IsRelateToEffect(e) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
-		e1:SetValue(0)
 		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		e1:SetValue(0)
 		tc:RegisterEffect(e1)
 	end
 end

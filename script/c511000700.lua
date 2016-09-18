@@ -1,5 +1,42 @@
 --Nightmare Xyz
 function c511000700.initial_effect(c)
+	function aux.AddXyzProcedure(c,f,lv,ct,alterf,desc,maxct,op)
+		local code=c:GetOriginalCode()
+		local mt=_G["c" .. code]
+		if f then
+			mt.xyz_filter=function(mc) return mc and f(mc) end
+		else
+			mt.xyz_filter=function(mc) return true end
+		end
+		mt.minxyzct=ct
+		if not maxct then
+			mt.maxxyzct=ct
+		else
+			if maxct==5 then
+				mt.maxxyzct=99
+			else
+				mt.maxxyzct=maxct
+			end
+		end
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetCode(EFFECT_SPSUMMON_PROC)
+		e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+		e1:SetRange(LOCATION_EXTRA)
+		if not maxct then maxct=ct end
+		if alterf then
+			e1:SetCondition(Auxiliary.XyzCondition2(f,lv,ct,maxct,alterf,desc,op))
+			e1:SetTarget(Auxiliary.XyzTarget2(f,lv,ct,maxct,alterf,desc,op))
+			e1:SetOperation(Auxiliary.XyzOperation2(f,lv,ct,maxct,alterf,desc,op))
+		else
+			e1:SetCondition(Auxiliary.XyzCondition(f,lv,ct,maxct))
+			e1:SetTarget(Auxiliary.XyzTarget(f,lv,ct,maxct))
+			e1:SetOperation(Auxiliary.XyzOperation(f,lv,ct,maxct))
+		end
+		e1:SetValue(SUMMON_TYPE_XYZ)
+		c:RegisterEffect(e1)
+	end
+	
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -49,7 +86,7 @@ function c511000700.clear(e,tp,eg,ep,ev,re,r,rp)
 	c511000700[1]=false
 end
 function c511000700.filter(c,e,tp)
-	local ct=c.xyz_count
+	local ct=c.minxyzct
 	return c:GetRank()<=4 and c:IsAttribute(ATTRIBUTE_DARK) and c:IsRace(RACE_FIEND) and c:IsType(TYPE_XYZ) 
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and Duel.GetLocationCount(tp,LOCATION_MZONE)>ct-1 
 		and Duel.IsExistingMatchingCard(c511000700.filter2,tp,LOCATION_GRAVE,0,ct,nil,e,tp)
@@ -68,10 +105,13 @@ end
 function c511000700.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) then
-		local ct=tc.xyz_count
-		if Duel.GetLocationCount(tp,LOCATION_MZONE)<ct then return end
+		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+		local ct=tc.minxyzct
+		local ct2=tc.maxxyzct
+		if ft<ct then return end
+		if ft<ct2 then ct2=ft end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectMatchingCard(tp,c511000700.filter2,tp,LOCATION_GRAVE,0,ct,ct,nil,e,tp)
+		local g=Duel.SelectMatchingCard(tp,c511000700.filter2,tp,LOCATION_GRAVE,0,ct,ct2,nil,e,tp)
 		if g:GetCount()>0 then
 			local tcx=g:GetFirst()
 			while tcx do

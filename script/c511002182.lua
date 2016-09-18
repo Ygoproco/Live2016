@@ -42,7 +42,7 @@ end
 function c511002182.ctop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetAttacker() and e:GetHandler():GetReasonCard() and e:GetHandler():GetReasonCard()==Duel.GetAttacker() then
 		Duel.Hint(HINT_CARD,0,511002182)
-		Duel.GetAttacker():AddCounter(0x15,1,REASON_EFFECT)
+		Duel.GetAttacker():AddCounter(0x1015,1,REASON_EFFECT)
 	end
 	e:Reset()
 end

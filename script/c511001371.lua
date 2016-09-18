@@ -61,11 +61,11 @@ function c511001371.ctop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	local g=Duel.SelectMatchingCard(tp,Card.IsFaceup,tp,0,LOCATION_MZONE,1,1,nil)
 	if g:GetCount()>0 then
-		g:GetFirst():AddCounter(0x24,1)
+		g:GetFirst():AddCounter(0x1024,1)
 	end
 end
 function c511001371.desfilter(c)
-	return c:GetCounter(0x24)~=0 and c:IsDestructable()
+	return c:GetCounter(0x1024)~=0 and c:IsDestructable()
 end
 function c511001371.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c511001371.desfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
