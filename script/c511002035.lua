@@ -18,10 +18,10 @@ end
 function c511002035.valcheck(e,c)
 	local g=c:GetMaterial()
 	local flag=0
-	if g:IsExists(Card.IsSetCard,1,nil,0x20a) then flag=1 end
-	if g:IsExists(Card.IsSetCard,1,nil,39389320) then flag=1 end
-	if g:IsExists(Card.IsSetCard,1,nil,40453765) then flag=1 end
-	if g:IsExists(Card.IsSetCard,1,nil,20394040) then flag=1 end
+	if g:IsExists(Card.IsSetCard,1,nil,0x2310) then flag=1 end
+	if g:IsExists(Card.IsCode,1,nil,39389320) then flag=1 end
+	if g:IsExists(Card.IsCode,1,nil,40453765) then flag=1 end
+	if g:IsExists(Card.IsCode,1,nil,20394040) then flag=1 end
 	e:SetLabel(flag)
 end
 function c511002035.regcon(e,tp,eg,ep,ev,re,r,rp)

@@ -10,7 +10,7 @@ function c511001465.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511001465.val(e,c)
-	local g=Duel.GetMatchingGroup(Card.IsSetCard,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil,0x20b)
+	local g=Duel.GetMatchingGroup(Card.IsSetCard,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil,0x220b)
 	local atk=0
 	while g:GetCount()>=4 and g:GetClassCount(Card.GetCode)>=4 do
 		local g1=g:GetFirst()

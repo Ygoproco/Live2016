@@ -6,7 +6,7 @@ function c511000596.initial_effect(c)
 	e3:SetRange(LOCATION_GRAVE)
 	e3:SetCode(EFFECT_UPDATE_ATTACK)
 	e3:SetTargetRange(LOCATION_MZONE,0)
-	e3:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x202))
+	e3:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x1202))
 	e3:SetValue(300)
 	c:RegisterEffect(e3)
 end

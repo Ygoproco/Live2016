@@ -58,7 +58,7 @@ function c511001295.initial_effect(c)
 	c:RegisterEffect(e8)
 end
 function c511001295.trfilter(c)
-	return (c:IsSetCard(0x20a) or c:IsCode(39389320) or c:IsCode(40453765) or c:IsCode(20394040))
+	return (c:IsSetCard(0x2310) or c:IsCode(39389320) or c:IsCode(40453765) or c:IsCode(20394040))
 end
 function c511001295.spcon(e,c)
 	if c==nil then return true end

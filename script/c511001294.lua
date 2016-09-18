@@ -13,7 +13,7 @@ function c511001294.initial_effect(c)
 end
 function c511001294.condition(e,tp,eg,ep,ev,re,r,rp)
 	local d=Duel.GetAttackTarget()
-	return d and d:IsControler(tp) and d:IsFaceup() and (d:IsSetCard(0x20a) or d:IsCode(39389320) or d:IsCode(40453765) or d:IsCode(20394040))
+	return d and d:IsControler(tp) and d:IsFaceup() and (d:IsSetCard(0x2310) or d:IsCode(39389320) or d:IsCode(40453765) or d:IsCode(20394040))
 end
 function c511001294.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():GetFlagEffect(511001294)==0 end

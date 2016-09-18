@@ -38,7 +38,6 @@ function c511000591.initial_effect(c)
 	e7:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
 	e7:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e7:SetTargetRange(1,0)
-	e7:SetCondition(aux.nfbdncon)
 	e7:SetTarget(c511000591.splimit)
 	c:RegisterEffect(e7)
 	--Immune

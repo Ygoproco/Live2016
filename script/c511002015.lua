@@ -2,7 +2,7 @@
 function c511002015.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0x1220),aux.FilterBoolFunction(Card.IsFusionSetCard,0x2220),true)
+	aux.AddFusionProcFun2(c,c511002015.ffilter,aux.FilterBoolFunction(Card.IsFusionSetCard,0x407),true)
 	--damage
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DAMAGE)
@@ -14,6 +14,9 @@ function c511002015.initial_effect(c)
 	e1:SetTarget(c511002015.damtg)
 	e1:SetOperation(c511002015.damop)
 	c:RegisterEffect(e1)
+end
+function c511002015.ffilter(c)
+	return c:IsFusionSetCard(0x408) or c:IsFusionSetCard(0x21f) or c:IsFusionSetCard(0x21) or c:IsFusionCode(67105242) or c:IsFusionCode(67987302)
 end
 function c511002015.filter(c)
 	return c:IsFaceup() and c:IsRace(RACE_WARRIOR)

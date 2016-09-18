@@ -2,7 +2,7 @@
 function c511002013.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0x1220),aux.FilterBoolFunction(Card.IsFusionSetCard,0x2220),true)
+	aux.AddFusionProcFun2(c,c511002013.ffilter,aux.FilterBoolFunction(Card.IsFusionSetCard,0x407),true)
 	--atkdown
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_ATKCHANGE)
@@ -11,6 +11,9 @@ function c511002013.initial_effect(c)
 	e1:SetCondition(c511002013.atkcon)
 	e1:SetOperation(c511002013.atkop)
 	c:RegisterEffect(e1)
+end
+function c511002013.ffilter(c)
+	return c:IsFusionSetCard(0x408) or c:IsFusionSetCard(0x21f) or c:IsFusionSetCard(0x21) or c:IsFusionCode(67105242) or c:IsFusionCode(67987302)
 end
 function c511002013.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

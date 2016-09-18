@@ -13,7 +13,7 @@ function c511001297.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511001297.cfilter(c)
-	return c:IsFaceup() and (c:IsSetCard(0x20a) or c:IsCode(39389320) or c:IsCode(40453765) or c:IsCode(20394040))
+	return c:IsFaceup() and (c:IsSetCard(0x2310) or c:IsCode(39389320) or c:IsCode(40453765) or c:IsCode(20394040))
 end
 function c511001297.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c511001297.cfilter,tp,LOCATION_ONFIELD,0,1,nil)

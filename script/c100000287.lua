@@ -29,7 +29,7 @@ function c100000287.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c100000287.costfilter(c)
-	return (c:IsCode(47660516) or c:IsCode(92365601) or c:IsCode(100000286)) and c:IsAbleToRemoveAsCost()
+	return (c:IsCode(47660516) or c:IsCode(92365601) or c:IsSetCard(0x1310)) and c:IsAbleToRemoveAsCost()
 end
 function c100000287.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000287.costfilter,tp,LOCATION_GRAVE,0,1,nil) end

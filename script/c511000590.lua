@@ -77,6 +77,7 @@ function c511000590.spop(e,tp,eg,ep,ev,re,r,rp)
 	if ct>5 then ct=5 end
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ct>ft then ct=ft end
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) and ct>2 then ct=2 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c511000590.spfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,ct,nil,e,tp)
 	if Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP_DEFENSE) then

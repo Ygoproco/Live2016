@@ -14,7 +14,7 @@ end
 function c511000593.con(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttacker()
 	local at=Duel.GetAttackTarget()
-	return Duel.GetBattleDamage(tp)>0 and (tc:IsSetCard(0x202) or (at and at:IsSetCard(0x202)))
+	return Duel.GetBattleDamage(tp)>0 and (tc:IsSetCard(0x1202) or (at and at:IsSetCard(0x1202)))
 end
 function c511000593.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
