@@ -64,18 +64,20 @@ function c7574.drtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingTarget(c7574.drfil,tp,LOCATION_REMOVED,0,2,nil) and Duel.IsPlayerCanDraw(tp,1) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local g=Duel.SelectTarget(tp,c7574.drfil,tp,LOCATION_REMOVED,0,2,2,nil)
-	Duel.SetTargetPlayer(tp)
-	Duel.SetTargetParam(1)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,2,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function c7574.drop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local g,p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	g=g:Filter(Card.IsRelateToEffect,nil,e)
-	if g:GetCount()>0 and Duel.SendtoDeck(g,nil,2,REASON_EFFECT)>0 then
+	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
+	if not g or g:FilterCount(Card.IsRelateToEffect,nil,e)~=2 then return end
+	Duel.SendtoDeck(g,nil,0,REASON_EFFECT)
+	local g=Duel.GetOperatedGroup()
+	if g:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) then Duel.ShuffleDeck(tp) end
+	local ct=g:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)
+	if ct==2 then
 		Duel.BreakEffect()
-		Duel.Draw(p,d,REASON_EFFECT)
+		Duel.Draw(tp,1,REASON_EFFECT)
 	end
 end
 
