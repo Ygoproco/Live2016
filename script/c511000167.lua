@@ -1,5 +1,6 @@
---Dark Wall of Wind
-function c511000167.initial_effect(c)
+--Dark wall of wind
+--scripted by GameMaster (GM)
+function c511000167.initial_effect (c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -9,9 +10,14 @@ function c511000167.initial_effect(c)
 end
 function c511000167.activate(e,tp,eg,ep,ev,re,r,rp)
 	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_CANNOT_DIRECT_ATTACK)
-	e1:SetTargetRange(0,LOCATION_MZONE)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_PRE_BATTLE_DAMAGE)
+	e1:SetOperation(c511000167.damop)
 	e1:SetReset(RESET_PHASE+PHASE_END)
-	Duel.RegisterEffect(e1,tp)
+   	Duel.RegisterEffect(e1,tp)
 end
+
+function c511000167.damop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetAttacker():IsControler(1-tp) and not Duel.GetAttackTarget() then Duel.ChangeBattleDamage(tp,0) end
+end
+

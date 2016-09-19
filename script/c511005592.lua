@@ -13,7 +13,7 @@ function c511005592.initial_effect(c)
 	--Def
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_EQUIP)
-	e2:SetCode(EFFECT_UPDATE_DEFENCE)
+	e2:SetCode(EFFECT_UPDATE_DEFENSE)
 	e2:SetValue(1000)
 	c:RegisterEffect(e2)
 	--Equip limit

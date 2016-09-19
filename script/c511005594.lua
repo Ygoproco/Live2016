@@ -1,5 +1,5 @@
 --mistrust
---Scripted by GameMaster(GM) & Snrk
+--scripted by GameMaster (GM) and Snrk
 function c511005594.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)

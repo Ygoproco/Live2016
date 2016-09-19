@@ -22,7 +22,7 @@ function c100000382.condition(e,tp,eg,ep,ev,re,r,rp)
 	return tg:GetSummonType()==SUMMON_TYPE_XYZ
 end
 function c100000382.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsPlayerCanDraw(ep,1) end
+	if chk==0 then return true end
 	Duel.SetTargetPlayer(ep)
 	Duel.SetTargetParam(1)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,ep,1)

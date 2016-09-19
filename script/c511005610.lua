@@ -39,3 +39,6 @@ function c511005610.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 	
 	
+--Scripter Notes:
+--When this card is flipped face-up, all Skull Servants are increased by 300 points.
+--The flip eff only works for original skull servants, this Anime Atk points wont update. So to overcome this problem, i've decided to adding Harpie Harpist eff (56585883) to Skull Servant DOR

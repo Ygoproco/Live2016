@@ -1,5 +1,5 @@
 --Landstar Shoot
---scripted by GameMaster(GM) & Snrk
+--scripted by GameMaster(GM)
 function c511005590.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)

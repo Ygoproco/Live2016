@@ -23,7 +23,7 @@ c511009059.collection={
 	[511001090]=true;[511001091]=true;	
 }
 function c511009059.filter(c,e,tp)
-	return (c511009059.collection[c:GetCode()] or c:IsSetCard(0x202)) and and Duel.IsExistingMatchingCard(c511009059.thfil,tp,LOCATION_DECK,0,1,nil,c:GetCode()) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return (c511009059.collection[c:GetCode()] or c:IsSetCard(0x202)) and Duel.IsExistingMatchingCard(c511009059.thfil,tp,LOCATION_DECK,0,1,nil,c:GetCode()) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511009059.spfilter(c,code,e,tp)
 	return c:IsCode(code) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

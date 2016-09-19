@@ -1,5 +1,4 @@
 --Masquerade
---scripted by GameMaster(GM) & Snrk
 function c511005596.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)

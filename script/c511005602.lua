@@ -1,7 +1,7 @@
 --pupa of moth
 --Scripted by GameMaster (GM)
 function c511005602.initial_effect(c)
-	--spsummon
+	--spsummon great moth if destroyed before count 5
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(511005602,1))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -18,7 +18,7 @@ function c511005602.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCode(EFFECT_CANNOT_ATTACK)
 	c:RegisterEffect(e2)
-	--special summon
+	--special summon perfectly ultimate great moth manga at turn count 5
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(511005602,0))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -30,7 +30,7 @@ function c511005602.initial_effect(c)
 	e3:SetTarget(c511005602.sptg)
 	e3:SetOperation(c511005602.spop)
 	c:RegisterEffect(e3)
-	--reg
+	--required
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e4:SetCode(EVENT_SUMMON_SUCCESS)
@@ -42,7 +42,7 @@ function c511005602.initial_effect(c)
 	local e6=e4:Clone()
 	e6:SetCode(EVENT_FLIP)
 	c:RegisterEffect(e6)
-	--to defence
+	--to defense
 	local e7=Effect.CreateEffect(c)
 	e7:SetDescription(aux.Stringid(511005602,0))
 	e7:SetCategory(CATEGORY_POSITION)

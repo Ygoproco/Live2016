@@ -8,8 +8,8 @@ function c511009017.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
-	e2:SetTarget(c45458027.target)
-	e2:SetOperation(c45458027.operation)
+	e2:SetTarget(c511009017.target)
+	e2:SetOperation(c511009017.operation)
 	c:RegisterEffect(e2)
 	--spsummon
 	local e5=Effect.CreateEffect(c)
@@ -33,13 +33,13 @@ function c511009017.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.RemoveCounter(tp,1,0,0x108,3,REASON_COST)
 end
 
-function c45458027.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function c511009017.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsFaceup() and chkc:IsLocation(LOCATION_MZONE) end
 	if chk==0 then return Duel.IsExistingTarget(aux.nzatk,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,aux.nzatk,tp,0,LOCATION_MZONE,1,1,nil)
 end
-function c45458027.operation(e,tp,eg,ep,ev,re,r,rp)
+function c511009017.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsFaceup() and tc:IsRelateToEffect(e) then
 		local e1=Effect.CreateEffect(e:GetHandler())

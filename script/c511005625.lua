@@ -1,4 +1,4 @@
---Cosmo Queen (DOR)
+--cosmo queen (DOR)
 --scripted by GameMaster (GM)
 function c511005625.initial_effect(c)
   --flip

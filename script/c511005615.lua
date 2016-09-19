@@ -23,14 +23,51 @@ function c511005615.initial_effect(c)--special summon
     e2:SetCondition(c511005615.con)
     e2:SetOperation(function (e) e:GetHandler():SetTurnCounter(e:GetHandler():GetTurnCounter()+1) end)
     c:RegisterEffect(e2)
-    
+    --required
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e3:SetCode(EVENT_CHANGE_POS)
+	e3:SetOperation(c511005615.regop)
+	e3:SetCondition(c511005615.con)
+	c:RegisterEffect(e3)
+	--to defense
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(511005615,0))
+	e4:SetCategory(CATEGORY_POSITION)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e4:SetCode(EVENT_SUMMON_SUCCESS)
+	e4:SetTarget(c511005615.potg)
+	e4:SetOperation(c511005615.poop)
+	c:RegisterEffect(e4)
+	local e5=e4:Clone()
+	e5:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
+	c:RegisterEffect(e5)
+	local e6=e4:Clone()
+	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
+	c:RegisterEffect(e4)
+end
+
+function c511005615.potg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chk==0 then return e:GetHandler():IsAttackPos() end
+	Duel.SetOperationInfo(0,CATEGORY_POSITION,e:GetHandler(),1,0,0)
+end
+function c511005615.poop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsFaceup() and c:IsAttackPos() and c:IsRelateToEffect(e) then
+	c:SetTurnCounter(0)
+		Duel.ChangePosition(c,POS_FACEUP_DEFENSE)
+	end
+end
+
+function c511005615.regop(e,tp,eg,ep,ev,re,r,rp)
+	e:GetHandler():RegisterFlagEffect(511005615,RESET_EVENT+0x1ec0000+RESET_PHASE+PHASE_END,0,1)
 end
 function c511005615.con(e)
 	return e:GetHandler():IsDefensePos()
 end
 function c511005615.spcon(e,c)
     if c==nil then return true end
-    return e:GetHandler():GetTurnCounter(e)>=3 
+    return e:GetHandler():GetTurnCounter(e)==3 and  e:GetHandler():IsDefensePos()
 end
 function c511005615.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() end

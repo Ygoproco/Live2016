@@ -1,6 +1,5 @@
 --Nemuriko (DOR)
 --scripted by GameMaster (GM)
---cannnot change position or attack
 function c511005617.initial_effect(c)
     --warrior race cannot atk/ chg pos
     local e1=Effect.CreateEffect(c)

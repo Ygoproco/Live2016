@@ -37,7 +37,7 @@ function c511005597.filter2(c)
 	return c:IsFacedown() and c:IsAttackAbove(1500) and c:IsDestructable()
 end
 function c511005597.con(e)
-	return e:GetHandler():IsDefencePos()
+	return e:GetHandler():IsDefensePos()
 end
 function c511005597.tglimit(e,c)
 	return c~=e:GetHandler()

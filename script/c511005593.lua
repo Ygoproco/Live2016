@@ -10,6 +10,16 @@ function c511005593.initial_effect(c)
 	e1:SetTarget(c511005593.damtg)
 	e1:SetOperation(c511005593.damop)
 	c:RegisterEffect(e1)
+	--act in hand
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetCode(EFFECT_QP_ACT_IN_NTPHAND)
+	e2:SetCondition(c511005593.handcon)
+	c:RegisterEffect(e2)
+end
+
+function c511005593.handcon(e)
+	return tp~=Duel.GetTurnPlayer()
 end
 
 function c511005593.damtg(e,tp,eg,ep,ev,re,r,rp,chk)

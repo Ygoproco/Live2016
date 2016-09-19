@@ -1,5 +1,5 @@
 --Gorgonic Temptaion
---scripted by GameMaster(GM) & Snrk
+--scripted by GameMaster(GM)
 function c511005598.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
