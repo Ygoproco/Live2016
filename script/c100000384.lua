@@ -8,13 +8,14 @@ function c100000384.initial_effect(c)
 	--destroy
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DESTROY)
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e1:SetRange(LOCATION_SZONE)
-	e1:SetCode(EVENT_PHASE_START+PHASE_BATTLE)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e1:SetCode(EVENT_PHASE+PHASE_BATTLE_START)
 	e1:SetCountLimit(1)
-	e1:SetCondition(c100000384.condition)
-	e1:SetTarget(c100000384.target)
-	e1:SetOperation(c100000384.activate)
+	e1:SetCondition(c100000384.descon)
+	e1:SetTarget(c100000384.destg)
+	e1:SetOperation(c100000384.desop)
 	c:RegisterEffect(e1)
 	--
 	local e2=Effect.CreateEffect(c)
@@ -35,34 +36,42 @@ function c100000384.initial_effect(c)
 	e3:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
 	c:RegisterEffect(e3)
 end
-function c100000384.condition(e,tp,eg,ep,ev,re,r,rp,chk)
+function c100000384.descon(e,tp,eg,ep,ev,re,r,rp,chk)
 	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)>1 or Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>1
 end
-function c100000384.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDestructable,tp,0,LOCATION_MZONE,1,nil)
-		or Duel.IsExistingMatchingCard(Card.IsDestructable,tp,LOCATION_MZONE,0,1,nil) end
+function c100000384.filter(c,tp)
+	return Duel.IsExistingMatchingCard(Card.IsDestructable,tp,LOCATION_MZONE,0,1,c)
+end
+function c100000384.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return false end
+	if chk==0 then return true end
+	local g=Group.CreateGroup()
+	if Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)>1 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+		local g1=Duel.SelectTarget(tp,c100000384.filter,tp,LOCATION_MZONE,0,1,1,nil,tp):GetFirst()
+		g:AddCard(g1)
+	end
+	if Duel.GetFieldGroupCount(1-tp,LOCATION_MZONE,0)>1 then
+		Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_FACEUP)
+		local g2=Duel.SelectTarget(1-tp,c100000384.filter,1-tp,LOCATION_MZONE,0,1,1,nil,1-tp):GetFirst()
+		g:AddCard(g2)
+	end
 	local sg=Duel.GetMatchingGroup(Card.IsDestructable,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	sg:Sub(g)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,sg:GetCount(),0,0)
 end
-function c100000384.activate(e,tp,eg,ep,ev,re,r,rp)
-	local sg=Duel.GetMatchingGroup(Card.IsDestructable,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	local tc=nil
-	if sg:FilterCount(Card.IsControler,nil,tp)>0 then
-		if sg:FilterCount(Card.IsControler,nil,tp)>1 then
-			tc=sg:FilterSelect(tp,Card.IsControler,1,1,nil,tp)		
-		else
-			tc=sg:Filter(Card.IsControler,nil,tp)
-		end
-		sg:RemoveCard(tc:GetFirst())
+function c100000384.desop(e,tp,eg,ep,ev,re,r,rp)
+	local sg=Group.CreateGroup()
+	local g1=Duel.GetMatchingGroup(Card.IsDestructable,tp,LOCATION_MZONE,0,nil)
+	local g2=Duel.GetMatchingGroup(Card.IsDestructable,tp,0,LOCATION_MZONE,nil)
+	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
+	if tg:IsExists(Card.IsControler,1,nil,tp) or Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)>1 then
+		sg:Merge(g1)
 	end
-	if sg:FilterCount(Card.IsControler,nil,1-tp)>0 then
-		if sg:FilterCount(Card.IsControler,nil,1-tp)>1 then
-			tc=sg:FilterSelect(1-tp,Card.IsControler,1,1,nil,1-tp)
-		else
-			tc=sg:Filter(Card.IsControler,nil,1-tp)
-		end
-		sg:RemoveCard(tc:GetFirst())
+	if tg:IsExists(Card.IsControler,1,nil,1-tp) or Duel.GetFieldGroupCount(1-tp,LOCATION_MZONE,0)>1 then
+		sg:Merge(g2)
 	end
+	sg:Sub(tg)
 	Duel.Destroy(sg,REASON_EFFECT)
 end
 function c100000384.reccon(e,tp,eg,ep,ev,re,r,rp)

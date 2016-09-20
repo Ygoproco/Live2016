@@ -19,7 +19,7 @@ end
 function c511001423.handcon(e)
 	local ph=Duel.GetCurrentPhase()
 	return Duel.IsExistingMatchingCard(c511001423.cfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
-		and (ph==PHASE_BATTLE or ph==PHASE_DAMAGE or ph==PHASE_DAMAGE_CAL)
+		and ph>=0x08 and ph<=0x20
 end
 function c511001423.cfilter(c)
 	return c:IsFaceup() and (c:IsSetCard(0x1048) or c:IsSetCard(0x1073) or c:IsCode(511000296))

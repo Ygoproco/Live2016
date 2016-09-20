@@ -1,5 +1,6 @@
 --coded by Lyris
 --Battle of Sleeping Spirits
+--fixed by MLD
 function c511007007.initial_effect(c)
 	--synchro effect
 	local e1=Effect.CreateEffect(c)

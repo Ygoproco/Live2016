@@ -11,7 +11,7 @@ function c511000932.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511000932.condition(e,tp,eg,ep,ev,re,r,rp)
-	return tp~=Duel.GetTurnPlayer() and Duel.GetCurrentPhase()==PHASE_BATTLE
+	return tp~=Duel.GetTurnPlayer() and Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE
 end
 function c511000932.filter(c)
 	return c:IsFaceup() and c:IsDestructable() and c:IsSetCard(0x26)
@@ -27,15 +27,18 @@ end
 function c511000932.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectMatchingCard(tp,c511000932.filter,tp,LOCATION_MZONE,0,1,1,nil)
-	if g:GetCount()>0 then
-		local tc=g:GetFirst()
+	local tc=g:GetFirst()
+	if tc then
+		Duel.HintSelection(g)
 		Duel.Destroy(tc,REASON_EFFECT)
 		Duel.SkipPhase(1-tp,PHASE_BATTLE,RESET_PHASE+PHASE_BATTLE,1)
+		local sg=Duel.GetMatchingGroup(c511000932.spfilter,tp,LOCATION_GRAVE,0,nil,e,tp,tc:GetLevel())
 		if tc:IsLocation(LOCATION_GRAVE) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-			and Duel.IsExistingMatchingCard(c511000932.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,tc:GetLevel()) then
+			and sg:GetCount()>0 then
+			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-			local sp=Duel.SelectMatchingCard(tp,c511000932.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,tc:GetLevel())
-			Duel.SpecialSummon(sp,0,tp,tp,false,false,POS_FACEUP)
+			local spg=sg:Select(tp,1,1,nil)
+			Duel.SpecialSummon(spg,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
 end

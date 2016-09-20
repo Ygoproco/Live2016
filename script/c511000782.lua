@@ -19,7 +19,8 @@ function c511000782.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c511000782.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()==PHASE_BATTLE and Duel.GetTurnPlayer()==tp and not e:GetHandler():IsStatus(STATUS_CHAINING)
+	return Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE and Duel.GetTurnPlayer()==tp 
+		and not e:GetHandler():IsStatus(STATUS_CHAINING)
 end
 function c511000782.filter(c)
 	return c:IsAttackPos() and c:IsFaceup()

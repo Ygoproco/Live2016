@@ -1,53 +1,33 @@
 --狂戦士の魂
 function c100000199.initial_effect(c)
-	--
-	local e1=Effect.CreateEffect(c)	
-	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(EVENT_DAMAGE_STEP_END)
-	e1:SetRange(LOCATION_HAND+LOCATION_ONFIELD)
-	e1:SetTargetRange(LOCATION_MZONE,0)
-	e1:SetCondition(c100000199.descon)
-	e1:SetTarget(c100000199.target)
-	e1:SetOperation(c100000199.spop)
-	c:RegisterEffect(e1)
 	--Activate
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_DAMAGE+CATEGORY_DRAW)
 	e2:SetType(EFFECT_TYPE_ACTIVATE)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetCondition(c100000199.dacon)
+	e2:SetCondition(c100000199.condition)
 	e2:SetCost(c100000199.cost)
-	e2:SetTarget(c100000199.tar)
-	e2:SetOperation(c100000199.acti)
+	e2:SetTarget(c100000199.target)
+	e2:SetOperation(c100000199.activate)
 	c:RegisterEffect(e2)
-end
-function c100000199.descon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetAttackTarget()==nil and Duel.GetTurnPlayer()==e:GetHandler():GetControler()
-end
-function c100000199.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetAttacker():GetAttack()<=1500 end
-	Duel.SetTargetCard(Duel.GetAttacker())
-end
-function c100000199.spop(e,tp,c)
-	local rc=Duel.GetAttacker()
-	if rc:IsFaceup() then 	
-		local e3=Effect.CreateEffect(e:GetHandler())
-		e3:SetType(EFFECT_TYPE_FIELD)
-		e3:SetCode(100000199)
-		e3:SetRange(LOCATION_MZONE)
-		e3:SetTargetRange(LOCATION_MZONE,0)
-		e3:SetLabelObject(rc)	
-		e3:SetTarget(c100000199.tg)
-		rc:RegisterEffect(e3)
+	if not c100000199.global_check then
+		c100000199.global_check=true
+		local ge1=Effect.CreateEffect(c)
+		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge1:SetCode(EVENT_DAMAGE_STEP_END)
+		ge1:SetOperation(c100000199.checkop)
+		Duel.RegisterEffect(ge1,0)
 	end
 end
-function c100000199.tg(e,c)
-	return c==e:GetLabelObject()
+function c100000199.checkop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetAttacker()
+	if Duel.GetAttackTarget()==nil and tc:GetControler()==Duel.GetTurnPlayer() then
+		tc:RegisterFlagEffect(100000199,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,0)
+	end
 end
-function c100000199.dacon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()==PHASE_BATTLE	and Duel.GetTurnPlayer()==e:GetHandler():GetControler()
+function c100000199.condition(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()==tp
 end
 function c100000199.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
@@ -58,16 +38,20 @@ function c100000199.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
 	Duel.SendtoGrave(g,REASON_COST+REASON_DISCARD)
 end
-function c100000199.tar(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingTarget(Card.IsHasEffect,tp,LOCATION_MZONE,0,1,nil,100000199) end
+function c100000199.filter(c)
+	return c:GetFlagEffect(100000199)>0 and c:IsAttackBelow(1500)
+end
+function c100000199.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c100000199.filter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(c100000199.filter,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,Card.IsHasEffect,tp,LOCATION_MZONE,0,1,1,nil,100000199)
+	Duel.SelectTarget(tp,c100000199.filter,tp,LOCATION_MZONE,0,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,0)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
-function c100000199.acti(e,tp,eg,ep,ev,re,r,rp)
-	local tg=Duel.GetFirstTarget()
-	while Duel.Draw(tp,1,REASON_EFFECT)~=0 and tg:IsFaceup() and tg:IsRelateToEffect(e) do
+function c100000199.activate(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	while Duel.Draw(tp,1,REASON_EFFECT)~=0 and tc and tc:IsFaceup() and tc:IsRelateToEffect(e) do
 		local tc=Duel.GetOperatedGroup():GetFirst()
 		Duel.ConfirmCards(tp,tc)		
 		if tc:IsType(TYPE_MONSTER) then		
@@ -79,5 +63,5 @@ function c100000199.acti(e,tp,eg,ep,ev,re,r,rp)
 				end
 			end
 		else return Duel.ShuffleHand(tp)end
-	 end
+	end
 end

@@ -12,7 +12,7 @@ function c511000091.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511000091.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()==PHASE_BATTLE
+	return Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE
 end
 function c511000091.filter(c)
 	return c:GetAttackedCount()>0

@@ -315,7 +315,7 @@ function c95000000.effop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c95000000.atkcon(e)
 	local ph=Duel.GetCurrentPhase()
-	return ph>=PHASE_BATTLE and ph<=PHASE_DAMAGE_CAL
+	return ph>=0x08 and ph<=0x80
 end
 function c95000000.atkval(e,c)
 	return c:GetAttack()*2

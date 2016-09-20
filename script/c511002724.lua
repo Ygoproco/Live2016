@@ -68,7 +68,7 @@ function c511002724.atkfilter(c,atk)
 	return c:IsFaceup() and c:GetAttack()>atk
 end
 function c511002724.chtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c511002724.filter,tp,0,LOCATION_MZONE,1,nil,e:GetHandler():GetEquipTarget():GetAttack()) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c511002724.atkfilter,tp,0,LOCATION_MZONE,1,nil,e:GetHandler():GetEquipTarget():GetAttack()) end
 end
 function c511002724.chop(e,tp,eg,ep,ev,re,r,rp)
 	local atk=e:GetHandler():GetEquipTarget():GetAttack()

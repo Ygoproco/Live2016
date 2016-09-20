@@ -16,7 +16,8 @@ function c511001073.cfilter(c,e,tp)
 end
 function c511001073.condition(e,tp,eg,ep,ev,re,r,rp)
 	local g=eg:Filter(c511001073.cfilter,nil,e,tp)
-	return g:GetCount()==1 and Duel.GetTurnPlayer()==tp and Duel.GetCurrentPhase()==PHASE_BATTLE
+	local ph=Duel.GetCurrentPhase()
+	return g:GetCount()==1 and Duel.GetTurnPlayer()==tp and ph>=0x08 and ph<=0x20
 end
 function c511001073.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDestructable,tp,0,LOCATION_MZONE,1,nil) 

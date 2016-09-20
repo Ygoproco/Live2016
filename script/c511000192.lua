@@ -74,7 +74,8 @@ function c511000192.initial_effect(c)
 	end
 end
 c511000192.xyz_number=0
-c511000192.xyz_count=2
+c511000192.minxyzct=2
+c511000192.maxxyzct=2
 c511000192.maintain_overlay=true
 function c511000192.ovfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_XYZ)

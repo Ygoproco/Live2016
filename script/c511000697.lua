@@ -64,7 +64,8 @@ function c511000697.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=c:GetEquipTarget()
 	Duel.SendtoGrave(e:GetHandler(),REASON_EFFECT)
 	local bt=tg:GetBattleTarget()
-	if Duel.GetTurnPlayer()==tp and Duel.GetCurrentPhase()>=PHASE_BATTLE and Duel.GetCurrentPhase()<=PHASE_DAMAGE_CAL and Duel.GetTurnPlayer()==tp then
+	local ph=Duel.GetCurrentPhase()
+	if Duel.GetTurnPlayer()==tp and ph>=0x08 and ph<=0x20 and Duel.GetTurnPlayer()==tp then
 		if Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,bt) and Duel.SelectYesNo(tp,aux.Stringid(511000697,1)) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 			local g=Duel.SelectMatchingCard(tp,Card.IsFaceup,tp,0,LOCATION_MZONE,1,1,bt):GetFirst()

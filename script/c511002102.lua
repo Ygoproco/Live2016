@@ -80,7 +80,7 @@ function c511002102.posop(e,tp,eg,ep,ev,re,r,rp)
 	eq:RegisterEffect(e1)
 end
 function c511002102.macon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()==tp and Duel.GetCurrentPhase()==PHASE_BATTLE
+	return Duel.GetTurnPlayer()==tp and Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE
 end
 function c511002102.cfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsAbleToGraveAsCost()

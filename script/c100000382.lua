@@ -23,9 +23,9 @@ function c100000382.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 function c100000382.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	Duel.SetTargetPlayer(ep)
+	Duel.SetTargetPlayer(rp)
 	Duel.SetTargetParam(1)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,ep,1)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,rp,1)
 end
 function c100000382.operation(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)

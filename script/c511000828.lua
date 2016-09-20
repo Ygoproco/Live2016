@@ -13,8 +13,8 @@ function c511000828.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511000828.condition(e,tp,eg,ep,ev,re,r,rp)
-	local phase=Duel.GetCurrentPhase()
-	return Duel.GetTurnPlayer()~=tp and (phase==PHASE_BATTLE or (phase==PHASE_DAMAGE and not Duel.IsDamageCalculated()))
+	local ph=Duel.GetCurrentPhase()
+	return Duel.GetTurnPlayer()~=tp and ((ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE) or (ph==PHASE_DAMAGE and not Duel.IsDamageCalculated()))
 end
 function c511000828.cfilter(c,tp)
 	return ((c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost() and c:IsLocation(LOCATION_HAND)) or c:IsReleasable()) 

@@ -24,7 +24,7 @@ function c511002623.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c511002623.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp and Duel.GetCurrentPhase()==PHASE_BATTLE
+	return Duel.GetTurnPlayer()~=tp and Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE
 		and Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
 end
 function c511002623.cost(e,tp,eg,ep,ev,re,r,rp,chk)

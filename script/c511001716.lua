@@ -11,7 +11,7 @@ function c511001716.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511001716.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()==tp and Duel.GetCurrentPhase()==PHASE_BATTLE
+	return Duel.GetTurnPlayer()==tp and Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE
 end
 function c511001716.filter1(c,e)
 	return c:IsCanBeFusionMaterial() and not c:IsImmuneToEffect(e)

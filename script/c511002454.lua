@@ -13,7 +13,7 @@ function c511002454.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511002454.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp and Duel.GetCurrentPhase()==PHASE_BATTLE
+	return Duel.GetTurnPlayer()~=tp and Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE
 end
 function c511002454.filter(c,e)
 	return (not e and c:IsPosition(POS_FACEUP_ATTACK)) or (e and c:IsFaceup() and c:IsRelateToEffect(e))

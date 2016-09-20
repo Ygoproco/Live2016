@@ -47,7 +47,7 @@ function c511001880.activate(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511001880.atkcon(e)
 	local ph=Duel.GetCurrentPhase()
-	return ph>=0x08 and ph<=0x20
+	return ph>=0x08 and ph<=0x80
 end
 function c511001880.shcon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttackTarget()

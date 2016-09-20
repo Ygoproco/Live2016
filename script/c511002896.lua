@@ -31,7 +31,7 @@ end
 function c511002896.condition(e,tp,eg,ep,ev,re,r,rp)
 	local ph=Duel.GetCurrentPhase()
 	return Duel.GetTurnPlayer()==tp and ph>=0x08 and ph<=0x20 
-		and (Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated())
+		and (ph~=PHASE_DAMAGE or not Duel.IsDamageCalculated())
 end
 function c511002896.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end

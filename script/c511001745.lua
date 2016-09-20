@@ -38,5 +38,5 @@ function c511001745.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511001745.atkcon(e)
 	local ph=Duel.GetCurrentPhase()
-	return ph>=0x08 and ph<=0x20
+	return ph>=0x08 and ph<=0x80
 end

@@ -28,7 +28,7 @@ function c511001867.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c511001867.condition(e,tp,eg,ep,ev,re,r,rp)
-	return tp~=Duel.GetTurnPlayer() and Duel.GetCurrentPhase()==PHASE_BATTLE
+	return tp~=Duel.GetTurnPlayer() and Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE
 end
 function c511001867.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

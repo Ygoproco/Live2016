@@ -19,7 +19,6 @@ function c511000369.initial_effect(c)
 	e2:SetCategory(CATEGORY_ATKCHANGE)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e2:SetCode(EVENT_BATTLE_START)
-	e2:SetProperty(EFFECT_FLAG_REPEAT)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetOperation(c511000369.atkop)
 	c:RegisterEffect(e2)
@@ -43,6 +42,21 @@ function c511000369.initial_effect(c)
 	e4:SetCost(c511000369.regcost)
 	e4:SetOperation(c511000369.regop)
 	c:RegisterEffect(e4)
+	if not c511000369.global_check then
+		c511000369.global_check=true
+		local ge2=Effect.CreateEffect(c)
+		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge2:SetCode(EVENT_ADJUST)
+		ge2:SetCountLimit(1)
+		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
+		ge2:SetOperation(c511000369.numchk)
+		Duel.RegisterEffect(ge2,0)
+	end
+end
+c511000369.xyz_number=100
+function c511000369.numchk(e,tp,eg,ep,ev,re,r,rp)
+	Duel.CreateToken(tp,57314798)
+	Duel.CreateToken(1-tp,57314798)
 end
 function c511000369.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local at=Duel.GetAttacker()
@@ -95,23 +109,20 @@ function c511000369.regcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511000369.regop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(511000369,3))
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(EVENT_PHASE_START+PHASE_BATTLE)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetCountLimit(1)
-	e1:SetCondition(c511000369.atkupcon)
-	e1:SetOperation(c511000369.atkupop)
-	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-	c:RegisterEffect(e1)
-end
-function c511000369.atkupcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()==tp and Duel.GetCurrentPhase()==PHASE_BATTLE
+	if c:IsRelateToEffect(e) then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(EVENT_PHASE_START+PHASE_BATTLE_START)
+		e1:SetRange(LOCATION_MZONE)
+		e1:SetCountLimit(1)
+		e1:SetOperation(c511000369.atkupop)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		c:RegisterEffect(e1)
+	end
 end
 function c511000369.atkupop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local g=Duel.GetMatchingGroup(Card.IsFaceup,c:GetControler(),LOCATION_MZONE,LOCATION_MZONE,nil)
+	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	local atk=g:GetSum(Card.GetRank)*1000
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)

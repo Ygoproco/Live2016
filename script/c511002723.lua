@@ -56,5 +56,10 @@ function c511002723.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c511002723.damval(e,re,val,r,rp,rc)
-	return val-e:GetLabel()
+	local dam=val-e:GetLabel()
+	if dam>=0 then
+		return dam
+	else
+		return 0
+	end
 end

@@ -11,7 +11,7 @@ function c511004336.initial_effect(c)
 	c:RegisterEffect(e1)  
 end
 function c511004336.filter(c)
-	return c:IsFaceup() and c:GetCounter(0x1107)>=1
+	return c:IsFaceup() and c:GetCounter(0x1107)>=1 and Duel.GetAttacker():GetControler()~=tp
 end
 function c511004336.con(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c511004336.filter,tp,LOCATION_ONFIELD,0,1,nil)
