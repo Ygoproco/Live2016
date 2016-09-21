@@ -1,7 +1,7 @@
 --パッチワーク・ファーニマル
 --Fluffal Patchwork
 --Scripted by Eerie Code
-function c6131.initial_effect(c)
+function c81481818.initial_effect(c)
 	--Frightfur
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -14,14 +14,14 @@ function c6131.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_FUSION_SUBSTITUTE)
-	e2:SetCondition(c6131.subcon)
-	e2:SetValue(c6131.subval)
+	e2:SetCondition(c81481818.subcon)
+	e2:SetValue(c81481818.subval)
 	c:RegisterEffect(e2)
 end
 
-function c6131.subcon(e)
+function c81481818.subcon(e)
 	return e:GetHandler():IsLocation(LOCATION_MZONE)
 end
-function c6131.subval(e,c)
+function c81481818.subval(e,c)
 	return c:IsSetCard(0xad)
 end
