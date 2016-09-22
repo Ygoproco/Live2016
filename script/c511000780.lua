@@ -49,7 +49,7 @@ function c511000780.activate(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetTargetRange(1,0)
 	if Duel.GetTurnPlayer()==tp then
 		e1:SetLabel(Duel.GetTurnCount())
-		e1:SetCondition(c100100108.turncon1)
+		e1:SetCondition(c511000780.turncon1)
 		e1:SetReset(RESET_PHASE+PHASE_END,4)
 	else
 		e1:SetReset(RESET_PHASE+PHASE_END,3)
@@ -57,6 +57,6 @@ function c511000780.activate(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetValue(1)
 	Duel.RegisterEffect(e1,tp)
 end
-function c100100108.turncon1(e)
+function c511000780.turncon1(e)
 	return Duel.GetTurnCount()~=e:GetLabel()
 end

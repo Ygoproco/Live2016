@@ -13,7 +13,7 @@ function c100100510.initial_effect(c)
 end
 function c100100510.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=Duel.GetFieldCard(tp,LOCATION_SZONE,5)
-	if chk==0 then return tc and tc:IsCanRemoveCounter(tp,0x91,4,REASON_COST) Duel.GetActivityCount(tp,ACTIVITY_SUMMON)==0
+	if chk==0 then return tc and tc:IsCanRemoveCounter(tp,0x91,4,REASON_COST) and Duel.GetActivityCount(tp,ACTIVITY_SUMMON)==0
 		and Duel.GetActivityCount(tp,ACTIVITY_FLIPSUMMON)==0 and Duel.GetActivityCount(tp,ACTIVITY_SPSUMMON)==0 end
 	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 	tc:RemoveCounter(tp,0x91,4,REASON_COST)	
