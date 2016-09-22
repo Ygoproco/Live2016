@@ -720,3 +720,8 @@ ANNOUNCE_CARD			=0x7	--宣言卡片
 --cards with double names
 CARD_MARINE_DOLPHIN		=78734254	--海洋海豚
 CARD_TWINKLE_MOSS		=13857930	--光輝苔蘚
+
+--New constants as of 1.033.A
+CARD_BLUEEYES_SPIRIT	=59822133	--青眼の精霊龍
+CARD_POLYMERIZATION		=24094653	--融合
+CARD_SUMMON_GATE		=29724053	--サモン・ゲート
