@@ -20,12 +20,12 @@ function scard.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 
-function scard.tg(e,tp,eg,ep,ev,re,r,rp)
+function scard.cd(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFlagEffect(tp,s_id)==0
 end
 
 function scard.tg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFieldGroupCount(1-tp,LOCATION_HAND)>0 end
+	if chk==0 then return Duel.GetFieldGroupCount(1-tp,LOCATION_HAND,0)>0 end
 	Duel.SetTargetParam(Duel.AnnounceCard(tp))
 	Duel.SetOperationInfo(0,CATEGORY_HANDES,nil,1,1-tp,0)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,1000,tp,0)

@@ -83,7 +83,7 @@ function c511009053.operation(e,tp,eg,ep,ev,re,r,rp)
 			e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
 			e2:SetCode(EVENT_CHAIN_SOLVED)
 			e2:SetRange(LOCATION_MZONE)
-			e2:SetLabel(tc:GetDefence())
+			e2:SetLabel(tc:GetDefense())
 			e2:SetOperation(c511009053.Defop)
 			e2:SetReset(RESET_EVENT+0x1fe0000)
 			tc:RegisterEffect(e2)
@@ -106,15 +106,15 @@ function c511009053.Atkop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511009053.Defop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if e:GetLabel()==c:GetDefence() then return end
+	if e:GetLabel()==c:GetDefense() then return end
 	local val=0
-	if e:GetLabel()>c:GetDefence() then
-		val=e:GetLabel()-c:GetDefence()
+	if e:GetLabel()>c:GetDefense() then
+		val=e:GetLabel()-c:GetDefense()
 	else
-		val=c:GetDefence()-e:GetLabel()
+		val=c:GetDefense()-e:GetLabel()
 	end
 	Duel.RaiseEvent(c,511001265,re,REASON_EFFECT,rp,tp,val)
-	e:SetLabel(c:GetDefence())
+	e:SetLabel(c:GetDefense())
 end
 
 function c511009053.damcon(e,tp,eg,ep,ev,re,r,rp)

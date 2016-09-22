@@ -12,8 +12,8 @@ function c511009171.initial_effect(c)
 	e1:SetTarget(c511009171.damtg)
 	e1:SetOperation(c511009171.damop)
 	c:RegisterEffect(e1)
-	if not c8785161.global_check then
-		c8785161.global_check=true
+	if not c511009171.global_check then
+		c511009171.global_check=true
 		local ge1=Effect.CreateEffect(c)
 		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		ge1:SetCode(EVENT_SUMMON_SUCCESS)

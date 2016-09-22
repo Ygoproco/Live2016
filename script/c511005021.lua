@@ -11,7 +11,7 @@ end
 
 local scard,s_id=getID()
 
-function .initial_effect(c)
+function scard.initial_effect(c)
 	--Global effect
 	if not scard.gl_chk then
 		scard.gl_chk=true

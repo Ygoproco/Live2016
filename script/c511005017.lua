@@ -1,7 +1,7 @@
 --Battery Unit Charge
 --  Copied from Overlay Regen
 
-local scard=c27068117
+local scard=c511005017
 
 function scard.initial_effect(c)
 	--Activate

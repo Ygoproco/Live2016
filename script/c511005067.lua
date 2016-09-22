@@ -18,8 +18,8 @@ function scard.initial_effect(c)
   e2:SetOperation(scard.op)
   c:RegisterEffect(e2)
   --Global const
-  if not scard.['gl_chk'] then
-    scard.['gl_chk']=true
+  if not scard.gl_chk then
+    scard.gl_chk=true
     scard.seal_lst={
       25880422,29549364,63102017,
       58921041,511000176

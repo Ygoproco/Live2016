@@ -29,7 +29,7 @@ function scard.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingTarget(scard.fil,tp,LOCATION_SZONE,LOCATION_SZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	Duel.SelectTarget(tp,scard.fil,tp,LOCATION_SZONE,LOCATION_SZONE,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,1,0,0)
 end
 
 function scard.op(e,tp,eg,ep,ev,re,r,rp)
