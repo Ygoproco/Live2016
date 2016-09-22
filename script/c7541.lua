@@ -1,3 +1,4 @@
+--古代の機械混沌巨人
 --Ancient Gear Chaos Giant
 function c7541.initial_effect(c)
 	--fusion material
