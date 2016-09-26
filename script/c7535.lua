@@ -65,7 +65,7 @@ function c7535.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c7535.spcfil(c)
-	return c:IsSetCard(0x2093) and not c:IsCode(7535) and c:IsAbleToRemoveAsCost()
+	return c:IsSetCard(0x2093) and c:IsAbleToRemoveAsCost()
 end
 function c7535.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
