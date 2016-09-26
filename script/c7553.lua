@@ -3,7 +3,7 @@
 --Scripted by Eerie Code
 function c7553.initial_effect(c)
 	c:EnableReviveLimit()
-	aux.AddXyzProcedure(c,nil,4,4,c7553.ovfilter,aux.Stringid(7553,0),5)
+	aux.AddXyzProcedure(c,nil,4,4,c7553.ovfilter,aux.Stringid(7553,0),4,c7553.xyzop)
 	--
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -23,7 +23,6 @@ function c7553.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCountLimit(1)
 	e3:SetCost(c7553.descost)
 	e3:SetTarget(c7553.destg)
 	e3:SetOperation(c7553.desop)
@@ -32,6 +31,10 @@ end
 
 function c7553.ovfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xf2) and not c:IsCode(7553)
+end
+function c7553.xyzop(e,tp,chk)
+	if chk==0 then return Duel.GetFlagEffect(tp,7553)==0 end
+	Duel.RegisterFlagEffect(tp,7553,RESET_PHASE+PHASE_END,0,1)
 end
 
 function c7553.adfil(c)
