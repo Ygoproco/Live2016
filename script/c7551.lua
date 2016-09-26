@@ -22,7 +22,7 @@ function c7551.initial_effect(c)
 	e3:SetCategory(CATEGORY_TOHAND)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetCode(EVENT_FREE_CHAIN)
-	e3:SetRange(LOCATION_MZONE)
+	e3:SetRange(LOCATION_DECK)
 	e3:SetCountLimit(1)
 	e3:SetCost(c7551.thcost)
 	e3:SetOperation(c7551.thop)
@@ -40,29 +40,29 @@ end
 function c7551.adfil(c)
 	return c:IsSetCard(0xf2) and c:IsType(TYPE_MONSTER)
 end
+function c7551.adfil2(c)
+	return c:IsSetCard(0xf2) and c:IsType(TYPE_MONSTER) and c:IsType(TYPE_XYZ)
+end
 function c7551.atkval(e,c)
-	return c:GetOverlayGroup():Filter(c7551.adfil,nil):GetSum(Card.GetAttack)
+	return c:GetOverlayGroup():Filter(c7551.adfil,nil):GetSum(Card.GetAttack)-c:GetOverlayGroup():Filter(c7551.adfil2,nil):GetSum(Card.GetAttack)
 end
 function c7551.defval(e,c)
-	return c:GetOverlayGroup():Filter(c7551.adfil,nil):GetSum(Card.GetDefense)
+	return c:GetOverlayGroup():Filter(c7551.adfil,nil):GetSum(Card.GetDefense)-c:GetOverlayGroup():Filter(c7551.adfil2,nil):GetSum(Card.GetDefense)
 end
 
 function c7551.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(c57103969.filter,tp,LOCATION_DECK,0,nil)
+	local g=Duel.IsExistingMatchingCard(c7551.thfil,tp,LOCATION_DECK,0,nil)
 	if g:GetCount()>0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function c7551.thfil(c)
 	return c:IsRace(RACE_BEASTWARRIOR) and c:IsAbleToHand() and c:IsSummonableCard()
 end
-end
 function c7551.thop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local g=Duel.GetMatchingGroup(c57103969.filter,tp,LOCATION_DECK,0,nil)
-	if g:GetCount()>0 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local sg=g:Select(tp,1,1,nil)
-		Duel.SendtoHand(sg,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,sg)
-	end
+	local g=Duel.GetMatchingGroup(c7551.thfil,tp,LOCATION_DECK,0,nil)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local sg=g:Select(tp,1,1,nil)
+	Duel.SendtoHand(sg,nil,REASON_EFFECT)
+	Duel.ConfirmCards(1-tp,sg)
 end
