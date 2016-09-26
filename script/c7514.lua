@@ -36,7 +36,8 @@ function c7514.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c7514.efcon(e,tp,eg,ep,ev,re,r,rp)
-	return r==REASON_XYZ and e:GetHandler():GetReasonCard():GetOriginalRace()==RACE_BEASTWARRIOR
+	return r==REASON_XYZ and e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
+		and e:GetHandler():GetReasonCard():GetOriginalRace()==RACE_BEASTWARRIOR
 end
 function c7514.efop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
