@@ -58,6 +58,7 @@ function c7518.checkop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 			e1:SetRange(LOCATION_MZONE)
 			e1:SetCondition(c7518.negcon)
+			e1:SetCost(c7518.negcost)
 			e1:SetTarget(c7518.negtg)
 			e1:SetOperation(c7518.negop)
 			tc:RegisterEffect(e1,true)
@@ -72,6 +73,10 @@ function c7518.negcon(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
 	if not g or not g:IsContains(c) then return false end
 	return re:IsHasType(EFFECT_TYPE_ACTIVATE) or re:IsActiveType(TYPE_TRAP)
+end
+function c7518.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
+	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function c7518.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
