@@ -28,7 +28,7 @@ function c7516.mfil(c)
 end
 function c7516.mtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c7516.mfil(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c7516.mfil,tp,LOCATION_MZONE,0,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(c7516.mfil,tp,LOCATION_MZONE,0,1,nil) and not e:GetHandler():IsStatus(STATUS_CHAINING) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	Duel.SelectTarget(tp,c7516.mfil,tp,LOCATION_MZONE,0,1,1,nil)
 end
