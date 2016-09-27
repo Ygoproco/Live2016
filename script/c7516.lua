@@ -24,6 +24,11 @@ function c7516.initial_effect(c)
 	end
 end
 
+function c7516.mcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return c:GetFlagEffect(7516)==0 end
+	c:RegisterFlagEffect(7516,RESET_CHAIN,0,1)
+end
 function c7516.mfil(c)
 	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsRace(RACE_BEASTWARRIOR)
 end
@@ -34,7 +39,7 @@ function c7516.mcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c7516.mtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c7516.mfil(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c7516.mfil,tp,LOCATION_MZONE,0,1,nil) and not e:GetHandler():IsStatus(STATUS_CHAINING) end
+	if chk==0 then return Duel.IsExistingTarget(c7516.mfil,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	Duel.SelectTarget(tp,c7516.mfil,tp,LOCATION_MZONE,0,1,1,nil)
 end
