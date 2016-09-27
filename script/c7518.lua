@@ -72,7 +72,7 @@ function c7518.negcon(e,tp,eg,ep,ev,re,r,rp)
 	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
 	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
 	if not g or not g:IsContains(c) then return false end
-	return re:IsHasType(EFFECT_TYPE_ACTIVATE) or re:IsActiveType(TYPE_TRAP)
+	return re:IsHasType(EFFECT_TYPE_ACTIVATE) or re:IsActiveType(TYPE_TRAP) and e:GetHandler():GetOverlayGroup():IsExists(Card.IsCode,1,nil,7518)
 end
 function c7518.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
