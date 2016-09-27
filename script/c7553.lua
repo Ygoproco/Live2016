@@ -22,7 +22,9 @@ function c7553.initial_effect(c)
 	e3:SetCategory(CATEGORY_DESTROY)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetRange(LOCATION_MZONE)
+	e3:SetCountLimit(1)
 	e3:SetCost(c7553.descost)
 	e3:SetTarget(c7553.destg)
 	e3:SetOperation(c7553.desop)
@@ -41,10 +43,10 @@ function c7553.adfil(c)
 	return c:IsSetCard(0xf2) and c:IsType(TYPE_MONSTER)
 end
 function c7553.atkval(e,c)
-	return c:GetOverlayGroup():Filter(c7553.adfil,nil):GetSum(Card.GetAttack)
+	return c:GetOverlayGroup():Filter(c7553.adfil,nil):Filter(Card.IsAttackAbove,nil,1):GetSum(Card.GetAttack)
 end
 function c7553.defval(e,c)
-	return c:GetOverlayGroup():Filter(c7553.adfil,nil):GetSum(Card.GetDefense)
+	return c:GetOverlayGroup():Filter(c7553.adfil,nil):Filter(Card.IsDefenseAbove,nil,1):GetSum(Card.GetDefense)
 end
 
 function c7553.descost(e,tp,eg,ep,ev,re,r,rp,chk)
