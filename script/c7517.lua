@@ -27,7 +27,7 @@ function c7517.initial_effect(c)
 end
 
 function c7517.filter(c)
-	return c:IsSetCard(0xfd) and c:IsType(TYPE_MONSTER) and c:IsDiscardable(REASON_EFFECT)
+	return c:IsSetCard(0xfd) and c:IsType(TYPE_MONSTER)
 end
 function c7517.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1)
