@@ -41,10 +41,10 @@ function c7552.adfil(c)
 	return c:IsSetCard(0xf2) and c:IsType(TYPE_MONSTER)
 end
 function c7552.atkval(e,c)
-	return c:GetOverlayGroup():Filter(c7552.adfil,nil):GetSum(Card.GetAttack)
+	return c:GetOverlayGroup():Filter(c7552.adfil,nil):Filter(Card.IsAttackAbove,nil,1):GetSum(Card.GetAttack)
 end
 function c7552.defval(e,c)
-	return c:GetOverlayGroup():Filter(c7552.adfil,nil):GetSum(Card.GetDefense)
+	return c:GetOverlayGroup():Filter(c7552.adfil,nil):Filter(Card.IsDefenseAbove,nil,1):GetSum(Card.GetDefense)
 end
 
 function c7552.matcost(e,tp,eg,ep,ev,re,r,rp,chk)
