@@ -42,7 +42,7 @@ function c7558.atkfil(c,atk)
 	return c:IsFaceup() and c:IsRace(RACE_BEASTWARRIOR) and c:GetAttack()>atk
 end
 function c7558.atlimit(e,c)
-	return c:IsFaceup() and c:IsRace(RACE_BEASTWARRIOR) and not Duel.IsExistingMatchingCard(c7558.atkfil,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,c,c:GetAttack())
+	return c:IsFaceup() and c:IsRace(RACE_BEASTWARRIOR) and Duel.IsExistingMatchingCard(c7558.atkfil,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,c,c:GetAttack())
 end
 
 function c7558.repfilter(c,tp)
