@@ -60,7 +60,7 @@ function c7571.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 		local sg=g:Select(tp,1,1,nil)
 		mg:AddCard(sg:GetFirst())
-		mg:Remove(Card.IsCode,nil,sg:GetFirst():GetCode())
+		g:Remove(Card.IsCode,nil,sg:GetFirst():GetCode())
 	end
 	Duel.SetTargetCard(mg)
 	Duel.SetTargetPlayer(tp)
@@ -69,7 +69,7 @@ function c7571.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function c7571.tdop(e,tp,eg,ep,ev,re,r,rp)
-	local g,p,d=Duel.GetChaininfo(0,CHAININFO_TARGET_CARDS,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	local g,p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	g=g:Filter(Card.IsRelateToEffect,nil,e)
 	if g:GetCount()==5 and Duel.SendtoDeck(g,nil,2,REASON_EFFECT)==5 then
 		Duel.BreakEffect()
