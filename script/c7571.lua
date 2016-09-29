@@ -60,7 +60,7 @@ function c7571.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 		local sg=g:Select(tp,1,1,nil)
 		mg:AddCard(sg:GetFirst())
-		mg=mg:Remove(Card.IsCode,nil,sg:GetFirst():GetCode())
+		mg:Remove(Card.IsCode,nil,sg:GetFirst():GetCode())
 	end
 	Duel.SetTargetCard(mg)
 	Duel.SetTargetPlayer(tp)
