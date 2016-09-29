@@ -27,7 +27,7 @@ function c7502.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c7502.thfilter(c)
-	return c:IsSetCard(0x9f) c:IsAbleToHand()
+	return c:IsSetCard(0x9f) and c:IsAbleToHand()
 end
 function c7502.thtg1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(tp) and c7502.thfilter(chkc) end
