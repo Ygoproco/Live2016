@@ -52,7 +52,7 @@ function c7518.checkop(e,tp,eg,ep,ev,re,r,rp)
 			and tc:GetFlagEffect(7518)==0 then
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetDescription(aux.Stringid(7518,1))
-			e1:SetCategory(CATEGORY_NEGATE)
+			e1:SetCategory(CATEGORY_DISABLE)
 			e1:SetType(EFFECT_TYPE_QUICK_O)
 			e1:SetCode(EVENT_CHAINING)
 			e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
@@ -69,10 +69,11 @@ function c7518.checkop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c7518.negcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
-	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
-	if not g or not g:IsContains(c) then return false end
-	return re:IsHasType(EFFECT_TYPE_ACTIVATE) or re:IsActiveType(TYPE_TRAP) and e:GetHandler():GetOverlayGroup():IsExists(Card.IsCode,1,nil,7518)
+	return c:GetOverlayGroup():IsExists(Card.IsCode,1,nil,7518)
+		and not c:IsStatus(STATUS_BATTLE_DESTROYED)
+		and re:IsActiveType(TYPE_TRAP) and Duel.IsChainDisablable(ev)
+		and re:IsHasProperty(EFFECT_FLAG_CARD_TARGET)
+		and Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS):IsContains(c)
 end
 function c7518.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
@@ -80,7 +81,7 @@ function c7518.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c7518.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
 end
 function c7518.negop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.NegateActivation(ev)
