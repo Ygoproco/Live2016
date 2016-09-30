@@ -4,7 +4,11 @@
 function c7609.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcFun2(c,c7609.ffilter,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_DARK),true)
+	if Card.IsFusionAttribute then
+		aux.AddFusionProcFun2(c,c7609.ffilter,aux.FilterBoolFunction(Card.IsFusionAttribute,ATTRIBUTE_DARK),true)
+	else
+		aux.AddFusionProcFun2(c,c7609.ffilter,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_DARK),true)
+	end
 	--remove
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(7609,0))
