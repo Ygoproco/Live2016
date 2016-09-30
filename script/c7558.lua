@@ -45,34 +45,40 @@ function c7558.atlimit(e,c)
 	return c:IsFaceup() and c:IsRace(RACE_BEASTWARRIOR) and Duel.IsExistingMatchingCard(c7558.atkfil,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,c,c:GetAttack())
 end
 
-function c7558.repfilter(c,tp)
-	return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:IsSetCard(0xf2)
-		and (c:IsReason(REASON_EFFECT)) and not c:IsReason(REASON_REPLACE)
+function c7558.repfilter(c,tp,e)
+	return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_MZONE)
+		and c:IsSetCard(0xf2) and c:IsReason(REASON_EFFECT) and c:GetFlagEffect(7558)==0
 end
 function c7558.desfilter(c,tp)
-	return c:IsFaceup() and c:IsControler(tp) and c:IsType(TYPE_MONSTER) and c:IsLocation(LOCATION_HAND+LOCATION_MZONE) and c:IsSetCard(0xf2)
-		and not c:IsStatus(STATUS_DESTROY_CONFIRMED+STATUS_BATTLE_DESTROYED)
+	return c:IsControler(tp) and c:IsLocation(LOCATION_MZONE+LOCATION_HAND)
+		and c:IsType(TYPE_MONSTER) and not c:IsStatus(STATUS_DESTROY_CONFIRMED+STATUS_BATTLE_DESTROYED)
 end
 function c7558.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return eg:IsExists(c7558.repfilter,1,nil,tp)
-		and Duel.IsExistingMatchingCard(c7558.desfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,nil,tp)
-		and e:GetHandler():GetFlagEffect(7558)==0 end
+	if chk==0 then return Duel.IsExistingMatchingCard(c7558.desfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,1,nil,tp)
+		and eg:IsExists(c7558.repfilter,1,nil,tp,e) end
 	if Duel.SelectYesNo(tp,aux.Stringid(7558,0)) then
+		local g=eg:Filter(c7558.repfilter,nil,tp,e)
+		if g:GetCount()==1 then
+			e:SetLabelObject(g:GetFirst())
+		else
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESREPLACE)
+			local cg=g:Select(tp,1,1,nil)
+			e:SetLabelObject(cg:GetFirst())
+		end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESREPLACE)
-		local g=Duel.SelectMatchingCard(tp,c7558.desfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,1,nil,tp)
-		e:SetLabelObject(g:GetFirst())
-		Duel.HintSelection(g)
-		g:GetFirst():SetStatus(STATUS_DESTROY_CONFIRMED,true)
+		local tg=Duel.SelectMatchingCard(tp,c7558.desfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,1,1,nil,tp)
+		Duel.HintSelection(tg)
+		Duel.SetTargetCard(tg)
+		tg:GetFirst():RegisterFlagEffect(7558,RESET_EVENT+0x1fc0000+RESET_CHAIN,0,1)
+		tg:GetFirst():SetStatus(STATUS_DESTROY_CONFIRMED,true)
 		return true
-	end
-	return false
+	else return false end
 end
 function c7558.repval(e,c)
-	return c7558.repfilter(c,e:GetHandlerPlayer())
+	return c==e:GetLabelObject()
 end
 function c7558.repop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=e:GetLabelObject()
+	local tc=Duel.GetFirstTarget()
 	tc:SetStatus(STATUS_DESTROY_CONFIRMED,false)
 	Duel.Destroy(tc,REASON_EFFECT+REASON_REPLACE)
-	e:GetHandler():RegisterFlagEffect(7558,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
 end
