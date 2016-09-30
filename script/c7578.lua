@@ -30,7 +30,7 @@ function c7578.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 function c7578.filter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsAttackBelow(1500)
+	return c:IsType(TYPE_MONSTER) and c:IsDefenseBelow(1500)
 end
 function c7578.activate(e,tp,eg,ep,ev,re,r,rp)
 	local conf=Duel.GetFieldGroup(tp,0,LOCATION_MZONE+LOCATION_HAND)
