@@ -55,7 +55,7 @@ function c7558.desfilter(c,tp)
 end
 function c7558.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c7558.desfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,1,nil,tp)
-		and eg:IsExists(c7558.repfilter,1,nil,tp,e) end
+		and eg:IsExists(c7558.repfilter,1,nil,tp,e) and e:GetHandler():GetFlagEffect(7558)==0 end
 	if Duel.SelectYesNo(tp,aux.Stringid(7558,0)) then
 		local g=eg:Filter(c7558.repfilter,nil,tp,e)
 		if g:GetCount()==1 then
@@ -81,4 +81,5 @@ function c7558.repop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	tc:SetStatus(STATUS_DESTROY_CONFIRMED,false)
 	Duel.Destroy(tc,REASON_EFFECT+REASON_REPLACE)
+	e:GetHandler():RegisterFlagEffect(7558,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
 end
