@@ -21,7 +21,7 @@ function c7550.initial_effect(c)
 	e2:SetDescription(aux.Stringid(7550,1))
 	e2:SetCategory(CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetCode(EVENT_TO_GRAVE)
 	e2:SetCondition(c7550.thcon)
 	e2:SetTarget(c7550.thtg)
@@ -33,7 +33,7 @@ function c7550.con(e)
 	return Duel.GetCurrentPhase()==PHASE_MAIN1
 end
 function c7550.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():CheckRemoveOverlayCost(tp,1,1,REASON_COST) end
+	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,1,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function c7550.fil(c)
@@ -51,7 +51,7 @@ function c7550.op(e,tp,eg,ep,ev,re,r,rp,chk)
 		local fid=tc:GetFieldID()
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD)
-		e1:SetCode(EFFECT_CANNOT_DIRECT_ATTACK)
+		e1:SetCode(EFFECT_CANNOT_ATTACK)
 		e1:SetTargetRange(LOCATION_MZONE,0)
 		e1:SetTarget(c7550.atktg)
 		e1:SetLabel(fid)
@@ -81,7 +81,7 @@ function c7550.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c7550.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c7550.thfilter,LOCATION_DECK,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,c7550.thfilter,tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
