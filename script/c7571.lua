@@ -72,6 +72,7 @@ function c7571.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local g,p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	g=g:Filter(Card.IsRelateToEffect,nil,e)
 	if g:GetCount()==5 and Duel.SendtoDeck(g,nil,2,REASON_EFFECT)==5 then
+		if g:FilterCount(Card.IsLocation,nil,LOCATION_EXTRA)<5 then Duel.ShuffleDeck(p) end
 		Duel.BreakEffect()
 		Duel.Draw(p,d,REASON_EFFECT)
 	end
