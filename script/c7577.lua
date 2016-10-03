@@ -14,7 +14,7 @@ function c7577.initial_effect(c)
 end
 
 function c7577.fil(c,e,tp)
-	local lc=c:GetLocation()
+	local lc=c:GetSequence()
 	return c:IsFaceup() and c:IsSetCard(0xd0) and (lc==6 or lc==7) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c7577.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
