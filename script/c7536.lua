@@ -45,7 +45,7 @@ function c7536.spfil(c,e,tp)
 	return c:IsType(TYPE_SPIRIT) and c:IsLevelBelow(4) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function c7536.ritop(e,tp,eg,ep,ev,re,r,rp)
-	local mg=Duel.GetMatchingGroup(c7536.spfil,tp,LOCATION_HAND,0,nil,e,tp)
+	local mg=Duel.GetMatchingGroup(c7536.spfil,tp,LOCATION_DECK,0,nil,e,tp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 	local g=Duel.SelectMatchingCard(tp,c7536.ritfil,tp,0,LOCATION_ONFIELD,1,3,nil)
 	if g:GetCount()>0 and Duel.SendtoHand(g,nil,REASON_EFFECT)>0 and mg:GetCount()>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SelectYesNo(tp,aux.Stringid(7536,1)) then
