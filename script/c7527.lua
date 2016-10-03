@@ -36,7 +36,7 @@ function c7527.initial_effect(c)
 end
 
 function c7527.spfil(c)
-	return c:IsAbleToDeckAsCost()
+	return c:IsAbleToDeckOrExtraAsCost()
 end
 function c7527.spcon(e,c)
 	if c==nil then return true end
