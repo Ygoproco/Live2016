@@ -40,7 +40,7 @@ function c7562.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c7562.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	local mg=Duel.GetMatchingGroup(c7562.matfilter1,tp,LOCATION_HAND,0,nil)
+	local mg=Duel.GetMatchingGroup(c7562.matfilter1,tp,LOCATION_HAND,0,nil,tp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local tg=Duel.SelectMatchingCard(tp,c7562.filter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp,mg)
 	local tc1=tg:GetFirst()
