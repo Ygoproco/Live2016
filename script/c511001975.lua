@@ -20,15 +20,15 @@ function c511001975.handcon(e)
 end
 function c511001975.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,511001975,0,0x21,300,600,4,RACE_WARRIOR,ATTRIBUTE_DARK) end
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,24212820,0x10db,0x21,300,600,4,RACE_WARRIOR,ATTRIBUTE_DARK) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c511001975.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e)
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,511001975,0,0x21,300,600,4,RACE_WARRIOR,ATTRIBUTE_DARK) then
-		c:AddMonsterAttribute(TYPE_EFFECT+TYPE_TRAP)
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,24212820,0x10db,0x21,300,600,4,RACE_WARRIOR,ATTRIBUTE_DARK) then
+		c:AddMonsterAttribute(TYPE_EFFECT)
 		Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP_DEFENSE)
 		c:AddMonsterAttributeComplete()
 		local e1=Effect.CreateEffect(c)
@@ -44,5 +44,5 @@ function c511001975.atkcon(e)
 	return Duel.GetAttackTarget() and e:GetHandler()==Duel.GetAttackTarget()
 end
 function c511001975.atkval(e,c)
-	return Duel.GetMatchingGroupCount(Card.IsSetCard,tp,LOCATION_GRAVE,0,nil,0x10d9)*300
+	return Duel.GetMatchingGroupCount(Card.IsSetCard,tp,LOCATION_GRAVE,0,nil,0x10db)*300
 end

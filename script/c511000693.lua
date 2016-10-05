@@ -19,7 +19,6 @@ end
 function c511000693.operation(e,tp,eg,ep,ev,re,r,rp)
 	local ac=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
 	local g=Duel.GetMatchingGroup(Card.IsCode,tp,0,LOCATION_HAND,nil,ac)
-	local hg=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
 	local tc=g:GetFirst()
 	if tc then
 		if tc:IsType(TYPE_SPELL) or tc:IsType(TYPE_TRAP) then

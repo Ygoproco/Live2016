@@ -65,6 +65,14 @@ function c110000012.initial_effect(c)
 	local e10=e8:Clone()
 	e10:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e10)
+	--cannot be target
+	local e11=Effect.CreateEffect(c)
+	e11:SetType(EFFECT_TYPE_SINGLE)
+	e11:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+	e11:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e11:SetRange(LOCATION_MZONE)
+	e11:SetValue(1)
+	c:RegisterEffect(e11)
 end
 function c110000012.ttcon(e,c)
 	if c==nil then return true end

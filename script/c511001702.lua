@@ -10,7 +10,7 @@ function c511001702.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511001702.filter(c,e,tp)
-	return c:GetAttack()==100 and c:IsSetCard(0xe3) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:GetAttack()==100 and c:IsSetCard(0xe6) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511001702.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>3 
@@ -55,5 +55,5 @@ function c511001702.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SpecialSummonComplete()
 end
 function c511001702.sumlimit(e,c)
-	return not c:IsSetCard(0xe3)
+	return not c:IsSetCard(0xe6)
 end
