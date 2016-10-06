@@ -1,5 +1,5 @@
 --Cosmic Space
--- !counter 0x109 Life Star Counter
+-- !counter 0x1109 Life Star Counter
 function c511009010.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -49,8 +49,8 @@ function c511009010.operation(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	local tc=g:GetFirst()
 	while tc do
-		tc:AddCounter(0x109,tc:GetLevel(),REASON_EFFECT)
-		tc:RegisterFlagEffect(95100584,RESET_EVENT+0x1fe0000,0,1)
+		tc:AddCounter(0x1109,tc:GetLevel(),REASON_EFFECT)
+		tc:RegisterFlagEffect(511009010,RESET_EVENT+0x1fe0000,0,1)
 		tc=g:GetNext()
 	end
 end
@@ -58,14 +58,14 @@ end
 
 
 function c511009010.rmcountfilter(c)
-	return c:GetCounter(0x109)~=0
+	return c:GetCounter(0x1109)~=0
 end
 
 function c511009010.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c511009010.rmcountfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	local tc=g:GetFirst()
 	while tc do
-		tc:RemoveCounter(tp,0x109,1,REASON_EFFECT)
+		tc:RemoveCounter(tp,0x1109,1,REASON_EFFECT)
 		tc=g:GetNext()
 	end
 	local g2=Duel.GetMatchingGroup(c511009010.desfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
@@ -78,20 +78,20 @@ end
 function c511009010.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return eg:IsExists(c511009010.filter,1,nil,tp) end
 	Duel.SetTargetCard(eg)
-	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,1,0,0x109)
+	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,1,0,0x1109)
 end
 function c511009010.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=eg:Filter(c511009010.filter,nil,e,tp)
 	local tc=g:GetFirst()
 	while tc do
-		tc:AddCounter(0x109,tc:GetLevel(),REASON_EFFECT)	
-		tc:RegisterFlagEffect(95100584,RESET_EVENT+0x1fe0000,0,1)
+		tc:AddCounter(0x1109,tc:GetLevel(),REASON_EFFECT)	
+		tc:RegisterFlagEffect(511009010,RESET_EVENT+0x1fe0000,0,1)
 		tc=g:GetNext()
 	end
 end
 
 function c511009010.desfilter(c,g,pg)
-	return c:IsFaceup() and c:GetCounter(0x109)==0 and c:GetFlagEffect(95100584)~=0 and c:IsDestructable()
+	return c:IsFaceup() and c:GetCounter(0x1109)==0 and c:GetFlagEffect(511009010)~=0 and c:IsDestructable()
 end
 function c511009010.desop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c511009010.desfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
