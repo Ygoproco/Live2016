@@ -16,7 +16,7 @@ function c700000031.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x513)
 end
 function c700000031.negcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp and Duel.GetCurrentPhase()==PHASE_BATTLE and Duel.GetAttacker():GetControler()~=tp and Duel.IsExistingMatchingCard(c700000031.cfilter,tp,LOCATION_MZONE,0,1,e:GetHandler())
+	return Duel.GetAttacker():IsControler(1-tp) and Duel.IsExistingMatchingCard(c700000031.cfilter,tp,LOCATION_MZONE,0,1,e:GetHandler())
 end
 function c700000031.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,400) end

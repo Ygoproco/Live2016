@@ -58,7 +58,7 @@ function c511000275.initial_effect(c)
 	c:RegisterEffect(e6)
 end
 function c511000275.accon(e,tp,eg,ep,ev,re,r,rp)
-	return ep~=tp and Duel.GetFieldGroupCount(e:GetHandler():GetControler(),LOCATION_ONFIELD,0)==0
+	return ep~=tp and Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)==0
 end
 function c511000275.actg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end	
@@ -75,7 +75,7 @@ function c511000275.rcon(e,tp,eg,ep,ev,re,r,rp)
 	and re:GetHandler():IsSetCard(0x1FF)
 end
 function c511000275.numcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFieldGroupCount(e:GetHandler():GetControler(),LOCATION_ONFIELD,0)==1
+	return Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)==1
 end
 function c511000275.tgfilter(c,e,tp,eg,ep,ev,re,r,rp)
 	local te=c:GetActivateEffect()
@@ -97,6 +97,7 @@ function c511000275.numtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 end
 function c511000275.numop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.RegisterFlagEffect(tp,511001666,RESET_CHAIN,0,1)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(tp,c511000275.tgfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()

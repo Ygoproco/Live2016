@@ -22,7 +22,7 @@ function c511001721.activate(e,tp,eg,ep,ev,re,r,rp)
 		local g=Duel.GetOperatedGroup()
 		local tc=g:GetFirst()
 		while tc do
-			if Duel.GetLocationCount(p,LOCATION_MZONE)>0 and tc:IsSetCard(0xe3) 
+			if Duel.GetLocationCount(p,LOCATION_MZONE)>0 and tc:IsSetCard(0xe6) 
 				and tc:IsCanBeSpecialSummoned(e,0,p,false,false) then
 				Duel.SpecialSummonStep(tc,0,p,p,false,false,POS_FACEUP)
 				local e1=Effect.CreateEffect(e:GetHandler())

@@ -12,7 +12,7 @@ function c511000694.initial_effect(c)
 	--Double Atk
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_EQUIP)
-	e2:SetCode(EFFECT_SET_BASE_ATTACK)
+	e2:SetCode(EFFECT_SET_ATTACK)
 	e2:SetValue(c511000694.atkval)
 	c:RegisterEffect(e2)
 	--Destroy on Draw

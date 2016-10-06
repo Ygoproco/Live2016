@@ -19,5 +19,5 @@ function c511001722.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e1,tp)
 end
 function c511001722.filter(e,c)
-	return c:IsSetCard(0xe3)
+	return c:IsSetCard(0xe6)
 end

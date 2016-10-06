@@ -32,8 +32,8 @@ function c511001701.initial_effect(c)
 end
 function c511001701.scon(e,tp,eg,ep,ev,re,r,rp)
 	local mg=e:GetHandler():GetMaterial()
-	return tp==Duel.GetTurnPlayer() and mg:GetCount()>0 and mg:IsExists(Card.IsCode,1,nil,511001700) and mg:IsExists(Card.IsCode,1,nil,511001696) 
-		and mg:IsExists(Card.IsCode,1,nil,511001699) and mg:IsExists(Card.IsCode,1,nil,511001694)
+	return tp==Duel.GetTurnPlayer() and mg:GetCount()>0 and mg:IsExists(Card.IsCode,1,nil,89818984) and mg:IsExists(Card.IsCode,1,nil,16024176) 
+		and mg:IsExists(Card.IsCode,1,nil,43413875) and mg:IsExists(Card.IsCode,1,nil,16802689)
 end
 function c511001701.sop(e,tp,eg,ep,ev,re,r,rp)
 	local dt=Duel.GetDrawCount(tp)
@@ -52,8 +52,8 @@ function c511001701.sop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511001701.drcon(e,tp,eg,ep,ev,re,r,rp)
 	local mg=e:GetHandler():GetMaterial()
-	return ep==tp and mg:GetCount()>0 and mg:IsExists(Card.IsCode,1,nil,511001700) and mg:IsExists(Card.IsCode,1,nil,511001696) 
-		and mg:IsExists(Card.IsCode,1,nil,511001699) and mg:IsExists(Card.IsCode,1,nil,511001694)
+	return ep==tp and mg:GetCount()>0 and mg:IsExists(Card.IsCode,1,nil,89818984) and mg:IsExists(Card.IsCode,1,nil,16024176) 
+		and mg:IsExists(Card.IsCode,1,nil,43413875) and mg:IsExists(Card.IsCode,1,nil,16802689)
 end
 function c511001701.drop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -75,8 +75,8 @@ function c511001701.drop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511001701.damcon(e,tp,eg,ep,ev,re,r,rp)
 	local mg=e:GetHandler():GetMaterial()
-	return ep~=tp and mg:GetCount()>0 and mg:IsExists(Card.IsCode,1,nil,511001700) and mg:IsExists(Card.IsCode,1,nil,511001696) 
-		and mg:IsExists(Card.IsCode,1,nil,511001699) and mg:IsExists(Card.IsCode,1,nil,511001694)
+	return ep~=tp and mg:GetCount()>0 and mg:IsExists(Card.IsCode,1,nil,89818984) and mg:IsExists(Card.IsCode,1,nil,16024176) 
+		and mg:IsExists(Card.IsCode,1,nil,43413875) and mg:IsExists(Card.IsCode,1,nil,16802689)
 end
 function c511001701.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Damage(1-tp,1500,REASON_EFFECT)
