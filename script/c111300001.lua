@@ -12,6 +12,17 @@ function c111300001.initial_effect(c)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetOperation(c111300001.preatkop)
 	c:RegisterEffect(e2)
+	local f=Card.GetReasonCard
+	Card.GetReasonCard=function(c)
+		if c:GetFlagEffect(111300001)>0 then
+			local a=Duel.GetAttacker()
+			local d=Duel.GetAttackTarget()
+			if a==c then return d end
+			if d==c then return a end
+			return nil
+		end
+		return f(c)
+	end
 end
 function c111300001.preatkop(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
@@ -45,4 +56,6 @@ function c111300001.op(e,tp,eg,ep,ev,re,r,rp)
 	end
 	bc:SetStatus(STATUS_BATTLE_DESTROYED,true)
 	Duel.RaiseEvent(c,EVENT_BATTLE_DESTROYING,e,REASON_BATTLE,c:GetControler(),c:GetControler(),0)
+	c:RegisterFlagEffect(111300001,RESET_PHASE+PHASE_DAMAGE,0,0)
+	bc:RegisterFlagEffect(111300001,RESET_PHASE+PHASE_DAMAGE,0,0)
 end

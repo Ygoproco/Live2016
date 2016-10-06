@@ -66,7 +66,7 @@ function c7557.exop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetDecktopGroup(tp,5)
 	if g:IsExists(c7557.exfil,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(7557,1)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local sg=g:FilterSelect(c7557.exfil,tp,1,1,nil)
+		local sg=g:Filter(c7557.exfil,nil):Select(tp,1,1,nil)
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,sg)
 		g:RemoveCard(sg:GetFirst())

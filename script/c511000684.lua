@@ -17,18 +17,19 @@ function c511000684.initial_effect(c)
 end
 function c511000684.condition(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
-	return tc:IsControler(tp) and tc:IsType(TYPE_XYZ) and tc:IsChainAttackable()
+	return tc:IsControler(tp) and tc:IsType(TYPE_XYZ)
 end
 function c511000684.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return eg:GetFirst():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	eg:GetFirst():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function c511000684.operation(e,tp,eg,ep,ev,re,r,rp)
+	local tc=eg:GetFirst()
+	local ct=tc:GetEffectCount(EFFECT_EXTRA_ATTACK)
 	local e2=Effect.CreateEffect(e:GetHandler())
 	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	e2:SetCode(EFFECT_EXTRA_ATTACK)
-	e2:SetValue(1)
-	e2:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
-	eg:GetFirst():RegisterEffect(e2)
+	e2:SetValue(ct+1)
+	e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+	tc:RegisterEffect(e2)
 end

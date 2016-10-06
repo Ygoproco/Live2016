@@ -30,7 +30,7 @@ function c511001704.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c511001704.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0xe3) and c:IsType(TYPE_SYNCHRO)
+	return c:IsFaceup() and c:IsSetCard(0xe6) and c:IsType(TYPE_SYNCHRO)
 end
 function c511001704.ofilter(c)
 	return c:GetSummonLocation()==LOCATION_HAND

@@ -54,7 +54,7 @@ function c511001485.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511001485.atcon(e,tp,eg,ep,ev,re,r,rp)
 	local eq=e:GetHandler():GetEquipTarget()
-	return eq:IsRelateToBattle() and Duel.GetAttacker()==eq and eq:GetAttack()>=500 and eq:IsChainAttackable()
+	return eq:IsRelateToBattle() and Duel.GetAttacker()==eq and eq:GetAttack()>=500
 end
 function c511001485.atcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -72,18 +72,5 @@ end
 function c511001485.atop(e,tp,eg,ep,ev,re,r,rp)
 	local eq=e:GetHandler():GetEquipTarget()
 	if not eq:IsRelateToBattle() then return end
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-	e1:SetCode(EFFECT_EXTRA_ATTACK)
-	e1:SetValue(1)
-	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_BATTLE)
-	eq:RegisterEffect(e1)
-	local e2=Effect.CreateEffect(e:GetHandler())
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e2:SetCode(EVENT_ATTACK_ANNOUNCE)
-	e2:SetLabelObject(e1)
-	e2:SetOperation(aux.atrst)
-	e2:SetReset(RESET_PHASE+PHASE_BATTLE)
-	Duel.RegisterEffect(e2,tp)
+	Duel.ChainAttack()
 end

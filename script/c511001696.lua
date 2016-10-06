@@ -12,6 +12,16 @@ function c511001696.initial_effect(c)
 	e1:SetOperation(c511001696.spop)
 	c:RegisterEffect(e1)
 	c511001696.spe=e1
+	if not c511001696.global_check then
+		c511001696.global_check=true
+		local ge2=Effect.CreateEffect(c)
+		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge2:SetCode(EVENT_ADJUST)
+		ge2:SetCountLimit(1)
+		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
+		ge2:SetOperation(c511001696.cardchk)
+		Duel.RegisterEffect(ge2,0)
+	end
 end
 function c511001696.spcon(c,e)
 	if c==nil or not e then return false end
@@ -22,8 +32,8 @@ end
 function c511001696.filter(c)
 	local re=c:GetReasonEffect()
 	local spchk=bit.band(c:GetSummonType(),SUMMON_TYPE_SPECIAL)
-	return c:GetLevel()==1 and c:IsSetCard(0xe3)
-		and (spchk==0 or (spchk~=0 and (not re or not re:GetHandler():IsSetCard(0xe3) or not re:GetHandler():IsType(TYPE_MONSTER))))
+	return c:GetLevel()==1 and c:IsSetCard(0xe6)
+		and (spchk==0 or (spchk~=0 and (not re or not re:GetHandler():IsSetCard(0xe6) or not re:GetHandler():IsType(TYPE_MONSTER))))
 end
 function c511001696.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckReleaseGroup(tp,c511001696.filter,1,nil) end
@@ -46,11 +56,15 @@ function c511001696.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Draw(tp,1,REASON_EFFECT)
 		if tc then
 			Duel.ConfirmCards(1-tp,tc)
-			if not tc:IsSetCard(0xe3) or not tc.spcon(tc,tc.spe) then
+			if not tc:IsSetCard(0xe6) or not tc.spcon or not tc.spcon(tc,tc.spe) then
 				Duel.BreakEffect()
 				Duel.SendtoGrave(tc,REASON_EFFECT)
 			end
 			Duel.ShuffleHand(tp)
 		end
 	end
+end
+function c511001696.cardchk(e,tp,eg,ep,ev,re,r,rp)
+	Duel.CreateToken(tp,419)
+	Duel.CreateToken(1-tp,419)
 end
