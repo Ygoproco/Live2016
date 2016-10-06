@@ -15,16 +15,16 @@ end
 function c511009011.addct2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() end
 	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x109,1,REASON_EFFECT)
-		and Duel.IsExistingTarget(Card.IsCanAddCounter,tp,LOCATION_MZONE,LOCATION_MZONE,1,e:GetHandler(),0x109,1) end
+		and Duel.IsExistingTarget(Card.IsCanAddCounter,tp,LOCATION_MZONE,LOCATION_MZONE,1,e:GetHandler(),0x1109,1) end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(98162021,1))
-	Duel.SelectTarget(tp,Card.IsCanAddCounter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,e:GetHandler(),0x109,1)
+	Duel.SelectTarget(tp,Card.IsCanAddCounter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,e:GetHandler(),0x1109,1)
 end
 function c511009011.addc2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:GetCounter(0x109)==0 then return end
-	c:RemoveCounter(tp,0x109,1,REASON_EFFECT)
+	if c:GetCounter(0x1109)==0 then return end
+	c:RemoveCounter(tp,0x1109,1,REASON_EFFECT)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsFaceup() and tc:IsRelateToEffect(e) then
-		tc:AddCounter(0x109,1)
+		tc:AddCounter(0x1109,1)
 	end
 end

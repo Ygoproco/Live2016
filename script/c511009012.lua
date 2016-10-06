@@ -14,7 +14,7 @@ end
 
 function c511009012.damcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local ct=c:GetCounter(0x109)
+	local ct=c:GetCounter(0x1109)
 	e:SetLabel(ct)
 	return ct>0 and c:IsLocation(LOCATION_GRAVE)
 end
@@ -25,6 +25,6 @@ function c511009012.damop(e,tp,eg,ep,ev,re,r,rp)
 	for i=1,ct do
 		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(83604828,1))
 		local tc=g:Select(tp,1,1,nil):GetFirst()
-		tc:AddCounter(0x109,1)
+		tc:AddCounter(0x1109,1)
 	end
 end

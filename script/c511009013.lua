@@ -21,18 +21,18 @@ function c511009013.initial_effect(c)
 	c:RegisterEffect(e6)
 end
 function c511009013.atkval(e,c)
-	return c:GetCounter(0x109)*300
+	return c:GetCounter(0x1109)*300
 end
 function c511009013.addop2(e,tp,eg,ep,ev,re,r,rp)
 	local count=0
 	local c=eg:GetFirst()
 	while c~=nil do
 		if c:IsPreviousLocation(LOCATION_ONFIELD) and c:IsReason(REASON_DESTROY) and c:GetReasonCard()==e:GetHandler() then
-			count=count+c:GetCounter(0x109)
+			count=count+c:GetCounter(0x1109)
 		end
 		c=eg:GetNext()
 	end
 	if count>0 then
-		e:GetHandler():AddCounter(0x109,count)
+		e:GetHandler():AddCounter(0x1109,count)
 	end
 end
