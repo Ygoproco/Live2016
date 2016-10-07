@@ -94,7 +94,7 @@ function c7610.descon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsReason(REASON_DESTROY)
 end
 function c7610.destg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetmatchingGroup(card.IsDestructable,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	local g=Duel.GetmatchingGroup(Card.IsDestructable,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	if chk==0 then return g:GetCount()>0 end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
