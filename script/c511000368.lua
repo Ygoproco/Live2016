@@ -52,7 +52,7 @@ function c511000368.initial_effect(c)
 	e6:SetOperation(c511000368.posop)
 	c:RegisterEffect(e6)
 	--Activate
-	local e8=Effect.CreateEffect(c) 
+	local e8=Effect.CreateEffect(c)	
 	e8:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e8:SetCode(EVENT_PRE_BATTLE_DAMAGE)
 	e8:SetOperation(c511000368.dam)
@@ -70,6 +70,12 @@ function c511000368.initial_effect(c)
 	e7:SetTarget(c511000368.rectg)
 	e7:SetOperation(c511000368.recop)
 	c:RegisterEffect(e7)
+	--number generic effect
+	local e8=Effect.CreateEffect(c)
+	e8:SetType(EFFECT_TYPE_SINGLE)
+	e8:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e8:SetValue(c511000368.indes)
+	c:RegisterEffect(e8)
 	if not c511000368.global_check then
 		c511000368.global_check=true
 		local ge2=Effect.CreateEffect(c)
@@ -80,17 +86,8 @@ function c511000368.initial_effect(c)
 		ge2:SetOperation(c511000368.numchk)
 		Duel.RegisterEffect(ge2,0)
 	end
-	--number generic effect
-	local e8=Effect.CreateEffect(c)
-	e8:SetType(EFFECT_TYPE_SINGLE)
-	e8:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-	e8:SetValue(c511000368.indes)
-	c:RegisterEffect(e8)
 end
 c511000368.xyz_number=92
-function c511000368.indes(e,c)
-	return not c:IsSetCard(0x48)
-end
 function c511000368.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()~=tp
 end
@@ -183,4 +180,7 @@ end
 function c511000368.numchk(e,tp,eg,ep,ev,re,r,rp)
 	Duel.CreateToken(tp,97403510)
 	Duel.CreateToken(1-tp,97403510)
+end
+function c511000368.indes(e,c)
+	return not c:IsSetCard(0x48)
 end

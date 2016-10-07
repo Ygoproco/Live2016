@@ -22,6 +22,12 @@ function c511002749.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetTarget(c511002749.reptg)
 	c:RegisterEffect(e3)
+	--battle indestructable
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_SINGLE)
+	e4:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e4:SetValue(c511002749.indes)
+	c:RegisterEffect(e4)
 	if not c511002749.global_check then
 		c511002749.global_check=true
 		--register
@@ -32,22 +38,6 @@ function c511002749.initial_effect(c)
 		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
 		ge2:SetOperation(c511002749.numchk)
 		Duel.RegisterEffect(ge2,0)
-	end
-	--battle indestructable
-	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_SINGLE)
-	e4:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-	e4:SetValue(c511002749.indes)
-	c:RegisterEffect(e4)
-	if not c511002749.global_check then
-		c511002749.global_check=true
-		local ge3=Effect.CreateEffect(c)
-		ge3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge3:SetCode(EVENT_ADJUST)
-		ge3:SetCountLimit(1)
-		ge3:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge3:SetOperation(c511002749.numchk)
-		Duel.RegisterEffect(ge3,0)
 	end
 end
 c511002749.xyz_number=66

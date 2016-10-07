@@ -1,7 +1,7 @@
 --Number 38: Hope Harbinger Dragon Titanic Galaxy
 function c511001275.initial_effect(c)
 	--xyz summon
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_LIGHT),8,2)
+	aux.AddXyzProcedure(c,nil,8,2)
 	c:EnableReviveLimit()
 	--Negate
 	local e1=Effect.CreateEffect(c)
@@ -156,4 +156,8 @@ function c511001275.atkop2(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511001275.indes(e,c)
 	return not c:IsSetCard(0x48)
+end
+function c511001275.numchk(e,tp,eg,ep,ev,re,r,rp)
+	Duel.CreateToken(tp,63767246)
+	Duel.CreateToken(1-tp,63767246)
 end

@@ -19,14 +19,13 @@ function c511000369.initial_effect(c)
 	e2:SetCategory(CATEGORY_ATKCHANGE)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e2:SetCode(EVENT_BATTLE_START)
-	e2:SetProperty(EFFECT_FLAG_REPEAT)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetOperation(c511000369.atkop)
 	c:RegisterEffect(e2)
 	--destroy and return
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(511000369,1))
-	e3:SetCategory(CATEGORY_DESTROY+CATEGORY_TODECK)
+	e3:SetCategory(CATEGORY_DESTROY)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e3:SetCode(EVENT_DESTROYED)
@@ -60,6 +59,11 @@ function c511000369.initial_effect(c)
 		Duel.RegisterEffect(ge2,0)
 	end
 end
+c511000369.xyz_number=100
+function c511000369.numchk(e,tp,eg,ep,ev,re,r,rp)
+	Duel.CreateToken(tp,57314798)
+	Duel.CreateToken(1-tp,57314798)
+end
 function c511000369.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local at=Duel.GetAttacker()
 	return at:GetControler()~=tp and at:IsType(TYPE_XYZ) and Duel.GetAttackTarget()==nil and Duel.GetFieldGroupCount(tp,LOCATION_HAND+LOCATION_ONFIELD,0)==0
@@ -88,22 +92,25 @@ function c511000369.atkop(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e1)
 	end
 end
-function c511000369.retfilter(c)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToDeck() 
+function c511000369.retfilter(c,tid)
+	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsReason(REASON_DESTROY) and c:GetTurnID()==tid and c:IsPreviousLocation(LOCATION_ONFIELD)
 end
 function c511000369.destg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDestructable,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) 
-	or Duel.IsExistingMatchingCard(c511000369.retfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
-	local sg1=Duel.GetMatchingGroup(Card.IsDestructable,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg1,sg1:GetCount(),0,0)
-	local sg2=Duel.GetMatchingGroup(c511000369.retfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,sg2,sg2:GetCount(),0,0)
+	if chk==0 then return true end
+	local sg=Duel.GetMatchingGroup(Card.IsDestructable,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,sg:GetCount(),0,0)
 end
 function c511000369.desop(e,tp,eg,ep,ev,re,r,rp)
 	local sg1=Duel.GetMatchingGroup(Card.IsDestructable,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	Duel.Destroy(sg1,REASON_EFFECT)
-	local sg2=Duel.GetMatchingGroup(c511000369.retfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
-	Duel.SendtoDeck(sg2,nil,2,REASON_EFFECT)
+	local tid=Duel.GetTurnCount()
+	local sg2=Duel.GetMatchingGroup(c511000369.retfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_GRAVE+LOCATION_REMOVED,nil,Duel.GetTurnCount())
+	local tc=sg2:GetFirst()
+	while tc do
+		Duel.MoveToField(tc,tp,tc:GetPreviousControler(),tc:GetPreviousLocation(),tc:GetPreviousPosition(),true)
+		tc=sg2:GetNext()
+	end
+	Duel.SpecialSummonComplete()
 end
 function c511000369.regcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
@@ -111,23 +118,20 @@ function c511000369.regcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511000369.regop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(511000369,3))
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(EVENT_PHASE_START+PHASE_BATTLE)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetCountLimit(1)
-	e1:SetCondition(c511000369.atkupcon)
-	e1:SetOperation(c511000369.atkupop)
-	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-	c:RegisterEffect(e1)
-end
-function c511000369.atkupcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()==tp and Duel.GetCurrentPhase()==PHASE_BATTLE
+	if c:IsRelateToEffect(e) then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(EVENT_PHASE_START+PHASE_BATTLE_START)
+		e1:SetRange(LOCATION_MZONE)
+		e1:SetCountLimit(1)
+		e1:SetOperation(c511000369.atkupop)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		c:RegisterEffect(e1)
+	end
 end
 function c511000369.atkupop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local g=Duel.GetMatchingGroup(Card.IsFaceup,c:GetControler(),LOCATION_MZONE,LOCATION_MZONE,nil)
+	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	local atk=g:GetSum(Card.GetRank)*1000
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
