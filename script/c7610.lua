@@ -26,8 +26,8 @@ function c7610.initial_effect(c)
 	--
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(7610,1))
-	e3:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON+CATEGORY_REMOVE)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e3:SetCode(EVENT_TO_GRAVE)
 	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e3:SetCondition(c7610.descon)
@@ -94,24 +94,24 @@ function c7610.descon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsReason(REASON_DESTROY)
 end
 function c7610.destg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetmatchingGroup(Card.IsDestructable,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	if chk==0 then return g:GetCount()>0 end
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
+	if chk==0 then return true end
+	local dg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,dg,dg:GetCount(),0,0)
 end
 function c7610.cfil(c)
 	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsLevelAbove(8) and c:IsAbleToRemove()
 end
 function c7610.desop(e,tp,eg,ep,ev,re,r,rp)
+	local dg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	Duel.Destroy(dg,REASON_EFFECT)
 	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
-	local g=Duel.GetMatchingGroup(Card.IsDestructable,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	local rg=Duel.GetMatchingGroup(c7610.cfil,tp,LOCATION_GRAVE,0,c)
-	if Duel.Destroy(g,REASON_EFFECT)>0 and rg:GetCount()>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	local g=Duel.GetMatchingGroup(c7610.cfil,tp,LOCATION_GRAVE,0,c)
+	if g:GetCount()>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.SelectYesNo(tp,aux.Stringid(7610,2)) then
+		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local sg=rg:Select(tp,1,1,nil)
-		if Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)>0 then
-			Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
-		end
+		local rg=g:Select(tp,1,1,nil)
+		Duel.Remove(rg,POS_FACEUP,REASON_EFFECT)
+		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
