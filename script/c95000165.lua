@@ -27,7 +27,15 @@ function c95000165.initial_effect(c)
 	e6:SetCode(EFFECT_IMMUNE_EFFECT)
 	e6:SetValue(c95000165.ctcon2)
 	c:RegisterEffect(e6)
-	
+	--cannot set
+	local e7=Effect.CreateEffect(c)
+	e7:SetType(EFFECT_TYPE_FIELD)
+	e7:SetCode(EFFECT_CANNOT_SSET)
+	e7:SetRange(LOCATION_SZONE)
+	e7:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e7:SetTargetRange(1,0)
+	e7:SetTarget(c95000166.sfilter)
+	c:RegisterEffect(e7)
 	-- Add Action Card
 	local e8=Effect.CreateEffect(c)
 	e8:SetDescription(aux.Stringid(95000165,0))
@@ -38,7 +46,33 @@ function c95000165.initial_effect(c)
 	e8:SetTarget(c95000165.Acttarget)
 	e8:SetOperation(c95000165.operation)
 	c:RegisterEffect(e8)
-	
+	--cost change
+	local e9=Effect.CreateEffect(c)
+	e9:SetType(EFFECT_TYPE_FIELD)
+	e9:SetCode(EFFECT_LPCOST_CHANGE)
+	e9:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e9:SetRange(LOCATION_FZONE)
+	e9:SetTargetRange(1,1)
+	e9:SetCondition(c95000165.costchange)
+	c:RegisterEffect(e9)
+	--search
+	local e10=Effect.CreateEffect(c)
+	e10:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e10:SetRange(LOCATION_FZONE)
+	e10:SetCode(EVENT_TO_GRAVE)
+	e10:SetOperation(c95000165.regop)
+	e10:SetCondition(c95000165.IRLcondition)
+	c:RegisterEffect(e10)
+	local e11=Effect.CreateEffect(c)
+	e11:SetDescription(aux.Stringid(94585852,0))
+	e11:SetCategory(CATEGORY_TOHAND)
+	e11:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e11:SetProperty(EFFECT_FLAG_EVENT_PLAYER+EFFECT_FLAG_DAMAGE_STEP)
+	e11:SetCode(95000165)
+	e11:SetTarget(c95000165.target)
+	e11:SetCondition(c95000165.IRLcondition)
+	e11:SetOperation(c95000165.operation)
+	c:RegisterEffect(e11)
 	--
 	local eb=Effect.CreateEffect(c)
 	eb:SetType(EFFECT_TYPE_FIELD)
@@ -57,33 +91,7 @@ function c95000165.initial_effect(c)
 	ee:SetCode(EFFECT_CANNOT_REMOVE)
 	c:RegisterEffect(ee)
 	
-	--cost change
-	local e6=Effect.CreateEffect(c)
-	e6:SetType(EFFECT_TYPE_FIELD)
-	e6:SetCode(EFFECT_LPCOST_CHANGE)
-	e6:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e6:SetRange(LOCATION_FZONE)
-	e6:SetTargetRange(1,1)
-	e6:SetCondition(c95000165.costchange)
-	c:RegisterEffect(e6)
-	--search
-	local e7=Effect.CreateEffect(c)
-	e7:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e7:SetRange(LOCATION_FZONE)
-	e7:SetCode(EVENT_TO_GRAVE)
-	e7:SetOperation(c95000165.regop)
-	e7:SetCondition(c95000165.IRLcondition)
-	c:RegisterEffect(e7)
-	local e8=Effect.CreateEffect(c)
-	e8:SetDescription(aux.Stringid(94585852,0))
-	e8:SetCategory(CATEGORY_TOHAND)
-	e8:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e8:SetProperty(EFFECT_FLAG_EVENT_PLAYER+EFFECT_FLAG_DAMAGE_STEP)
-	e8:SetCode(95000165)
-	e8:SetTarget(c95000165.target)
-	e8:SetCondition(c95000165.IRLcondition)
-	e8:SetOperation(c95000165.operation)
-	c:RegisterEffect(e8)
+	
 end
 function c95000165.ctcon2(e,re)
 	return re:GetHandler()~=e:GetHandler()
@@ -136,11 +144,8 @@ function c95000165.op(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 
-function c95000165.aclimit(e,re)
-	return re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_SPELL) and re:GetHandler():IsType(TYPE_FIELD)
-end
-function c95000165.aclimit2(e,c)
-	return c:IsType(TYPE_FIELD)
+function c95000166.sfilter(e,c,tp)
+	return c:IsType(TYPE_FIELD) 
 end
 function c95000165.tgn(e,c)
 	return c==e:GetHandler()
@@ -167,7 +172,6 @@ ac=math.random(1,#tableAction)
 e:SetLabel(tableAction[ac])
 end
 function c95000165.operation(e,tp,eg,ep,ev,re,r,rp)
-if Duel.SelectYesNo(1-tp,aux.Stringid(95000165,0)) then
 local dc=Duel.TossDice(tp,1)
 if dc==2 or dc==4 or dc==6 then
 
@@ -188,7 +192,6 @@ if dc==5 or dc==6 then
 
 end
 
-end
 end
 function c95000165.condition(e,tp,eg,ep,ev,re,r,rp)
 	return not Duel.IsExistingMatchingCard(c95000165.cfilter,tp,LOCATION_SZONE+LOCATION_HAND,0,1,nil)
@@ -244,6 +247,16 @@ function c95000165.returnop(e)
 	e1:SetOperation(c95000165.operation)
 	e1:SetReset(RESET_EVENT+0x1fe0000)
 	fc:RegisterEffect(e1)
+	--cannot set
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_CANNOT_SSET)
+	e4:SetRange(LOCATION_SZONE)
+	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e4:SetTargetRange(1,0)
+	e4:SetReset(RESET_EVENT+0x1fe0000)
+	e4:SetTarget(c95000166.sfilter)
+	fc:RegisterEffect(e4)
 	fc:RegisterFlagEffect(195000165,RESET_EVENT+0x1fe0000,0,1)
 	end
 end

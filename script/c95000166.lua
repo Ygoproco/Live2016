@@ -27,7 +27,15 @@ function c95000166.initial_effect(c)
 	e6:SetCode(EFFECT_IMMUNE_EFFECT)
 	e6:SetValue(c95000166.ctcon2)
 	c:RegisterEffect(e6)
-	
+	--cannot set
+	local e7=Effect.CreateEffect(c)
+	e7:SetType(EFFECT_TYPE_FIELD)
+	e7:SetCode(EFFECT_CANNOT_SSET)
+	e7:SetRange(LOCATION_SZONE)
+	e7:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e7:SetTargetRange(1,0)
+	e7:SetTarget(c95000166.sfilter)
+	c:RegisterEffect(e7)
 	-- Add Action Card
 	local e8=Effect.CreateEffect(c)
 	e8:SetDescription(aux.Stringid(95000166,0))
@@ -38,7 +46,44 @@ function c95000166.initial_effect(c)
 	e8:SetTarget(c95000166.Acttarget)
 	e8:SetOperation(c95000166.operation)
 	c:RegisterEffect(e8)
-	
+	--to defence
+	local e9=Effect.CreateEffect(c)
+	e9:SetDescription(aux.Stringid(32391631,0))
+	e9:SetCategory(CATEGORY_RECOVER)
+	e9:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e9:SetCode(EVENT_DAMAGE_STEP_END)
+	e9:SetRange(LOCATION_SZONE)
+	e9:SetTarget(c95000166.rectg)
+	e9:SetCondition(c95000166.IRLcondition)
+	e9:SetOperation(c95000166.recop)
+	c:RegisterEffect(e9)
+	--must attack
+	local e10=Effect.CreateEffect(c)
+	e10:SetType(EFFECT_TYPE_FIELD)
+	e10:SetCode(EFFECT_MUST_ATTACK)
+	e10:SetRange(LOCATION_SZONE)
+	e10:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+	c:RegisterEffect(e10)
+	local e11=Effect.CreateEffect(c)
+	e11:SetType(EFFECT_TYPE_FIELD)
+	e11:SetCode(EFFECT_CANNOT_EP)
+	e11:SetRange(LOCATION_SZONE)
+	e11:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e11:SetTargetRange(1,1)
+	e11:SetCondition(c95000166.becon)
+	c:RegisterEffect(e11)
+	--destroy
+	local e12=Effect.CreateEffect(c)
+	e12:SetDescription(aux.Stringid(32391631,1))
+	e12:SetCategory(CATEGORY_DESTROY)
+	e12:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e12:SetRange(LOCATION_SZONE)
+	e12:SetCountLimit(1)
+	e12:SetCode(EVENT_PHASE+PHASE_END)
+	e12:SetTarget(c95000166.destg)
+	e12:SetCondition(c95000166.IRLcondition)
+	e12:SetOperation(c95000166.desop)
+	c:RegisterEffect(e12)
 	--
 	local eb=Effect.CreateEffect(c)
 	eb:SetType(EFFECT_TYPE_FIELD)
@@ -57,44 +102,7 @@ function c95000166.initial_effect(c)
 	ee:SetCode(EFFECT_CANNOT_REMOVE)
 	c:RegisterEffect(ee)
 	
-	--to defence
-	local e6=Effect.CreateEffect(c)
-	e6:SetDescription(aux.Stringid(32391631,0))
-	e6:SetCategory(CATEGORY_RECOVER)
-	e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e6:SetCode(EVENT_DAMAGE_STEP_END)
-	e6:SetRange(LOCATION_SZONE)
-	e6:SetTarget(c95000166.rectg)
-	e9:SetCondition(c95000166.IRLcondition)
-	e6:SetOperation(c95000166.recop)
-	c:RegisterEffect(e6)
-	--must attack
-	local e7=Effect.CreateEffect(c)
-	e7:SetType(EFFECT_TYPE_FIELD)
-	e7:SetCode(EFFECT_MUST_ATTACK)
-	e7:SetRange(LOCATION_SZONE)
-	e7:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
-	c:RegisterEffect(e7)
-	local e8=Effect.CreateEffect(c)
-	e8:SetType(EFFECT_TYPE_FIELD)
-	e8:SetCode(EFFECT_CANNOT_EP)
-	e8:SetRange(LOCATION_SZONE)
-	e8:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e8:SetTargetRange(1,1)
-	e8:SetCondition(c95000166.becon)
-	c:RegisterEffect(e8)
-	--destroy
-	local e9=Effect.CreateEffect(c)
-	e9:SetDescription(aux.Stringid(32391631,1))
-	e9:SetCategory(CATEGORY_DESTROY)
-	e9:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e9:SetRange(LOCATION_SZONE)
-	e9:SetCountLimit(1)
-	e9:SetCode(EVENT_PHASE+PHASE_END)
-	e9:SetTarget(c95000166.destg)
-	e9:SetCondition(c95000166.IRLcondition)
-	e9:SetOperation(c95000166.desop)
-	c:RegisterEffect(e9)
+	
 	if not c95000166.global_check then
 		c95000166.global_check=true
 		local ge1=Effect.CreateEffect(c)
@@ -160,11 +168,8 @@ function c95000166.op(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 
-function c95000166.aclimit(e,re)
-	return re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_SPELL) and re:GetHandler():IsType(TYPE_FIELD)
-end
-function c95000166.aclimit2(e,c)
-	return c:IsType(TYPE_FIELD)
+function c95000166.sfilter(e,c,tp)
+	return c:IsType(TYPE_FIELD) 
 end
 function c95000166.tgn(e,c)
 	return c==e:GetHandler()
@@ -191,7 +196,6 @@ ac=math.random(1,#tableAction)
 e:SetLabel(tableAction[ac])
 end
 function c95000166.operation(e,tp,eg,ep,ev,re,r,rp)
-if Duel.SelectYesNo(1-tp,aux.Stringid(95000166,0)) then
 local dc=Duel.TossDice(tp,1)
 if dc==2 or dc==4 or dc==6 then
 
@@ -212,7 +216,6 @@ if dc==5 or dc==6 then
 
 end
 
-end
 end
 function c95000166.condition(e,tp,eg,ep,ev,re,r,rp)
 	return not Duel.IsExistingMatchingCard(c95000166.cfilter,tp,LOCATION_SZONE+LOCATION_HAND,0,1,nil)
@@ -268,6 +271,16 @@ function c95000166.returnop(e)
 	e1:SetOperation(c95000166.operation)
 	e1:SetReset(RESET_EVENT+0x1fe0000)
 	fc:RegisterEffect(e1)
+	--cannot set
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_CANNOT_SSET)
+	e4:SetRange(LOCATION_SZONE)
+	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e4:SetTargetRange(1,0)
+	e4:SetReset(RESET_EVENT+0x1fe0000)
+	e4:SetTarget(c95000166.sfilter)
+	fc:RegisterEffect(e4)
 	fc:RegisterFlagEffect(195000166,RESET_EVENT+0x1fe0000,0,1)
 	end
 end

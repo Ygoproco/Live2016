@@ -27,7 +27,15 @@ function c95000167.initial_effect(c)
 	e6:SetCode(EFFECT_IMMUNE_EFFECT)
 	e6:SetValue(c95000167.ctcon2)
 	c:RegisterEffect(e6)
-	
+	--cannot set
+	local e7=Effect.CreateEffect(c)
+	e7:SetType(EFFECT_TYPE_FIELD)
+	e7:SetCode(EFFECT_CANNOT_SSET)
+	e7:SetRange(LOCATION_SZONE)
+	e7:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e7:SetTargetRange(1,0)
+	e7:SetTarget(c95000167.sfilter)
+	c:RegisterEffect(e7)
 	-- Add Action Card
 	local e8=Effect.CreateEffect(c)
 	e8:SetDescription(aux.Stringid(95000167,0))
@@ -38,7 +46,35 @@ function c95000167.initial_effect(c)
 	e8:SetTarget(c95000167.Acttarget)
 	e8:SetOperation(c95000167.operation)
 	c:RegisterEffect(e8)
-	
+	--atkup
+	local e9=Effect.CreateEffect(c)
+	e9:SetType(EFFECT_TYPE_FIELD)
+	e9:SetCode(EFFECT_UPDATE_ATTACK)
+	e9:SetRange(LOCATION_SZONE)
+	e9:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+	e9:SetTarget(aux.TargetBoolFunction(Card.IsRace,RACE_FIEND))
+	e9:SetValue(150)
+	c:RegisterEffect(e9)
+	--defup
+	local e10=Effect.CreateEffect(c)
+	e10:SetType(EFFECT_TYPE_FIELD)
+	e10:SetCode(EFFECT_UPDATE_DEFENCE)
+	e10:SetRange(LOCATION_SZONE)
+	e10:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+	e10:SetTarget(aux.TargetBoolFunction(Card.IsRace,RACE_FIEND))
+	e10:SetValue(150)
+	c:RegisterEffect(e10)
+	--discard & draw
+	local e11=Effect.CreateEffect(c)
+	e11:SetCategory(CATEGORY_HANDES+CATEGORY_DRAW)
+	e11:SetDescription(aux.Stringid(33017655,1))
+	e11:SetType(EFFECT_TYPE_IGNITION)
+	e11:SetRange(LOCATION_SZONE)
+	e11:SetCountLimit(1)
+	e11:SetCost(c95000167.cost)
+	e11:SetTarget(c95000167.target)
+	e11:SetOperation(c95000167.operation)
+	c:RegisterEffect(e11)
 	--
 	local eb=Effect.CreateEffect(c)
 	eb:SetType(EFFECT_TYPE_FIELD)
@@ -57,35 +93,7 @@ function c95000167.initial_effect(c)
 	ee:SetCode(EFFECT_CANNOT_REMOVE)
 	c:RegisterEffect(ee)
 	
-		--atkup
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_UPDATE_ATTACK)
-	e2:SetRange(LOCATION_SZONE)
-	e2:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
-	e2:SetTarget(aux.TargetBoolFunction(Card.IsRace,RACE_FIEND))
-	e2:SetValue(150)
-	c:RegisterEffect(e2)
-	--defup
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_FIELD)
-	e3:SetCode(EFFECT_UPDATE_DEFENSE)
-	e3:SetRange(LOCATION_SZONE)
-	e3:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
-	e3:SetTarget(aux.TargetBoolFunction(Card.IsRace,RACE_FIEND))
-	e3:SetValue(150)
-	c:RegisterEffect(e3)
-	--discard & draw
-	local e4=Effect.CreateEffect(c)
-	e4:SetCategory(CATEGORY_HANDES+CATEGORY_DRAW)
-	e4:SetDescription(aux.Stringid(33017655,1))
-	e4:SetType(EFFECT_TYPE_IGNITION)
-	e4:SetRange(LOCATION_SZONE)
-	e4:SetCountLimit(1)
-	e4:SetCost(c95000167.cost)
-	e4:SetTarget(c95000167.target)
-	e4:SetOperation(c95000167.operation)
-	c:RegisterEffect(e4)
+
 end
 function c95000167.ctcon2(e,re)
 	return re:GetHandler()~=e:GetHandler()
@@ -137,12 +145,8 @@ function c95000167.op(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.Draw(tp,1,REASON_RULE)
 	end
 end
-
-function c95000167.aclimit(e,re)
-	return re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_SPELL) and re:GetHandler():IsType(TYPE_FIELD)
-end
-function c95000167.aclimit2(e,c)
-	return c:IsType(TYPE_FIELD)
+function c95000167.sfilter(e,c,tp)
+	return c:IsType(TYPE_FIELD) 
 end
 function c95000167.tgn(e,c)
 	return c==e:GetHandler()
@@ -169,7 +173,6 @@ ac=math.random(1,#tableAction)
 e:SetLabel(tableAction[ac])
 end
 function c95000167.operation(e,tp,eg,ep,ev,re,r,rp)
-if Duel.SelectYesNo(1-tp,aux.Stringid(95000167,0)) then
 local dc=Duel.TossDice(tp,1)
 if dc==2 or dc==4 or dc==6 then
 
@@ -187,8 +190,6 @@ if dc==5 or dc==6 then
 		  local token=Duel.CreateToken(1-tp,e:GetLabel())
 		Duel.SendtoHand(token,nil,REASON_EFFECT)
 		end
-
-end
 
 end
 end
@@ -240,6 +241,16 @@ function c95000167.returnop(e)
 	e1:SetOperation(c95000167.operation)
 	e1:SetReset(RESET_EVENT+0x1fe0000)
 	fc:RegisterEffect(e1)
+	--cannot set
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_CANNOT_SSET)
+	e4:SetRange(LOCATION_SZONE)
+	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e4:SetTargetRange(1,0)
+	e4:SetTarget(c95000167.sfilter)
+	e4:SetReset(RESET_EVENT+0x1fe0000)
+	fc:RegisterEffect(e4)
 	fc:RegisterFlagEffect(195000167,RESET_EVENT+0x1fe0000,0,1)
 	end
 end
