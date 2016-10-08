@@ -1,7 +1,7 @@
 --霊魂鳥－巫鶴
 --Espirit Bird - Kannaki Tsuru
 --Scripted by Eerie Code
-function c7523.initial_effect(c)
+function c66815913.initial_effect(c)
 	--spirit return
 	aux.EnableSpiritReturn(c,EVENT_SUMMON_SUCCESS,EVENT_FLIP)
 	--cannot special summon
@@ -17,31 +17,31 @@ function c7523.initial_effect(c)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
 	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e2:SetCountLimit(1)
-	e2:SetDescription(aux.Stringid(7523,0))
+	e2:SetDescription(aux.Stringid(66815913,0))
 	e2:SetCategory(CATEGORY_DRAW)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetCondition(c7523.drcon)
-	e2:SetTarget(c7523.drtg)
-	e2:SetOperation(c7523.drop)
+	e2:SetCondition(c66815913.drcon)
+	e2:SetTarget(c66815913.drtg)
+	e2:SetOperation(c66815913.drop)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e3)
 end
 
-function c7523.drfil(c)
+function c66815913.drfil(c)
 	return c:IsFaceup() and c:IsType(TYPE_SPIRIT)
 end
-function c7523.drcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg and eg:IsExists(c7523.drfil,1,e:GetHandler())
+function c66815913.drcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg and eg:IsExists(c66815913.drfil,1,e:GetHandler())
 end
-function c7523.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c66815913.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
 	Duel.SetTargetPlayer(tp)
 	Duel.SetTargetParam(1)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
-function c7523.drop(e,tp,eg,ep,ev,re,r,rp)
+function c66815913.drop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(p,d,REASON_EFFECT)
 end
