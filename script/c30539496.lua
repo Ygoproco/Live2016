@@ -72,7 +72,7 @@ function c30539496.spop(e,tp,eg,ep,ev,re,r,rp)
 			return
 		end
 		--Banish from Extra
-		local rg=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_EXTRA,nil)
+		local rg=Duel.GetFieldGroup(tp,0,LOCATION_EXTRA)
 		if rm and rg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(30539496,0)) then
 			local count=3
 			local stop=false
