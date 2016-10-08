@@ -1,4 +1,4 @@
---Action Card - High-Speed Dribble
+--Action Card - Rocket Spike
 function c95000118.initial_effect(c)
 	--spsummon
 	local e1=Effect.CreateEffect(c)

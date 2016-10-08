@@ -108,11 +108,8 @@ function c95000053.op(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 
-function c95000053.aclimit(e,re)
-	return re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_SPELL) and re:GetHandler():IsType(TYPE_FIELD)
-end
-function c95000053.aclimit2(e,c)
-	return c:IsType(TYPE_FIELD)
+function c95000053.sfilter(e,c,tp)
+	return c:IsType(TYPE_FIELD) 
 end
 function c95000053.tgn(e,c)
 	return c==e:GetHandler()
@@ -139,7 +136,6 @@ ac=math.random(1,#tableAction)
 e:SetLabel(tableAction[ac])
 end
 function c95000053.operation(e,tp,eg,ep,ev,re,r,rp)
-if Duel.SelectYesNo(1-tp,aux.Stringid(95000053,0)) then
 local dc=Duel.TossDice(tp,1)
 if dc==2 or dc==4 or dc==6 then
 
@@ -160,7 +156,6 @@ if dc==5 or dc==6 then
 
 end
 
-end
 end
 function c95000053.condition(e,tp,eg,ep,ev,re,r,rp)
 	return not Duel.IsExistingMatchingCard(c95000053.cfilter,tp,LOCATION_SZONE+LOCATION_HAND,0,1,nil)

@@ -1,4 +1,4 @@
---Action Card - High Dive
+--Action Card - Spicy Spice
 function c95000137.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
