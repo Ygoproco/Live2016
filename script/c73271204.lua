@@ -67,9 +67,9 @@ function c73271204.exop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetDecktopGroup(tp,5)
 	if g:GetCount()>0 then
 		Duel.DisableShuffleCheck()
-		if g:IsExists(c73271204.milfilter,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(73271204,3)) then
+		if g:IsExists(c73271204.exfil,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(73271204,3)) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-			local sg=g:FilterSelect(tp,c73271204.milfilter,1,1,nil)
+			local sg=g:FilterSelect(tp,c73271204.exfil,1,1,nil)
 			Duel.SendtoHand(sg,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,sg)
 			Duel.ShuffleHand(tp)

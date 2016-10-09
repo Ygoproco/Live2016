@@ -62,7 +62,7 @@ function c7487.thop2(e,tp,eg,ep,ev,re,r,rp)
 	local g2=Duel.SelectMatchingCard(tp,c7487.thfil3,tp,LOCATION_DECK,0,1,1,nil)
 	g1:Merge(g2)
 	if g1:GetCount()==2 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
+		Duel.SendtoHand(g1,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,g1)
 	end
 end
