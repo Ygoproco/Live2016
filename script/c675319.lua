@@ -14,7 +14,7 @@ function c675319.initial_effect(c)
 	e2:SetRange(LOCATION_FZONE)
 	e2:SetTargetRange(LOCATION_MZONE,0)
 	e2:SetValue(300)
-	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0xf2))
+	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0xf1))
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
 	e3:SetCode(EFFECT_UPDATE_DEFENSE)
@@ -47,7 +47,7 @@ end
 
 function c675319.repfilter(c,tp,e)
 	return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_MZONE)
-		and c:IsSetCard(0xf2) and c:IsReason(REASON_EFFECT) and c:GetFlagEffect(675319)==0
+		and c:IsSetCard(0xf1) and c:IsReason(REASON_EFFECT) and c:GetFlagEffect(675319)==0
 end
 function c675319.desfilter(c,tp)
 	return c:IsControler(tp) and c:IsLocation(LOCATION_MZONE+LOCATION_HAND)

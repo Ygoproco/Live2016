@@ -30,7 +30,7 @@ function c11510448.initial_effect(c)
 end
 
 function c11510448.ovfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0xf2) and not c:IsCode(11510448)
+	return c:IsFaceup() and c:IsSetCard(0xf1) and not c:IsCode(11510448)
 end
 function c11510448.xyzop(e,tp,chk)
   if chk==0 then return Duel.GetFlagEffect(tp,11510448)==0 end
@@ -38,7 +38,7 @@ function c11510448.xyzop(e,tp,chk)
 end
 
 function c11510448.adfil(c)
-	return c:IsSetCard(0xf2) and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(0xf1) and c:IsType(TYPE_MONSTER)
 end
 function c11510448.atkval(e,c)
 	return c:GetOverlayGroup():Filter(c11510448.adfil,nil):Filter(Card.IsAttackAbove,nil,1):GetSum(Card.GetAttack)
@@ -55,7 +55,7 @@ function c11510448.tgfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_XYZ)
 end
 function c11510448.mfilter(c)
-	return c:IsSetCard(0xf2) and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(0xf1) and c:IsType(TYPE_MONSTER)
 end
 function c11510448.mattg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end

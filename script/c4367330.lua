@@ -28,7 +28,7 @@ function c4367330.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0
 end
 function c4367330.thfilter(c)
-	return c:IsSetCard(0xf2) and not c:IsCode(4367330) and c:IsAbleToHand()
+	return c:IsSetCard(0xf1) and not c:IsCode(4367330) and c:IsAbleToHand()
 end
 function c4367330.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c4367330.thfilter(chkc) end

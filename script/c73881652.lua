@@ -25,10 +25,10 @@ function c73881652.initial_effect(c)
 end
 
 function c73881652.xyzfil(c)
-	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsSetCard(0xf2)
+	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsSetCard(0xf1)
 end
 function c73881652.xyzfil2(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xf2)
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0xf1)
 end
 function c73881652.xyztg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c73881652.xyzfil(chkc) end
@@ -49,7 +49,7 @@ function c73881652.xyzop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c73881652.tdfil(c)
-	return c:IsSetCard(0xf2) and c:IsAbleToDeck()
+	return c:IsSetCard(0xf1) and c:IsAbleToDeck()
 end
 function c73881652.tdtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
