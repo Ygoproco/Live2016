@@ -47,7 +47,7 @@ function c78942513.activate(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetRange(LOCATION_MZONE)
 		e3:SetCountLimit(1)
 		e3:SetOperation(c78942513.posop)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		e3:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e3)
 	end
 end
