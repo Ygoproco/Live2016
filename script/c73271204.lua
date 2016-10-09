@@ -4,6 +4,7 @@
 function c73271204.initial_effect(c)
 	--
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(73271204,0))
 	e1:SetCategory(CATEGORY_TOHAND)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -13,6 +14,7 @@ function c73271204.initial_effect(c)
 	c:RegisterEffect(e1)
 	--
 	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(73271204,1))
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_TO_GRAVE)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
@@ -39,7 +41,7 @@ function c73271204.op(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) and Duel.SendtoHand(tc,nil,REASON_EFFECT)>0 then
 		local g=Duel.GetMatchingGroup(c73271204.spfil,tp,LOCATION_HAND,0,nil,e,tp)
-		if g:GetCount()>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SelectYesNo(tp,aux.Stringid(73271204,0)) then
+		if g:GetCount()>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SelectYesNo(tp,aux.Stringid(73271204,2)) then
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 			local sg=g:Select(tp,1,1,nil)
@@ -60,16 +62,19 @@ function c73271204.extg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>=5 end
 end
 function c73271204.exop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.ShuffleDeck(tp)
-	Duel.BreakEffect()
+	if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<5 then return end
 	Duel.ConfirmDecktop(tp,5)
 	local g=Duel.GetDecktopGroup(tp,5)
-	if g:IsExists(c73271204.exfil,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(73271204,1)) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local sg=g:Filter(c73271204.exfil,nil):Select(tp,1,1,nil)
-		Duel.SendtoHand(sg,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,sg)
-		g:RemoveCard(sg:GetFirst())
+	if g:GetCount()>0 then
+		Duel.DisableShuffleCheck()
+		if g:IsExists(c73271204.milfilter,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(73271204,3)) then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+			local sg=g:FilterSelect(tp,c73271204.milfilter,1,1,nil)
+			Duel.SendtoHand(sg,nil,REASON_EFFECT)
+			Duel.ConfirmCards(1-tp,sg)
+			Duel.ShuffleHand(tp)
+			g:Sub(sg)
+		end
+		Duel.SortDecktop(tp,tp,g:GetCount())
 	end
-	Duel.SortDecktop(tp,tp,g:GetCount())
 end
