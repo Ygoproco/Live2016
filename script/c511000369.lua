@@ -100,11 +100,18 @@ function c511000369.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local sg=Duel.GetMatchingGroup(Card.IsDestructable,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,sg:GetCount(),0,0)
 end
+function c511000369.tpfilter(c,tp)
+	return c:GetPreviousControler()==tp
+end
 function c511000369.desop(e,tp,eg,ep,ev,re,r,rp)
 	local sg1=Duel.GetMatchingGroup(Card.IsDestructable,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	Duel.Destroy(sg1,REASON_EFFECT)
 	local tid=Duel.GetTurnCount()
 	local sg2=Duel.GetMatchingGroup(c511000369.retfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_GRAVE+LOCATION_REMOVED,nil,Duel.GetTurnCount())
+	if sg2:IsExists(Card.IsPreviousLocation,1,nil,LOCATION_MZONE)
+	local g1=sg2:Filter(c511000369.tpfilter,nil,tp)
+	local g2=sg2:Filter(c511000369.tpfilter,nil,1-tp)
+	if g1:GetCount()>Duel.GetLocationCount(tp,LOCATION_SZONE) or g2:GetCount()>Duel.GetLocationCount(1-tp,LOCATION_SZONE) then return end
 	local tc=sg2:GetFirst()
 	while tc do
 		Duel.MoveToField(tc,tp,tc:GetPreviousControler(),tc:GetPreviousLocation(),tc:GetPreviousPosition(),true)
