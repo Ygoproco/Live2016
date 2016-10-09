@@ -35,7 +35,7 @@ function c74393852.initial_effect(c)
 end
 
 function c74393852.ovfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0xf2) and not c:IsCode(74393852)
+	return c:IsFaceup() and c:IsSetCard(0xf1) and not c:IsCode(74393852)
 end
 function c74393852.xyzop(e,tp,chk)
   if chk==0 then return Duel.GetFlagEffect(tp,74393852)==0 end
@@ -43,7 +43,7 @@ function c74393852.xyzop(e,tp,chk)
 end
 
 function c74393852.adfil(c)
-	return c:IsSetCard(0xf2) and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(0xf1) and c:IsType(TYPE_MONSTER)
 end
 function c74393852.atkval(e,c)
 	return c:GetOverlayGroup():Filter(c74393852.adfil,nil):Filter(Card.IsAttackAbove,nil,1):GetSum(Card.GetAttack)

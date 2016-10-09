@@ -27,7 +27,7 @@ function c77150143.initial_effect(c)
 end
 
 function c77150143.filter(c)
-	return c:IsSetCard(0xf2)
+	return c:IsSetCard(0xf1)
 end
 function c77150143.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1)
