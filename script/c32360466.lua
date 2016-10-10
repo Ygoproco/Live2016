@@ -33,12 +33,13 @@ function c32360466.op(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.SelectMatchingCard(tp,c32360466.fil,tp,LOCATION_DECK,0,2,2,bgc)
 	sg:AddCard(bgc)
 	Duel.ConfirmCards(1-tp,sg)
-	Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_CONFIRM)
+	Duel.ShuffleDeck(tp)
 	local tg=sg:Select(1-tp,1,1,nil)
-	if tg:IsExists(c32360466.bgfil,1,nil) then
-		Duel.SendtoHand(tg,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,tg)
-		sg:RemoveCard(tg:GetFirst())
+	local tc=tg:GetFirst()
+	Duel.Hint(HINT_CARD,0,tc:GetCode())
+	if c32360466.bgfil(tc) and tc:IsAbleToHand() then
+		Duel.SendtoHand(tc,nil,REASON_EFFECT)
+		sg:RemoveCard(tc)
 	end
 	Duel.SendtoGrave(sg,REASON_EFFECT)
 end
