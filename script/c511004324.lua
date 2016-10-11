@@ -1,6 +1,7 @@
---闇にしたがう者 a.k.a Sectarian of Secrets (DOR)
+--Sectarian of Secrets (DOR)
+--scripted by GameMaster (GM)
 function c511004324.initial_effect(c)
-	--destroyed eff --> 
+	-- lose 300 atk/def when destroyed
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(511004324,1))
 	e2:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DEFCHANGE)
@@ -21,6 +22,9 @@ function c511004324.desop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetReset(RESET_EVENT+0x1fe0000)
 	e1:SetValue(-300)
 	tc:RegisterEffect(e1)
+	local e2=e1:Clone()
+	e2:SetCode(EFFECT_UPDATE_DEFENSE)
+	tc:RegisterEffect(e2)
 end
 
 
