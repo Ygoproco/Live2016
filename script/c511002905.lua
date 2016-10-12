@@ -15,7 +15,7 @@ function c511002905.condition(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(Card.IsControler,1,nil,tp) and Duel.GetTurnPlayer()==tp
 end
 function c511002905.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local ct=Duel.GetCounter(tp,1,0,0x1107)
+	local ct=Duel.GetCounter(tp,1,0,0x107)
 	if chk==0 then return ct>0 end
 	Duel.SetTargetPlayer(1-tp)
 	Duel.SetTargetParam(ct*800)
@@ -23,5 +23,5 @@ function c511002905.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511002905.activate(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	Duel.Damage(p,Duel.GetCounter(tp,1,0,0x1107)*800,REASON_EFFECT)
+	Duel.Damage(p,Duel.GetCounter(tp,1,0,0x107)*800,REASON_EFFECT)
 end

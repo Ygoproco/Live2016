@@ -1,6 +1,6 @@
 --Automatic Gearspring Machine
 function c511002904.initial_effect(c)
-	c:EnableCounterPermit(0x1107)
+	c:EnableCounterPermit(0x107)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_COUNTER)
@@ -31,13 +31,13 @@ function c511002904.initial_effect(c)
 end
 function c511002904.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,2,0,0x1107)
+	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,2,0,0x107)
 end
 function c511002904.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
-		c:AddCounter(0x1107,2)
-		Duel.RaiseEvent(c,511002905,e,REASON_EFFECT,tp,tp,0x1107)
+		c:AddCounter(0x107,2)
+		Duel.RaiseEvent(c,511002905,e,REASON_EFFECT,tp,tp,0x107)
 	end
 end
 function c511002904.ctcon(e,tp,eg,ep,ev,re,r,rp)
@@ -45,32 +45,32 @@ function c511002904.ctcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511002904.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	c:AddCounter(0x1107,1)
+	c:AddCounter(0x107,1)
 	Duel.RaiseSingleEvent(c,511002905,e,0,0,tp,0)
 end
 function c511002904.plcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() end
-	e:SetLabel(e:GetHandler():GetCounter(0x1107))
+	e:SetLabel(e:GetHandler():GetCounter(0x107))
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST)
 end
 function c511002904.pltg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local c=e:GetHandler()
-		local ct=c:GetCounter(0x1107)
-		return ct>0 and Duel.IsExistingMatchingCard(Card.IsCanAddCounter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,c,0x1107,ct)
+		local ct=c:GetCounter(0x107)
+		return ct>0 and Duel.IsExistingMatchingCard(Card.IsCanAddCounter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,c,0x107,ct)
 	end
 	Duel.SetTargetParam(e:GetLabel())
 	e:SetLabel(0)
-	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,ct,0,0x1107)
+	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,ct,0,0x107)
 end
 function c511002904.plop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(73853830,1))
-	local g=Duel.SelectMatchingCard(tp,Card.IsCanAddCounter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil,0x1107,ct)
+	local g=Duel.SelectMatchingCard(tp,Card.IsCanAddCounter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil,0x107,ct)
 	local tc=g:GetFirst()
 	if tc then
 		Duel.HintSelection(g)
-		tc:AddCounter(0x1107,ct)
-		Duel.RaiseEvent(tc,511002905,e,REASON_EFFECT,tp,tp,0x1107)
+		tc:AddCounter(0x107,ct)
+		Duel.RaiseEvent(tc,511002905,e,REASON_EFFECT,tp,tp,0x107)
 	end
 end
