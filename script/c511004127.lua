@@ -90,11 +90,11 @@ end
 function c511004127.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) then
-		tc:AddCounter(0x104,1)
+		tc:AddCounter(0x1104,1)
 	end
 end
 function c511004127.cfilter(c,tp)
-	return c:GetControler()~=tp and c:IsFaceup() and c:IsControlerCanBeChanged() and c:GetCounter(0x104)>0
+	return c:GetControler()~=tp and c:IsFaceup() and c:IsControlerCanBeChanged() and c:GetCounter(0x1104)>0
 end
 function c511004127.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and chkc:IsControlerCanBeChanged() end
