@@ -27,7 +27,15 @@ function c95000109.initial_effect(c)
 	e6:SetCode(EFFECT_IMMUNE_EFFECT)
 	e6:SetValue(c95000109.ctcon2)
 	c:RegisterEffect(e6)
-	
+	--cannot set
+	local e7=Effect.CreateEffect(c)
+	e7:SetType(EFFECT_TYPE_FIELD)
+	e7:SetCode(EFFECT_CANNOT_SSET)
+	e7:SetRange(LOCATION_SZONE)
+	e7:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e7:SetTargetRange(1,0)
+	e7:SetTarget(c95000109.sfilter)
+	c:RegisterEffect(e7)
 	-- Add Action Card
 	local e8=Effect.CreateEffect(c)
 	e8:SetDescription(aux.Stringid(95000109,0))
@@ -41,30 +49,30 @@ function c95000109.initial_effect(c)
 
 
 --Activate
-	local e6=Effect.CreateEffect(c)
-	e6:SetDescription(aux.Stringid(3701074,0))
-	e6:SetCategory(CATEGORY_DESTROY)
-	e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e6:SetRange(LOCATION_SZONE)
-	e6:SetCode(EVENT_SUMMON_SUCCESS)
-	e6:SetCondition(c95000109.sumcondition)
-	e6:SetTarget(c95000109.target)
-	e6:SetOperation(c95000109.activate)
-	c:RegisterEffect(e6)
+	local e9=Effect.CreateEffect(c)
+	e9:SetDescription(aux.Stringid(3701074,0))
+	e9:SetCategory(CATEGORY_DESTROY)
+	e9:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e9:SetRange(LOCATION_SZONE)
+	e9:SetCode(EVENT_SUMMON_SUCCESS)
+	e9:SetCondition(c95000109.sumcondition)
+	e9:SetTarget(c95000109.target)
+	e9:SetOperation(c95000109.activate)
+	c:RegisterEffect(e9)
 	
 	--atk/def
-	local e7=Effect.CreateEffect(c)
-	e7:SetType(EFFECT_TYPE_FIELD)
-	e7:SetCode(EFFECT_UPDATE_ATTACK)
-	e7:SetRange(LOCATION_SZONE)
-	e7:SetCondition(c95000050.Fcond)
-	e7:SetTarget(aux.TargetBoolFunction(Card.IsRace,RACE_WINDBEAST))
-	e7:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
-	e7:SetValue(100)
-	c:RegisterEffect(e7)
-	local e8=e7:Clone()
-	e8:SetCode(EFFECT_UPDATE_DEFENSE)
-	c:RegisterEffect(e8)
+	local e10=Effect.CreateEffect(c)
+	e10:SetType(EFFECT_TYPE_FIELD)
+	e10:SetCode(EFFECT_UPDATE_ATTACK)
+	e10:SetRange(LOCATION_SZONE)
+	e10:SetCondition(c95000109.Fcond)
+	e10:SetTarget(aux.TargetBoolFunction(Card.IsRace,RACE_WINDBEAST))
+	e10:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+	e10:SetValue(100)
+	c:RegisterEffect(e10)
+	local e11=e10:Clone()
+	e11:SetCode(EFFECT_UPDATE_DEFENCE)
+	c:RegisterEffect(e11)
 	
 	--
 	local eb=Effect.CreateEffect(c)
@@ -135,11 +143,8 @@ function c95000109.op(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 
-function c95000109.aclimit(e,re)
-	return re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_SPELL) and re:GetHandler():IsType(TYPE_FIELD)
-end
-function c95000109.aclimit2(e,c)
-	return c:IsType(TYPE_FIELD)
+function c95000109.sfilter(e,c,tp)
+	return c:IsType(TYPE_FIELD) 
 end
 function c95000109.tgn(e,c)
 	return c==e:GetHandler()
@@ -166,7 +171,6 @@ ac=math.random(1,#tableAction)
 e:SetLabel(tableAction[ac])
 end
 function c95000109.operation(e,tp,eg,ep,ev,re,r,rp)
-if Duel.SelectYesNo(1-tp,aux.Stringid(95000109,0)) then
 local dc=Duel.TossDice(tp,1)
 if dc==2 or dc==4 or dc==6 then
 
@@ -187,7 +191,6 @@ if dc==5 or dc==6 then
 
 end
 
-end
 end
 function c95000109.condition(e,tp,eg,ep,ev,re,r,rp)
 	return not Duel.IsExistingMatchingCard(c95000109.cfilter,tp,LOCATION_SZONE+LOCATION_HAND,0,1,nil)
@@ -237,6 +240,17 @@ function c95000109.returnop(e)
 	e1:SetOperation(c95000109.operation)
 	e1:SetReset(RESET_EVENT+0x1fe0000)
 	fc:RegisterEffect(e1)
+	
+		--cannot set
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_CANNOT_SSET)
+	e4:SetRange(LOCATION_SZONE)
+	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e4:SetTargetRange(1,0)
+	e4:SetTarget(c95000109.sfilter)
+	e4:SetReset(RESET_EVENT+0x1fe0000)
+	fc:RegisterEffect(e4)
 	fc:RegisterFlagEffect(195000109,RESET_EVENT+0x1fe0000,0,1)
 	end
 end
@@ -261,7 +275,7 @@ function c95000109.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
-function c95000050.Fcond(e)
+function c95000109.Fcond(e)
 	local f1=Duel.GetFieldCard(0,LOCATION_SZONE,5)
 	local f2=Duel.GetFieldCard(1,LOCATION_SZONE,5)
 	return (f1:GetFlagEffect(95000109)==0) and (f2:GetFlagEffect(95000109)==0)

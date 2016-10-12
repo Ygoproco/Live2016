@@ -1,4 +1,4 @@
---Action Card - Damaga Vanish
+--Action Card -  Battle Change
 function c95000132.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -30,7 +30,7 @@ function c95000132.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e1,tp)
 end
 function c95000132.condition(e,tp,eg,ep,ev,re,r,rp)
-	return tp~=Duel.GetTurnPlayer()	
+	return tp~=Duel.GetTurnPlayer()	and Duel.GetAttacker():GetFlagEffect(95000132)==0
 end
 function c95000132.operation(e,tp,eg,ep,ev,re,r,rp)
 	local ats=eg:GetFirst():GetAttackableTarget()
@@ -42,5 +42,6 @@ function c95000132.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_CARD,0,95000132)
 		Duel.HintSelection(g)
 		Duel.ChangeAttackTarget(g:GetFirst())
+		Duel.GetAttacker():RegisterFlagEffect(95000132,RESET_EVENT+0x1fe0000,0,1) 	
 	end
 end

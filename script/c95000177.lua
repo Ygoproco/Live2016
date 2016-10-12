@@ -35,7 +35,7 @@ function c95000177.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if op==0 then
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectTarget(tp,c95000177.filter,tp,0,LOCATION_GRAVE,1,1,nil)
-	elso
+	else
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 	end
 	e:SetLabel(op)

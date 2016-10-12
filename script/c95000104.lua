@@ -40,26 +40,26 @@ function c95000104.initial_effect(c)
 	c:RegisterEffect(e8)
 	
 	--atkup
-	local e6=Effect.CreateEffect(c)
-	e6:SetType(EFFECT_TYPE_FIELD)
-	e6:SetRange(LOCATION_SZONE)
-	e6:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
-	e6:SetCode(EFFECT_UPDATE_ATTACK)
-	e6:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x71))
-	e6:SetCondition(c95000104.Fcond)
-	e6:SetValue(250)
-	c:RegisterEffect(e6)
-	local e7=e6:Clone()
-	e7:SetCode(EFFECT_UPDATE_DEFENSE)
-	c:RegisterEffect(e7)
+	local e9=Effect.CreateEffect(c)
+	e9:SetType(EFFECT_TYPE_FIELD)
+	e9:SetRange(LOCATION_SZONE)
+	e9:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+	e9:SetCode(EFFECT_UPDATE_ATTACK)
+	e9:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x71))
+	e9:SetCondition(c95000104.Fcond)
+	e9:SetValue(250)
+	c:RegisterEffect(e9)
+	local e10=e9:Clone()
+	e10:SetCode(EFFECT_UPDATE_DEFENCE)
+	c:RegisterEffect(e10)
 	--destroy
-	local e8=Effect.CreateEffect(c)
-	e8:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e8:SetRange(LOCATION_SZONE)
-	e8:SetCode(EFFECT_SEND_REPLACE)
-	e8:SetTarget(c95000104.reptg)
-	e8:SetValue(c95000104.repval)
-	c:RegisterEffect(e8)
+	local e11=Effect.CreateEffect(c)
+	e11:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e11:SetRange(LOCATION_SZONE)
+	e11:SetCode(EFFECT_SEND_REPLACE)
+	e11:SetTarget(c95000104.reptg)
+	e11:SetValue(c95000104.repval)
+	c:RegisterEffect(e11)
 
 	--
 	local eb=Effect.CreateEffect(c)
@@ -130,11 +130,8 @@ function c95000104.op(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 
-function c95000104.aclimit(e,re)
-	return re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_SPELL) and re:GetHandler():IsType(TYPE_FIELD)
-end
-function c95000104.aclimit2(e,c)
-	return c:IsType(TYPE_FIELD)
+function c95000104.sfilter(e,c,tp)
+	return c:IsType(TYPE_FIELD) 
 end
 function c95000104.tgn(e,c)
 	return c==e:GetHandler()
@@ -161,7 +158,6 @@ ac=math.random(1,#tableAction)
 e:SetLabel(tableAction[ac])
 end
 function c95000104.operation(e,tp,eg,ep,ev,re,r,rp)
-if Duel.SelectYesNo(1-tp,aux.Stringid(95000104,0)) then
 local dc=Duel.TossDice(tp,1)
 if dc==2 or dc==4 or dc==6 then
 
@@ -182,7 +178,6 @@ if dc==5 or dc==6 then
 
 end
 
-end
 end
 function c95000104.condition(e,tp,eg,ep,ev,re,r,rp)
 	return not Duel.IsExistingMatchingCard(c95000104.cfilter,tp,LOCATION_SZONE+LOCATION_HAND,0,1,nil)
@@ -232,6 +227,15 @@ function c95000104.returnop(e)
 	e1:SetOperation(c95000104.operation)
 	e1:SetReset(RESET_EVENT+0x1fe0000)
 	fc:RegisterEffect(e1)
+	--cannot set
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_CANNOT_SSET)
+	e4:SetRange(LOCATION_SZONE)
+	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e4:SetTargetRange(1,0)
+	e4:SetTarget(c95000104.sfilter)
+	fc:RegisterEffect(e4)
 	fc:RegisterFlagEffect(195000104,RESET_EVENT+0x1fe0000,0,1)
 	end
 end

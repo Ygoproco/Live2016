@@ -1,4 +1,4 @@
---Action Card - High-Speed Dribble
+--Action Card - eam Performapal's Bonds
 function c95000117.initial_effect(c)
 	--spsummon
 	local e1=Effect.CreateEffect(c)

@@ -19,12 +19,9 @@ function c95000130.handcon(e)
 	return tp~=Duel.GetTurnPlayer()
 end
 
-function c95000130.filter(c)
-	return c:IsPosition(POS_FACEUP_ATTACK)
-end
 function c95000130.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c95000130.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
-	local g=Duel.GetMatchingGroup(c95000130.filter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAttackPos,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	local g=Duel.GetMatchingGroup(Card.IsAttackPos,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	Duel.SetOperationInfo(0,CATEGORY_POSITION,g,g:GetCount(),0,0)
 end
 function c95000130.activate(e,tp,eg,ep,ev,re,r,rp)
