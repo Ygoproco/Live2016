@@ -26,21 +26,11 @@ function c511001339.initial_effect(c)
 	e3:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 	e3:SetValue(c511001339.indes)
 	c:RegisterEffect(e3)
-	if not c511001339.global_check then
-		c511001339.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c511001339.numchk)
-		Duel.RegisterEffect(ge2,0)
-	end
 end
 c511001339.xyz_number=2
 function c511001339.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local a=e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST)
-	local b=Duel.GetAttacker():GetCounter(0x101)>0
+	local b=Duel.GetAttacker():GetCounter(0x1101)>0
 	if chk==0 then return a or b end
 	local op=0
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(76922029,0))
@@ -61,7 +51,7 @@ end
 function c511001339.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	if e:GetLabel()==0 then
-		Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,1,0,0x101)
+		Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,1,0,0x1101)
 	end
 end
 function c511001339.op(e,tp,eg,ep,ev,re,r,rp)
@@ -85,7 +75,7 @@ function c511001339.op(e,tp,eg,ep,ev,re,r,rp)
 		local g=Duel.SelectMatchingCard(tp,Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 		if g:GetCount()>0 then
 			Duel.HintSelection(g)
-			g:GetFirst():AddCounter(0x101,1)
+			g:GetFirst():AddCounter(0x1101,1)
 		end
 	else
 		local e2=Effect.CreateEffect(c)
@@ -101,7 +91,7 @@ function c511001339.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ChangeBattleDamage(tp,0)
 end
 function c511001339.distg(e,c)
-	return c:GetCounter(0x101)>0
+	return c:GetCounter(0x1101)>0
 end
 function c511001339.indes(e,c)
 	return not c:IsSetCard(0x48)

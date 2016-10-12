@@ -75,6 +75,10 @@ end
 function c511000184.dfilter(c,atk)
 	return c:IsFaceup() and c:IsDestructable() and c:GetAttack()<=atk
 end
+function c511000184.numchk(e,tp,eg,ep,ev,re,r,rp)
+	Duel.CreateToken(tp,21313376)
+	Duel.CreateToken(1-tp,21313376)
+end
 function c511000184.indes(e,c)
 	return not c:IsSetCard(0x48)
 end

@@ -33,22 +33,12 @@ function c511000277.initial_effect(c)
 	e3:SetTarget(c511000277.sptg)
 	e3:SetOperation(c511000277.spop)
 	c:RegisterEffect(e3)
-    --battle indestructable
+	--battle indestructable
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE)
 	e4:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 	e4:SetValue(c511000277.indes)
 	c:RegisterEffect(e4)
-	if not c511000277.global_check then
-		c511000277.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c511000277.numchk)
-		Duel.RegisterEffect(ge2,0)
-	end	
 end
 c511000277.xyz_number=1
 function c511000277.cfilter(c)
@@ -58,7 +48,7 @@ function c511000277.ovfilter(c)
 	return c:IsFaceup() and c:IsCode(511000230)
 end
 function c511000277.xyzop(e,tp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c511000276.filter,0,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(c511000277.cfilter,0,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
 		or Duel.IsEnvironment(511000275) end
 end
 function c511000277.descon(e)

@@ -155,3 +155,7 @@ end
 function c511001273.indes(e,c)
 	return not c:IsSetCard(0x48)
 end
+function c511001273.numchk(e,tp,eg,ep,ev,re,r,rp)
+	Duel.CreateToken(tp,37279508)
+	Duel.CreateToken(1-tp,37279508)
+end

@@ -1,4 +1,4 @@
---Number C43: High Manipulator of Chaos (anime)
+--CNo.43 魂魄傀儡鬼神カオス・マリオネッター
 function c511001777.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_DARK),3,4)
@@ -43,6 +43,12 @@ function c511001777.initial_effect(c)
 	e4:SetTarget(aux.TargetBoolFunction(Card.IsCode,32446631))
 	e4:SetValue(c511001777.atkval)
 	c:RegisterEffect(e4)
+	--battle indestructable
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_SINGLE)
+	e5:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e5:SetValue(c511001777.indes)
+	c:RegisterEffect(e5)
 	if not c511001777.global_check then
 		c511001777.global_check=true
 		local ge2=Effect.CreateEffect(c)
@@ -52,22 +58,6 @@ function c511001777.initial_effect(c)
 		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
 		ge2:SetOperation(c511001777.numchk)
 		Duel.RegisterEffect(ge2,0)
-	end
-	--battle indestructable
-	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_SINGLE)
-	e5:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-	e5:SetValue(c511001777.indes)
-	c:RegisterEffect(e5)
-	if not c511001777.global_check then
-		c511001777.global_check=true
-		local ge3=Effect.CreateEffect(c)
-		ge3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge3:SetCode(EVENT_ADJUST)
-		ge3:SetCountLimit(1)
-		ge3:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge3:SetOperation(c511001777.numchk)
-		Duel.RegisterEffect(ge3,0)
 	end
 end
 c511001777.xyz_number=43
@@ -100,7 +90,7 @@ function c511001777.spop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetReset(RESET_EVENT+0x1fe0000)
 	token:RegisterEffect(e1)
 	local e2=e1:Clone()
-	e2:SetCode(EFFECT_SET_DEFENCE)
+	e2:SetCode(EFFECT_SET_DEFENSE)
 	token:RegisterEffect(e2)
 	Duel.SpecialSummonComplete()
 end
