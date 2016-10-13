@@ -282,14 +282,14 @@ function scard.readd_op(e,tp,eg,ep,ev,re,r,rp)
 	if addok then e:Reset() return end
 	addok=true
 	Duel.DisableShuffleCheck()
-	--Players remove from each deck until card=40
+	--Players remove from each deck until card>=40 (optional)
 	local rg=Group.CreateGroup()
 	for p=0,1 do
 		Duel.ConfirmCards(p,Duel.GetFieldGroup(p,LOCATION_DECK+LOCATION_EXTRA,0))
-		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_REMOVE)
 		local num=Duel.GetFieldGroupCount(p,LOCATION_DECK,0)-40
-		if num>0 then
-			local g=Duel.GetFieldGroup(p,LOCATION_DECK,0):Select(p,num,num,nil)
+		if num>0 and Duel.SelectYesNo(p,aux.Stringid(4002,7)) then
+			Duel.Hint(HINT_SELECTMSG,p,HINTMSG_REMOVE)
+			local g=Duel.GetFieldGroup(p,LOCATION_DECK,0):Select(p,1,num,nil)
 			_prepSide(p,g)
 			rg:Merge(g)
 		end
