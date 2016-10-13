@@ -116,6 +116,7 @@ function c110000000.filter(c)
 	return c:GetCode()~=110000000
 end
 function c110000000.op(e,tp,eg,ep,ev,re,r,rp,chk)
+	if Duel.GetTurnCount()~=1 then return false end
 	local tc=Duel.GetFieldCard(tp,LOCATION_SZONE,5)
 	local tc2=Duel.GetFieldCard(1-tp,LOCATION_SZONE,5)	
 	if tc==nil then
