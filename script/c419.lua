@@ -12,7 +12,7 @@ function c419.initial_effect(c)
 		if not maxct then
 			mt.maxxyzct=ct
 		else
-			if maxct==5 then
+			if maxct==5 and code~=14306092 and code~=63504681 and code~=23776077 then
 				mt.maxxyzct=99
 			else
 				mt.maxxyzct=maxct
@@ -84,9 +84,8 @@ function c419.op1(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetValue(SUMMON_TYPE_SYNCHRO)
 			e1:SetCondition(c419.syncon)
 			e1:SetOperation(c419.synop)
-			e1:SetReset(RESET_EVENT+EVENT_ADJUST,1)
 			tc:RegisterEffect(e1)
-			tc:RegisterFlagEffect(2081,RESET_EVENT+EVENT_ADJUST,0,1) 	
+			tc:RegisterFlagEffect(2081,nil,0,1) 	
 		end
 		tc=g:GetNext()
 	end
@@ -204,9 +203,8 @@ function c419.op2(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetCondition(c419.xyzcon)
 			e1:SetOperation(c419.xyzop)
 			e1:SetLabelObject(xg)
-			e1:SetReset(RESET_EVENT+EVENT_ADJUST,1)
 			tc:RegisterEffect(e1)
-			tc:RegisterFlagEffect(419,RESET_EVENT+EVENT_ADJUST,0,1) 	
+			tc:RegisterFlagEffect(419,nil,0,1) 	
 		end
 		tc=g:GetNext()
 	end
@@ -339,9 +337,8 @@ function c419.op3(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetValue(SUMMON_TYPE_SYNCHRO)
 			e1:SetCondition(c419.syncon2)
 			e1:SetOperation(c419.synop2)
-			e1:SetReset(RESET_EVENT+EVENT_ADJUST,1)
 			tc:RegisterEffect(e1)
-			tc:RegisterFlagEffect(538,RESET_EVENT+EVENT_ADJUST,0,1) 	
+			tc:RegisterFlagEffect(538,nil,0,1) 	
 		end
 		tc=g:GetNext()
 	end
@@ -619,7 +616,7 @@ function c419.op3(e,tp,eg,ep,ev,re,r,rp)
 					end
 				end
 			end
-			tc:RegisterFlagEffect(227,RESET_EVENT+EVENT_ADJUST,0,1) 	
+			tc:RegisterFlagEffect(227,nil,0,1) 	
 		end
 		tc=g:GetNext()
 	end

@@ -1,4 +1,5 @@
 --Parasite Fusioner
+--created by MLD equip effect check fixed by CC
 function c511002961.initial_effect(c)
 	--Fusion monster, name + name
 	function aux.FConditionFilter21(c,code1,code2,sub)
@@ -978,6 +979,13 @@ function c511002961.initial_effect(c)
 	e9:SetValue(0x8)
 	e9:SetRange(LOCATION_MZONE)
 	c:RegisterEffect(e9)
+	--destroy sub
+	local e10=Effect.CreateEffect(c)
+	e10:SetType(EFFECT_TYPE_EQUIP)
+	e10:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+	e10:SetCode(EFFECT_DESTROY_SUBSTITUTE)
+	e10:SetValue(1)
+	c:RegisterEffect(e10)
 	if not c511002961.global_check then
 		c511002961.global_check=true
 		--FUSIONZ!!!
@@ -1307,15 +1315,9 @@ function c511002961.spop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(c511002961.eqlimit)
 		e1:SetLabelObject(tc)
 		c:RegisterEffect(e1)
-		local e2=Effect.CreateEffect(c)
-		e2:SetType(EFFECT_TYPE_EQUIP)
-		e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-		e2:SetCode(EFFECT_DESTROY_SUBSTITUTE)
-		e2:SetValue(1)
-		e2:SetReset(RESET_EVENT+0x1fe0000)
-		c:RegisterEffect(e2)
 	end
 end
 function c511002961.eqlimit(e,c)
 	return e:GetLabelObject()==c
 end
+

@@ -12,6 +12,7 @@ function c511002721.initial_effect(c)
 	e1:SetOperation(c511002721.atkop)
 	c:RegisterEffect(e1)
 end
+c511002721.miracle_synchro_fusion=true
 function c511002721.fusfilter1(c)
 	return c:IsSetCard(0x121f) and c:IsType(TYPE_FUSION)
 end

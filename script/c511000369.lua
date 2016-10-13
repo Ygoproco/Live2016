@@ -66,13 +66,12 @@ function c511000369.numchk(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511000369.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local at=Duel.GetAttacker()
-	return at:GetControler()~=tp and at:IsType(TYPE_XYZ) and Duel.GetAttackTarget()==nil and Duel.GetFieldGroupCount(tp,LOCATION_HAND+LOCATION_ONFIELD,0)==0
+	return at:GetControler()~=tp and at:IsType(TYPE_XYZ) and Duel.GetAttackTarget()==nil 
+		and Duel.GetFieldGroupCount(tp,LOCATION_HAND+LOCATION_ONFIELD,0)==0
 end
 function c511000369.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then
-		return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-	end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
 function c511000369.spop(e,tp,eg,ep,ev,re,r,rp)
@@ -108,7 +107,7 @@ function c511000369.desop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Destroy(sg1,REASON_EFFECT)
 	local tid=Duel.GetTurnCount()
 	local sg2=Duel.GetMatchingGroup(c511000369.retfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_GRAVE+LOCATION_REMOVED,nil,Duel.GetTurnCount())
-	if sg2:IsExists(Card.IsPreviousLocation,1,nil,LOCATION_MZONE)
+	if sg2:IsExists(Card.IsPreviousLocation,1,nil,LOCATION_MZONE) then return end
 	local g1=sg2:Filter(c511000369.tpfilter,nil,tp)
 	local g2=sg2:Filter(c511000369.tpfilter,nil,1-tp)
 	if g1:GetCount()>Duel.GetLocationCount(tp,LOCATION_SZONE) or g2:GetCount()>Duel.GetLocationCount(1-tp,LOCATION_SZONE) then return end
