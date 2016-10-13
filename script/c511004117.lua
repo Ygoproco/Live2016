@@ -58,14 +58,14 @@ function c511004117.operation(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		Duel.Equip(tp,c,tc)
 		Duel.BreakEffect()
-		tc:AddCounter(0x105,1)
+		tc:AddCounter(0x1108,1)
 		end	
 end
 function c511004117.stimfilter(e,te)
 	return te:IsActiveType(TYPE_SPELL+TYPE_TRAP+TYPE_MONSTER+TYPE_EFFECT) and c511004117.collection[te:GetCode()]
 end
 function c511004117.stimtg(e,c)
-	return c:IsType(TYPE_MONSTER) and c:GetCounter(0x105)>0
+	return c:IsType(TYPE_MONSTER) and c:GetCounter(0x1108)>0
 end
 function c511004117.retcon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
@@ -93,7 +93,7 @@ function c511004117.retop(e,tp,eg,ep,ev,re,r,rp)
 	if tc and tc:IsRelateToEffect(e) and (tc:IsReason(REASON_RELEASE) or tc:IsReason(REASON_FUSION)) and sc and sc:IsRelateToEffect(e) and sc:IsFaceup() and c and c:IsRelateToEffect(e) then
 		Duel.Equip(tp,c,sc)
 		Duel.BreakEffect()
-		sc:AddCounter(0x105,1)
+		sc:AddCounter(0x1108,1)
 		Duel.ConfirmCards(tc:GetPreviousControler(),tc)
 	end
 end
