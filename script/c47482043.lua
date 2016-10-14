@@ -6,7 +6,6 @@ function c47482043.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetHintTiming(0,TIMING_END_PHASE)
 	e1:SetTarget(c47482043.acttarget)
 	c:RegisterEffect(e1)
@@ -30,8 +29,8 @@ function c47482043.acttarget(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if c47482043.condition(e,tp,eg,ep,ev,re,r,rp) and c47482043.target(e,tp,eg,ep,ev,re,r,rp,0) and Duel.SelectYesNo(tp,94) then
 		e:SetCategory(CATEGORY_SPECIAL_SUMMON)
 		e:SetProperty(EFFECT_FLAG_CARD_TARGET)
-		e:SetOperation(c47482043.operation)
 		c47482043.target(e,tp,eg,ep,ev,re,r,rp,1)
+		e:SetOperation(c47482043.operation)
 	else
 		e:SetCategory(0)
 		e:SetProperty(0)
@@ -48,8 +47,8 @@ end
 function c47482043.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c47482043.filter(chkc,e,tp) end
 	if chk==0 then return Duel.IsExistingMatchingCard(c47482043.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp)
-		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.GetFlagEffect(tp,47482043)==0 end
-	Duel.RegisterFlagEffect(tp,47482043,RESET_PHASE+PHASE_END,0,1)
+		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and e:GetHandler():GetFlagEffect(47482043)==0 end
+	e:GetHandler():RegisterFlagEffect(47482043,RESET_PHASE+PHASE_END,0,1)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectTarget(tp,c47482043.filter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
