@@ -1,5 +1,6 @@
 --スピード・ワールド ２
 function c110000000.initial_effect(c)
+	--
 	c:EnableCounterPermit(0x91)
 	c:SetCounterLimit(0x91,12)
 	--Activate	
