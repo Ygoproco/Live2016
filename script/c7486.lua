@@ -51,7 +51,7 @@ function c7486.atkcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c7486.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=e:GetLabelObject()
-	if chk==0 then return tc:IsOnField() end
+	if chk==0 then return tc and tc:IsOnField() end
 	Duel.SetTargetCard(tc)
 end
 function c7486.atkop(e,tp,eg,ep,ev,re,r,rp)
