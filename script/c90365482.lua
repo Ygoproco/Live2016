@@ -27,7 +27,7 @@ function c90365482.initial_effect(c)
 end
 
 function c90365482.fil(c)
-	return c:IsFaceup() and not c:IsType(TYPE_SPIRIT)
+	return c:IsFaceup()
 end
 function c90365482.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c90365482.fil(chkc) end
