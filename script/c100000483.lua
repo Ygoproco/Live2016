@@ -28,6 +28,7 @@ end
 function c100000483.drop(e,tp,eg,ep,ev,re,r,rp)
 	local ft1=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft1<=0 then return end
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft1=1 end
 	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c100000483.filter,tp,LOCATION_GRAVE,0,ft1,ft1,nil,e,tp)

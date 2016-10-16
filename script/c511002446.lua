@@ -32,7 +32,8 @@ function c511002446.activate(e,tp,eg,ep,ev,re,r,rp)
 		local sg2=dg:Filter(c511002446.filter,nil,1-tp)
 		local sum1=sg1:GetSum(Card.GetAttack)/2
 		local sum2=sg2:GetSum(Card.GetAttack)/2
-		Duel.Damage(tp,sum1,REASON_EFFECT)
-		Duel.Damage(1-tp,sum2,REASON_EFFECT)
+		Duel.Damage(tp,sum1,REASON_EFFECT,true)
+		Duel.Damage(1-tp,sum2,REASON_EFFECT,true)
+		Duel.RDComplete()
 	end
 end

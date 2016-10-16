@@ -33,6 +33,7 @@ function c511001089.operation(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	if ft<=0 then return end
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
 	local fc=Duel.SelectMatchingCard(tp,c511001089.cfilter2,tp,LOCATION_SZONE,0,1,1,nil):GetFirst()
 	if fc:GetOverlayCount()<ft then ft=fc:GetOverlayCount() end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)

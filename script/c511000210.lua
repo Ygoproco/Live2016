@@ -30,6 +30,7 @@ function c511000210.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not tg or not tg:IsRelateToEffect(e) then return end
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft<=0 then return end
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
 	local sg=Duel.GetMatchingGroup(c511000210.spfilter,tp,0,LOCATION_DECK,nil,tg:GetAttribute(),e,tp)
 	if sg:GetCount()<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)

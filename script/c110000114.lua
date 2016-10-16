@@ -5,7 +5,6 @@ function c110000114.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_REMOVE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetCondition(c110000114.condition)
 	e1:SetTarget(c110000114.target)
 	e1:SetOperation(c110000114.operation)
 	c:RegisterEffect(e1)
@@ -23,6 +22,7 @@ end
 function c110000114.operation(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetDecktopGroup(tp,10)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
 	if g:FilterCount(Card.IsAbleToRemove,nil)~=10 then return end
 	Duel.DisableShuffleCheck()
 	Duel.ConfirmDecktop(tp,10)

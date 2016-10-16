@@ -55,6 +55,7 @@ end
 function c100000219.damop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local dam=Duel.GetMatchingGroupCount(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,nil)*300
-	Duel.Damage(tp,dam,REASON_EFFECT)
-	Duel.Damage(1-tp,dam,REASON_EFFECT)
+	Duel.Damage(tp,dam,REASON_EFFECT,true)
+	Duel.Damage(1-tp,dam,REASON_EFFECT,true)
+	Duel.RDComplete()
 end

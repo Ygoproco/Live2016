@@ -79,7 +79,8 @@ function c511002778.desop(e,tp,eg,ep,ev,re,r,rp)
 		end
 		if Duel.Destroy(sc,REASON_EFFECT)==0 then return end
 		local atk=sc:GetBaseAttack()
-		Duel.Damage(1-tp,atk,REASON_EFFECT)
-		Duel.Damage(tp,atk,REASON_EFFECT)
+		Duel.Damage(1-tp,atk,REASON_EFFECT,true)
+		Duel.Damage(tp,atk,REASON_EFFECT,true)
+		Duel.RDComplete()
 	end
 end

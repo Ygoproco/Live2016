@@ -121,6 +121,7 @@ function c511001952.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511001952.spop(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
 	if ft<=0 or not Duel.IsPlayerCanSpecialSummonMonster(tp,90884404,0,0x4011,100,0,1,RACE_FIEND,ATTRIBUTE_DARK) then return end
 	for i=1,ft do
 		local token=Duel.CreateToken(tp,90884404)
@@ -133,6 +134,7 @@ function c511001952.spop(e,tp,eg,ep,ev,re,r,rp)
 		token:RegisterEffect(e1)
 	end
 	local ft2=Duel.GetLocationCount(1-tp,LOCATION_MZONE)
+	if ft2>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft2=1 end
 	if ft2<=0 or not Duel.IsPlayerCanSpecialSummonMonster(1-tp,90884404,0,0x4011,0,0,1,RACE_FIEND,ATTRIBUTE_DARK) then return end
 	for i=1,ft2 do
 		local token=Duel.CreateToken(tp,90884404)

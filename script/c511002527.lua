@@ -14,7 +14,7 @@ function c511002527.spfilter(c,e,tp)
 	return c:IsSetCard(0x13) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsHasEffect(EFFECT_NECRO_VALLEY)
 end
 function c511002527.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>1 
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>1 and not Duel.IsPlayerAffectedByEffect(tp,59822133) 
 		and Duel.IsExistingMatchingCard(Card.IsDefensePos,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
 		and Duel.IsExistingMatchingCard(c511002527.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp) 
 		and Duel.IsExistingMatchingCard(c511002527.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
@@ -24,7 +24,7 @@ function c511002527.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(Card.IsDefensePos,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	if g:GetCount()==0 then return end
 	Duel.ChangePosition(g,0,0,POS_FACEUP_ATTACK,POS_FACEDOWN_ATTACK)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=1 then return end
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=1 or Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
 	local g1=Duel.GetMatchingGroup(c511002527.spfilter,tp,LOCATION_DECK,0,nil,e,tp)
 	local g2=Duel.GetMatchingGroup(c511002527.spfilter,tp,LOCATION_GRAVE,0,nil,e,tp)
 	if g1:GetCount()==0 or g2:GetCount()==0 then return end
