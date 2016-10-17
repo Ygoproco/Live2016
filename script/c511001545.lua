@@ -51,13 +51,17 @@ function c511001545.mgfilter(c,e,tp,fusc)
 end
 function c511001545.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local mg=e:GetHandler():GetMaterial()
-	if chk==0 then return mg:GetCount()>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>=mg:GetCount() 
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
+	if chk==0 then return mg:GetCount()>0 and ft>=mg:GetCount() 
 		and not mg:IsExists(c511001545.mgfilter,1,nil,e,tp,e:GetHandler()) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,mg,mg:GetCount(),tp,0)
 end
 function c511001545.sumop(e,tp,eg,ep,ev,re,r,rp)
 	local mg=e:GetHandler():GetMaterial()
-	if mg:GetCount()>Duel.GetLocationCount(tp,LOCATION_MZONE) 
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
+	if mg:GetCount()>ft 
 		or mg:IsExists(c511001545.mgfilter,1,nil,e,tp,e:GetHandler()) then return end
 	Duel.SpecialSummon(mg,0,tp,tp,false,false,POS_FACEUP)
 end

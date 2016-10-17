@@ -24,7 +24,7 @@ function c700000033.initial_effect(c)
 	e2:SetOperation(c700000033.operation)
 	c:RegisterEffect(e2)
 end
-
+c700000033.miracle_synchro_fusion=true
 function c700000033.atkval(e,c)
 	local cont=c:GetControler()
 	local atk=2500-Duel.GetLP(cont)

@@ -52,6 +52,7 @@ end
 function c100100515.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
 	local ft1=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if ft1>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft1=1 end
 	local gg=Group.CreateGroup()
 	if ft1>0 and tc:IsFaceup() and tc:IsRelateToEffect(e) then
 		local g=Duel.GetMatchingGroup(c100100515.filter,tp,0x13,0,nil,tc:GetCode(),e,tp)
@@ -65,6 +66,7 @@ function c100100515.activate(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 	local ft2=Duel.GetLocationCount(1-tp,LOCATION_MZONE)
+	if ft2>1 and Duel.IsPlayerAffectedByEffect(1-tp,59822133) then ft2=1 end
 	Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_FACEUP)
 	local sg=Duel.SelectMatchingCard(1-tp,c100100515.selfilter,1-tp,LOCATION_MZONE,0,1,1,nil)
 	if sg:GetCount()>0 then

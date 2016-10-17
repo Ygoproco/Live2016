@@ -25,6 +25,7 @@ end
 function c511001261.activate(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft<=0 then return end
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
 	local g=Duel.GetMatchingGroup(c511001261.lvfilter,tp,0,LOCATION_MZONE,nil)
 	local sum=g:GetSum(Card.GetLevel)
 	local spg=Group.CreateGroup()

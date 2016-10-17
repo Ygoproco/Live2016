@@ -15,6 +15,7 @@ function c511000096.spcon(e,c)
 	local tp=c:GetControler()
 	return Duel.GetLocationCount(1-tp,LOCATION_MZONE,tp)>1 and Duel.GetLocationCount(tp,LOCATION_MZONE,tp)>0
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,511000097,0xf,0x4011,1200,1200,2,RACE_WARRIOR,ATTRIBUTE_LIGHT,POS_FACEUP_DEFENSE,1-tp)
+		and not Duel.IsPlayerAffectedByEffect(tp,59822133)
 end
 function c511000096.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	for i=1,2 do

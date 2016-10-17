@@ -22,8 +22,9 @@ function c511001100.activate(e,tp,eg,ep,ev,re,r,rp)
 			g=g:Filter(Card.IsRace,nil,RACE_DRAGON)
 			local sum=g:GetSum(Card.GetAttack)
 			Duel.BreakEffect()
-			Duel.Damage(tp,sum,REASON_EFFECT)
-			Duel.Damage(1-tp,sum,REASON_EFFECT)
+			Duel.Damage(tp,sum,REASON_EFFECT,true)
+			Duel.Damage(1-tp,sum,REASON_EFFECT,true)
+			Duel.RDComplete()
 		end
 	end
 end

@@ -32,17 +32,12 @@ function c511002160.op(e,tp,eg,ep,ev,re,r,rp)
 		Duel.BreakEffect()
 		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 		if ft<=0 then return end
+		if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local sp=spg:Select(tp,ft,ft,nil)
 		if sp:GetCount()>0 then
 			ft=ft-sp:GetCount()
 			Duel.SpecialSummon(sp,0,tp,tp,false,false,POS_FACEUP)
-		end
-		if ft>0 then
-			local cg=Duel.GetFieldGroup(tp,LOCATION_DECK,0)
-			Duel.ConfirmCards(1-tp,cg)
-			Duel.ConfirmCards(tp,cg)
-			Duel.ShuffleDeck(tp)
 		end
 	end
 end

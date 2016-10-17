@@ -43,6 +43,7 @@ function c511002433.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 	local sg=Duel.GetMatchingGroup(c511002433.desfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	Duel.Destroy(sg,REASON_EFFECT)
-	Duel.Damage(1-tp,1000,REASON_EFFECT)
-	Duel.Damage(tp,1000,REASON_EFFECT)
+	Duel.Damage(1-tp,1000,REASON_EFFECT,true)
+	Duel.Damage(tp,1000,REASON_EFFECT,true)
+	Duel.RDComplete()
 end

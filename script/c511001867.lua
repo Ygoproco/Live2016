@@ -72,6 +72,7 @@ function c511001867.desop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.Destroy(e:GetHandler(),REASON_EFFECT)<=0 then return end
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft<=0 then return end
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local sg=Duel.SelectMatchingCard(tp,c511001867.filter,tp,LOCATION_HAND,0,ft,ft,nil,e,tp)
 	local tc=sg:GetFirst()

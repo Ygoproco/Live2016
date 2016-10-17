@@ -38,7 +38,7 @@ end
 function c511001528.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c511001528.filter(chkc,tp) end
 	if chk==0 then return Duel.IsExistingTarget(c511001528.filter,tp,LOCATION_MZONE,0,1,nil,tp) 
-		and Duel.GetLocationCount(1-tp,LOCATION_MZONE)>1
+		and Duel.GetLocationCount(1-tp,LOCATION_MZONE)>1 and not Duel.IsPlayerAffectedByEffect(1-tp,59822133) 
 		and Duel.IsPlayerCanSpecialSummonMonster(1-tp,511001529,0,0x4011,1000,1000,3,RACE_FIEND,ATTRIBUTE_DARK)end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	local g=Duel.SelectTarget(tp,c511001528.filter,tp,LOCATION_MZONE,0,1,1,nil,tp)
@@ -48,7 +48,8 @@ end
 function c511001528.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsRelateToEffect(e) then
+	if Duel.IsPlayerAffectedByEffect(1-tp,59822133) then return end
+	if c:IsRelateToEffect(e) and tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
 		c:SetCardTarget(tc)
 		if Duel.GetLocationCount(1-tp,LOCATION_MZONE)>1 
 			and Duel.IsPlayerCanSpecialSummonMonster(1-tp,511001529,0,0x4011,1000,1000,3,RACE_FIEND,ATTRIBUTE_DARK) then

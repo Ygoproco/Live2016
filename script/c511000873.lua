@@ -25,16 +25,15 @@ end
 function c511000873.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
 	local at=Duel.GetAttackTarget()
-	--if not a:IsRelateToEffect(e) or not at:IsRelateToEffect(e) then return end
 	local g=Group.FromCards(a,at)
 	if Duel.Remove(g,0,REASON_EFFECT+REASON_TEMPORARY)~=0 then
 		local og=Duel.GetOperatedGroup()
 		local oc=og:GetFirst()
 		while oc do
 			if oc:GetControler()==tp then
-				oc:RegisterFlagEffect(511000873,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_BATTLE+RESET_OPPO_TURN,0,3)
+				oc:RegisterFlagEffect(511000873,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_BATTLE+RESET_OPPO_TURN,0,4)
 			else
-				oc:RegisterFlagEffect(511000873,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_BATTLE+RESET_SELF_TURN,0,3)
+				oc:RegisterFlagEffect(511000873,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_BATTLE+RESET_SELF_TURN,0,4)
 			end
 			oc=og:GetNext()
 		end
@@ -42,8 +41,13 @@ function c511000873.rmop(e,tp,eg,ep,ev,re,r,rp)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e1:SetCode(EVENT_PHASE+PHASE_BATTLE)
-		e1:SetReset(RESET_PHASE+PHASE_BATTLE+RESET_OPPO_TURN,3)
-		e1:SetLabel(0)
+		if Duel.GetTurnPlayer()~=tp
+			e1:SetReset(RESET_PHASE+PHASE_BATTLE+RESET_OPPO_TURN,4)
+			e1:SetLabel(-1)
+		else
+			e1:SetReset(RESET_PHASE+PHASE_BATTLE+RESET_OPPO_TURN,3)
+			e1:SetLabel(0)
+		end
 		e1:SetCountLimit(1)
 		e1:SetLabelObject(og)
 		e1:SetOperation(c511000873.retop)

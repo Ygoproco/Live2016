@@ -26,6 +26,7 @@ function c511002555.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511002555.damop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
-	Duel.Damage(tp,1000,REASON_EFFECT)
-	Duel.Damage(1-tp,1000,REASON_EFFECT)
+	Duel.Damage(tp,1000,REASON_EFFECT,true)
+	Duel.Damage(1-tp,1000,REASON_EFFECT,true)
+	Duel.RDComplete()
 end

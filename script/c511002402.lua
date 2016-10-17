@@ -27,7 +27,6 @@ end
 function c511002402.regop(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():RegisterFlagEffect(511002402,RESET_EVENT+0x1fe0000,0,0)
 end
-
 function c511002402.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp and e:GetHandler():GetFlagEffect(511002402)==2
 end
@@ -47,6 +46,7 @@ function c511002402.spop(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft<=0 then return end
 	if ft>3 then ft=3 end
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c511002402.filter,tp,0x13,0,1,ft,nil,e,tp)
 	if g:GetCount()>0 then

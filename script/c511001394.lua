@@ -39,7 +39,8 @@ function c511001394.op(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(Card.IsDestructable,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	local ct=Duel.Destroy(g,REASON_EFFECT)
 	if ct>0 then
-		Duel.Damage(1-tp,ct*500,REASON_EFFECT)
-		Duel.Damage(tp,ct*500,REASON_EFFECT)
+		Duel.Damage(1-tp,ct*500,REASON_EFFECT,true)
+		Duel.Damage(tp,ct*500,REASON_EFFECT,true)
+		Duel.RDComplete()
 	end
 end

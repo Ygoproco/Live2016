@@ -3,7 +3,7 @@
 function c700000028.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcCode4(c,511001539,511001540,511001544,511001726,true,true)
+	aux.AddFusionProcCode4(c,42878636,511001540,511001544,511001726,true,true)
 	--immune
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)

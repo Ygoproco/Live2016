@@ -26,13 +26,14 @@ function c511001106.mgfilter(c,e,tp,sync)
 end
 function c511001106.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if not tc:IsRelateToEffect(e) then return end
+	if not tc or not tc:IsRelateToEffect(e) then return end
 	local mg=tc:GetMaterial()
 	local sumable=true
 	local sumtype=tc:GetSummonType()
+	local ft=Duel.GetLocationCount(1-tp,LOCATION_MZONE)
+	if ft>1 and Duel.IsPlayerAffectedByEffect(1-tp,59822133) then ft=1 end
 	if Duel.SendtoDeck(tc,nil,0,REASON_EFFECT)==0 or sumtype~=SUMMON_TYPE_SYNCHRO or mg:GetCount()==0 
-		or mg:GetCount()>Duel.GetLocationCount(tp,LOCATION_MZONE)
-		or mg:IsExists(c511001106.mgfilter,1,nil,e,1-tp,tc) then
+		or mg:GetCount()>ft or mg:IsExists(c511001106.mgfilter,1,nil,e,1-tp,tc) then
 		sumable=false
 	end
 	if sumable then

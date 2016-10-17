@@ -35,7 +35,7 @@ function c51102782.operation(e,tp,eg,ep,ev,re,r,rp)
 	until check==false or dn<140 or not Duel.SelectYesNo(tp,aux.Stringid(51102782,1))
 	Duel.Destroy(e:GetHandler(),REASON_EFFECT)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c51102781.spfilter,tp,0x13,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,c51102782.spfilter,tp,0x13,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEDOWN_DEFENSE)
 	end

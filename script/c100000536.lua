@@ -19,7 +19,7 @@ function c100000536.condition(e,tp,eg,ep,ev,re,r,rp)
 	if not re:IsActiveType(TYPE_MONSTER) or ep==tp then return false end
 	local res,teg,tep,tev,tre,tr,trp=Duel.CheckEvent(EVENT_BECOME_TARGET,true)
 	if res then
-		if trp==tp and tre:IsActiveType(TYPE_MONSTER) and teg:FilterCount(c100000536.cfilter,nil,tp)==1 then
+		if trp~=tp and tre:IsActiveType(TYPE_MONSTER) and teg:FilterCount(c100000536.cfilter,nil,tp)==1 then
 			local g=teg:Filter(c100000536.cfilter,nil,tp)
 			e:SetLabelObject(g:GetFirst())
 			return true

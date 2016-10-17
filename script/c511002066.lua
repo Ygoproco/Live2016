@@ -18,12 +18,14 @@ function c511002066.filter(c,e,tp)
 	return c:IsCode(511002067) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511002066.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>1
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>1 and not Duel.IsPlayerAffectedByEffect(tp,59822133) 
 		and Duel.IsExistingMatchingCard(c511002066.filter,tp,LOCATION_DECK,0,2,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_DECK)
 end
 function c511002066.spop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<2 then return end
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
+	if ft<2 then return end
 	local g=Duel.GetMatchingGroup(c511002066.filter,tp,LOCATION_DECK,0,nil,e,tp)
 	if g:GetCount()>=2 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)

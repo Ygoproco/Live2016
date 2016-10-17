@@ -18,12 +18,12 @@ function c100000255.spfilter(c,e,tp)
 	return c:IsLevelBelow(4) and c:IsRace(0x10000000) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c100000255.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>1 
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>1 and not Duel.IsPlayerAffectedByEffect(tp,59822133) 
 		and Duel.IsExistingMatchingCard(c100000255.spfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,2,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_GRAVE)
 end
 function c100000255.activate(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=1 then return end
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=1 or Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
 	local g=Duel.GetMatchingGroup(c100000255.spfilter,tp,LOCATION_GRAVE,LOCATION_GRAVE,nil,e,tp)
 	if g:GetCount()>1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
