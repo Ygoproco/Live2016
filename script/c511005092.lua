@@ -204,11 +204,12 @@ local function _prepSide(p,g)
 end
 
 local function _printDeck()
+--[[ uncomment this if you want to have deck listing
 	local io=require("io")
 	for p=0,1 do
 		local f=io.open("./deck/sealedpack"..p..".ydk","w+")
 		f:write("#created by ...\n#main\n")
-		local g=Duel.GetFieldGroup(p,LOCATION_DECK,0)
+		local g=Duel.GetFieldGroup(p,LOCATION_DECK+LOCATION_HAND,0)
 		local c=g:GetFirst()
 		while c do
 			f:write(c:GetOriginalCode().."\n")
@@ -227,17 +228,22 @@ local function _printDeck()
 		end
 		f:close()
 	end
+--]]
 end
 
 function scard.op(e,tp,eg,ep,ev,re,r,rp)
 	if packopen then e:Reset() return end
 	packopen=true
+	Duel.DisableShuffleCheck()
 	--Hint
 	Duel.Hint(HINT_CARD,0,s_id)
 	Duel.Hint(HINT_CODE,e:GetHandler():GetOwner(),s_id)
 	--note hand card
-	handnum[0]=Duel.GetFieldGroupCount(0,LOCATION_HAND,0)
-	handnum[1]=Duel.GetFieldGroupCount(1,LOCATION_HAND,0)
+	handnum[0]=5 --Duel.GetFieldGroupCount(0,LOCATION_HAND,0)
+	handnum[1]=5 --Duel.GetFieldGroupCount(1,LOCATION_HAND,0)
+	--SetLP
+	Duel.SetLP(0,8000)
+	Duel.SetLP(1,8000)
 	--FOR RANDOOM
 	local rseed=0
 	for i=1,6 do
@@ -268,20 +274,7 @@ function scard.op(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SendtoDeck(g:Filter(Card.IsLocation,nil,LOCATION_HAND),nil,2,REASON_RULE)
 		end
 	end
-	e:Reset()
 	--next step
-	local e1=Effect.GlobalEffect()
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(s_id)
-	e1:SetOperation(scard.readd_op)
-	Duel.RegisterEffect(e1,0)
-	Duel.RaiseEvent(Group.CreateGroup(),s_id,Effect.GlobalEffect(),0,0,0,0)
-end
-
-function scard.readd_op(e,tp,eg,ep,ev,re,r,rp)
-	if addok then e:Reset() return end
-	addok=true
-	Duel.DisableShuffleCheck()
 	--Players remove from each deck until card>=40 (optional)
 	local rg=Group.CreateGroup()
 	for p=0,1 do
@@ -295,21 +288,7 @@ function scard.readd_op(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 	if rg:GetCount()>0 then Duel.SendtoDeck(rg,nil,-2,REASON_RULE) end
-	_printDeck()
-	e:Reset()
 	--next step
-	local e1=Effect.GlobalEffect()
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(s_id)
-	e1:SetOperation(scard.redraw_op)
-	Duel.RegisterEffect(e1,0)
-	Duel.RaiseEvent(Group.CreateGroup(),s_id,Effect.GlobalEffect(),0,0,0,0)
-end
-
-function scard.redraw_op(e,tp,eg,ep,ev,re,r,rp)
-	if drawok then e:Reset() return end
-	drawok=true
-	Duel.DisableShuffleCheck()
 	--Shuffle deck and add card
 	for p=0,1 do
 		Duel.ShuffleDeck(p)
@@ -321,14 +300,16 @@ function scard.redraw_op(e,tp,eg,ep,ev,re,r,rp)
 		if Duel.SelectYesNo(p,aux.Stringid(4002,2)) then
 			local sg=Duel.GetFieldGroup(p,LOCATION_HAND,0)
 			local ct=sg:GetCount()
-			Duel.SendtoDeck(sg,nil,0,REASON_RULE)
-			local c=sg:GetFirst()
-			while c do
-				Duel.MoveSequence(c,1)
-				c=sg:GetNext()
-			end
+			Duel.SendtoDeck(sg,nil,1,REASON_RULE)
+			--local c=sg:GetFirst()
+			--while c do
+			--	Duel.MoveSequence(c,1)
+			--	c=sg:GetNext()
+			--end
 			Duel.SendtoHand(Duel.GetDecktopGroup(p,ct),nil,REASON_RULE)
 		end
 	end
 	e:Reset()
+	--if someone wants/needs a deck listing (local hosting only), the function itself can be uncommented
+	_printDeck()
 end
