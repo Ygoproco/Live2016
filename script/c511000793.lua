@@ -2,7 +2,7 @@
 function c511000793.initial_effect(c)
 	--Return
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_QUICK_O)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e1:SetCode(511002521)
 	e1:SetRange(LOCATION_GRAVE)
@@ -13,16 +13,16 @@ function c511000793.initial_effect(c)
 	c:RegisterEffect(e1)
 	if not c511000793.global_check then
 		c511000793.global_check=true
-		Duel.RegisterFlagEffect(0,511002521,0,0,1)
 		local ge1=Effect.CreateEffect(c)
 		ge1:SetType(EFFECT_TYPE_FIELD)
 		ge1:SetCode(EFFECT_CANNOT_LOSE_LP)
 		ge1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 		ge1:SetTargetRange(1,0)
+		ge1:SetLabel(0)
 		ge1:SetCondition(c511000793.con)
 		Duel.RegisterEffect(ge1,0)
-		Duel.RegisterFlagEffect(1,511002521,0,0,1)
 		local ge2=ge1:Clone()
+		ge2:SetLabel(1)
 		Duel.RegisterEffect(ge2,1)
 		local ge3=Effect.CreateEffect(c)
 		ge3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
@@ -32,7 +32,7 @@ function c511000793.initial_effect(c)
 	end
 end
 function c511000793.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetLP(tp)<=0 and Duel.GetFieldGroupCount(tp,LOCATION_HAND+LOCATION_ONFIELD,0)<=0
+	return Duel.GetFieldGroupCount(tp,LOCATION_HAND+LOCATION_ONFIELD,0)<=0
 end
 function c511000793.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -43,16 +43,12 @@ function c511000793.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e1:SetReset(RESET_CHAIN)
 	e1:SetCode(EFFECT_CANNOT_LOSE_LP)
 	Duel.RegisterEffect(e1,tp)
-end
-function c511000793.filter(c,e,tp)
-	return c:IsCode(81020646) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+	Duel.MoveToField(e:GetHandler(),tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 end
 function c511000793.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,81020646,0,0x2021,3000,3000,8,RACE_DRAGON,ATTRIBUTE_DARK) end
-	e:SetType(EFFECT_TYPE_ACTIVATE)
-	Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_EXTRA)
 end
 function c511000793.activate(e,tp,eg,ep,ev,re,r,rp)
@@ -92,16 +88,16 @@ function c511000793.leaveop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Win(e:GetLabel(),WIN_REASON_ZERO_GATE)
 end
 function c511000793.con(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFlagEffect(tp,511002521)>0
+	return Duel.GetFlagEffect(e:GetLabel(),511002521)>0
 end
 function c511000793.op(e,tp,eg,ep,ev,re,r,rp)
 	local ph=Duel.GetCurrentPhase()
 	if Duel.GetLP(0)<=0 and ph~=PHASE_DAMAGE then
-		Duel.RaiseEvent(Duel.GetMatchingGroup(Card.IsCode,0,LOCATION_ONFIELD,0,nil,511002521),511002521,e,0,0,0,0)
+		Duel.RaiseEvent(Duel.GetMatchingGroup(nil,0,0xff,0,nil),511002521,e,0,0,0,0)
 		Duel.ResetFlagEffect(0,511002521)
 	end
 	if Duel.GetLP(1)<=0 and ph~=PHASE_DAMAGE then
-		Duel.RaiseEvent(Duel.GetMatchingGroup(Card.IsCode,1,LOCATION_ONFIELD,0,nil,511002521),511002521,e,0,0,0,0)
+		Duel.RaiseEvent(Duel.GetMatchingGroup(nil,1,0xff,0,nil),511002521,e,0,0,0,0)
 		Duel.ResetFlagEffect(1,511002521)
 	end
 	if Duel.GetLP(0)>0 and Duel.GetFlagEffect(0,511002521)==0 then
