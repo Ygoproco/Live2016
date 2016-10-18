@@ -20,7 +20,7 @@ function c511001358.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
 	if chk==0 then return Duel.IsExistingTarget(c511001358.ofilter,tp,0,LOCATION_MZONE,1,nil) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
 		and Duel.IsExistingTarget(c511001358.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp) 
-		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
+		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and not Duel.IsPlayerAffectedByEffect(tp,59822133) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_OPPO)
 	local g1=Duel.SelectTarget(tp,c511001358.ofilter,tp,0,LOCATION_MZONE,1,1,nil)
 	e:SetLabelObject(g1:GetFirst())
@@ -37,6 +37,7 @@ end
 function c511001358.activate(e,tp,eg,ep,ev,re,r,rp)
 	local ftop=Duel.GetLocationCount(1-tp,LOCATION_MZONE)
 	if ftop>2 then ftop=2 end
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	local op=e:GetLabelObject()
 	local se=g:GetFirst()

@@ -1,5 +1,6 @@
 --スピード・ワールド ２
 function c110000000.initial_effect(c)
+	--
 	c:EnableCounterPermit(0x91)
 	c:SetCounterLimit(0x91,12)
 	--Activate	
@@ -116,6 +117,7 @@ function c110000000.filter(c)
 	return c:GetCode()~=110000000
 end
 function c110000000.op(e,tp,eg,ep,ev,re,r,rp,chk)
+	if Duel.GetTurnCount()~=1 then return false end
 	local tc=Duel.GetFieldCard(tp,LOCATION_SZONE,5)
 	local tc2=Duel.GetFieldCard(1-tp,LOCATION_SZONE,5)	
 	if tc==nil then

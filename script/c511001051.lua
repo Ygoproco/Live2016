@@ -47,13 +47,17 @@ end
 function c511001051.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=e:GetLabelObject()
 	g=g:Filter(c511001051.filter,nil,e,tp)
-	if chk==0 then return g:GetCount()>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>g:GetCount()-1 end
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
+	if chk==0 then return g:GetCount()>0 and ft>g:GetCount()-1 end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,g:GetCount(),tp,nil)
 end
 function c511001051.sumop(e,tp,eg,ep,ev,re,r,rp)
 	local g=e:GetLabelObject()
 	g=g:Filter(c511001051.filter,nil,e,tp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=g:GetCount()-1 then return end
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
+	if ft<=g:GetCount()-1 then return end
 	local tc=g:GetFirst()
 	while tc do
 		Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)

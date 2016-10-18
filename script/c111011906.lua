@@ -20,7 +20,7 @@ function c111011906.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c111011906.filter(c,e,tp)
-	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsType(TYPE_MONSTER)
+	return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c111011906.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local g=e:GetHandler():GetOverlayGroup()
@@ -32,15 +32,17 @@ function c111011906.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		end
 		tc=g:GetNext()
 	end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-	and Duel.GetLocationCount(tp,LOCATION_MZONE)>=count end
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
+	if chk==0 then return ft>0 and ft>=count end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_OVERLAY)
 end
 function c111011906.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g=c:GetOverlayGroup()
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
-		or Duel.GetLocationCount(tp,LOCATION_MZONE)<g:GetCount() then return end
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
+	if ft<=0 or ft<g:GetCount() then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)

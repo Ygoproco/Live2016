@@ -39,9 +39,11 @@ function c511001780.desrepop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local sumtype=c:GetSummonType()
 	local mg=c:GetMaterial():Filter(c511001780.mgfilter,nil,e,tp,c)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
 	if Duel.SendtoDeck(c,nil,0,REASON_EFFECT+REASON_REPLACE)>0 
 		and sumtype==SUMMON_TYPE_SYNCHRO and mg:GetCount()>0 
-		and mg:GetCount()<=Duel.GetLocationCount(tp,LOCATION_MZONE) then
+		and mg:GetCount()<=ft then
 		Duel.SpecialSummon(mg,0,tp,tp,false,false,POS_FACEUP)
 	end
 end

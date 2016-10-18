@@ -5,9 +5,9 @@ function c7481.initial_effect(c)
 	aux.AddSynchroProcedure(c,nil,aux.NonTuner(nil),1)
 	--
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(aux.Stringid(7481,0)))
 	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1)
 	e1:SetCost(c7481.descost)
@@ -18,10 +18,10 @@ function c7481.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCode(EVENT_TO_GRAVE)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e2:SetCondition(c7481.thcon)
-	e2:SetCost(c7481.thcost)
 	e2:SetTarget(c7481.thtg)
 	e2:SetOperation(c7481.thop)
 	c:RegisterEffect(e2)
@@ -59,15 +59,17 @@ function c7481.thfil(c)
 	return c:IsFaceup() and c:IsType(TYPE_TUNER) and c:IsAbleToHand()
 end
 function c7481.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_REMOVED) and chkc:IsControler(tp) and c7481.thfil(chkc) end
+	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_REMOVED) and c7481.thfil(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(c7481.thfil,tp,LOCATION_REMOVED,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectTarget(tp,c7481.thfil,tp,LOCATION_REMOVED,0,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
 end
 function c7481.thop(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,tc)
 	end
 end

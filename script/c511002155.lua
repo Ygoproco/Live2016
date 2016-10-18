@@ -40,7 +40,9 @@ function c511002155.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,0,0)
 end
 function c511002155.spop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<2 then return end
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
+	if ft<2 then return end
 	if not Duel.IsPlayerCanSpecialSummonMonster(tp,511002156,0,0x4011,2000,0,4,RACE_REPTILE,0) then return end
 	for i=1,2 do
 		local token=Duel.CreateToken(tp,511002156)

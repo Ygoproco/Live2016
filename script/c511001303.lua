@@ -35,7 +35,8 @@ function c511001303.activate(e,tp,eg,ep,ev,re,r,rp)
 		local dam1=Duel.GetMatchingGroupCount(nil,tp,LOCATION_MZONE,0,nil)*100
 		local dam2=Duel.GetMatchingGroupCount(nil,tp,0,LOCATION_MZONE,nil)*100
 		Duel.BreakEffect()
-		Duel.Damage(tp,dam1,REASON_EFFECT)
-		Duel.Damage(1-tp,dam2,REASON_EFFECT)
+		Duel.Damage(tp,dam1,REASON_EFFECT,true)
+		Duel.Damage(1-tp,dam2,REASON_EFFECT,true)
+		Duel.RDComplete()
 	end
 end

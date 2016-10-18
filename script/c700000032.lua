@@ -130,6 +130,7 @@ function c700000032.spop(e,tp,eg,ep,ev,re,r,rp)
 	local g=e:GetLabelObject()
 	local tg=g:Filter(c700000032.spfilter,nil,e:GetValue())
 	if not c:IsLocation(LOCATION_GRAVE) or not c:IsCanBeSpecialSummoned(e,0,tp,false,false) or tg:GetCount()~=e:GetLabel() then return end
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
 	tg:AddCard(c)
 	Duel.SpecialSummon(tg,0,tp,tp,false,false,POS_FACEUP_ATTACK)
 end

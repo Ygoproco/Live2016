@@ -18,7 +18,7 @@ function c511002949.filter(c,e,tp)
 end
 function c511002949.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsAttackPos() end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>2 
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>2 and not Duel.IsPlayerAffectedByEffect(tp,59822133) 
 		and Duel.IsExistingTarget(Card.IsAttackPos,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) 
 		and Duel.IsExistingMatchingCard(c511002949.filter,tp,LOCATION_HAND,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATTACK)
@@ -30,7 +30,7 @@ function c511002949.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) and tc:IsAttackPos() then
 		Duel.ChangePosition(tc,POS_FACEUP_DEFENSE,POS_FACEDOWN_DEFENSE,0,0)
-		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=2 then return end
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=2 or Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
 		local g=Duel.GetMatchingGroup(c511002949.filter,tp,LOCATION_HAND,0,nil,e,tp)
 		if g:GetCount()>=3 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)

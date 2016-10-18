@@ -38,7 +38,7 @@ function c170000174.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,4,tp,0)
 end
 function c170000174.spop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<3 then return end
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<3 or Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
 	if not Duel.IsPlayerCanSpecialSummonMonster(tp,170000175,0,0x4011,0,0,1,RACE_WARRIOR,ATTRIBUTE_DARK) then return end
 	for i=1,4 do
 		local token=Duel.CreateToken(tp,170000175)

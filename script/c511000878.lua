@@ -20,13 +20,13 @@ function c511000878.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoHand(g,nil,REASON_COST)
 end
 function c511000878.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and not Duel.IsPlayerAffectedByEffect(tp,59822133) 
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,511000879,0,0x4011,0,0,1,RACE_WINDBEAST,ATTRIBUTE_WIND) end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,2,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,0,0)
 end
 function c511000878.operation(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)>1
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>1 and not Duel.IsPlayerAffectedByEffect(tp,59822133) 
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,511000879,0,0x4011,0,0,1,RACE_WINDBEAST,ATTRIBUTE_WIND) then
 		for i=1,2 do
 			local token=Duel.CreateToken(tp,511000879)

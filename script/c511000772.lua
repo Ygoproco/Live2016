@@ -80,8 +80,9 @@ function c511000772.desop(e,tp,eg,ep,ev,re,r,rp)
 				sum2=sum2+tc2:GetBaseAttack()
 				tc2=g2:GetNext()
 			end
-			Duel.Damage(tp,sum1,REASON_EFFECT)
-			Duel.Damage(1-tp,sum2,REASON_EFFECT)
+			Duel.Damage(tp,sum1,REASON_EFFECT,true)
+			Duel.Damage(1-tp,sum2,REASON_EFFECT,true)
+			Duel.RDComplete()
 		end
 	end
 end

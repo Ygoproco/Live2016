@@ -46,7 +46,7 @@ function c100000055.spop(e,tp,eg,ep,ev,re,r,rp)
 	local g4=Duel.GetMatchingGroup(c100000055.filter,tp,0x13,0,nil,100000053,e,tp)
 	local g5=Duel.GetMatchingGroup(c100000055.filter,tp,0x13,0,nil,100000054,e,tp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)>=5 and g1:GetCount()>0 and g2:GetCount()>0 and g3:GetCount()>0 
-		and g4:GetCount()>0 and g5:GetCount()>0 then
+		and g4:GetCount()>0 and g5:GetCount()>0 and not Duel.IsPlayerAffectedByEffect(tp,59822133) then
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local tc1=g1:Select(tp,1,1,nil):GetFirst()

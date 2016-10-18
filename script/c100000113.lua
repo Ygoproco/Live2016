@@ -30,7 +30,8 @@ function c100000113.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.HintSelection(Group.FromCards(tc))
 		local atk=tc:GetAttack()
 		if atk<0 then return end
-		Duel.Damage(1-tp,atk,REASON_EFFECT)
-		Duel.Damage(tp,atk,REASON_EFFECT)
+		Duel.Damage(1-tp,atk,REASON_EFFECT,true)
+		Duel.Damage(tp,atk,REASON_EFFECT,true)
+		Duel.RDComplete()
 	end
 end

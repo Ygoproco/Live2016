@@ -18,7 +18,7 @@ function c810000034.filter(c,e,tp)
 			and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 	elseif c:IsAttackBelow(500) then
 		return Duel.IsPlayerCanSpecialSummonMonster(tp,c:GetOriginalCode(),0,c:GetType(),c:GetAttack(),c:GetDefense(),c:GetLevel(),c:GetRace(),c:GetAttribute()) 
-			and Duel.GetLocationCount(tp,LOCATION_MZONE)>1
+			and Duel.GetLocationCount(tp,LOCATION_MZONE)>1 and not Duel.IsPlayerAffectedByEffect(tp,59822133)
 	else return false 
 	end
 end
@@ -42,8 +42,9 @@ function c810000034.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not tc or tc:IsFacedown() or not tc:IsRelateToEffect(e) then return end
 	if tc:IsCode(40640057) then
 		if ft<=0 or not Duel.IsPlayerCanSpecialSummonMonster(tp,40703223,0,0x4011,tc:GetAttack(),tc:GetDefense(),1,RACE_FIEND,ATTRIBUTE_DARK) then return end
+		if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
 		for i=1,ft do
-				local token=Duel.CreateToken(tp,40703223)
+			local token=Duel.CreateToken(tp,40703223)
 			Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP)
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
@@ -65,7 +66,8 @@ function c810000034.activate(e,tp,eg,ep,ev,re,r,rp)
 		end
 		Duel.SpecialSummonComplete()
 	else
-		if ft<=0 
+		if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
+		if ft<=1 
 			or not Duel.IsPlayerCanSpecialSummonMonster(tp,tc:GetOriginalCode(),0,0x4011,tc:GetAttack(),tc:GetDefense(),tc:GetLevel(),
 			tc:GetRace(),tc:GetAttribute()) then return end
 		for i=1,2 do

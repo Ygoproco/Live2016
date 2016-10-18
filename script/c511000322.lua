@@ -21,6 +21,7 @@ end
 function c511000322.op(e,tp,eg,ep,ev,re,r,rp)
 	local ft1=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft1<=0 then return end
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft1=1 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c511000322.filter,tp,LOCATION_GRAVE,0,1,ft1,nil,e,tp,Duel.GetTurnCount())
 	if g:GetCount()>0 then
