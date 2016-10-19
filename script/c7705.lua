@@ -13,7 +13,7 @@ function c7705.initial_effect(c)
 	e1:SetCountLimit(1,7705)
 	e1:SetCost(c7705.atkcost1)
 	e1:SetTarget(c7705.atktg1)
-	e1:SetOperation(c7705.atktg2)
+	e1:SetOperation(c7705.atkop1)
 	c:RegisterEffect(e1)
 	--
 	local e2=Effect.CreateEffect(c)
