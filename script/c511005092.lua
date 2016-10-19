@@ -188,8 +188,6 @@ local pack={}
 	for _,v in ipairs(pack[4][3]) do table.insert(pack[4][5],v) end
 	for _,v in ipairs(pack[4][4]) do table.insert(pack[4][5],v) end
 local packopen=false
-local addok=false
-local drawok=false
 local handnum={[0]=5;[1]=5}
 
 --DangerZone
@@ -237,7 +235,26 @@ function scard.op(e,tp,eg,ep,ev,re,r,rp)
 	Duel.DisableShuffleCheck()
 	--Hint
 	Duel.Hint(HINT_CARD,0,s_id)
-	Duel.Hint(HINT_CODE,e:GetHandler():GetOwner(),s_id)
+	for p=0,1 do
+		local c=Duel.CreateToken(p,s_id)
+		Duel.Remove(c,POS_FACEUP,REASON_RULE)
+		Duel.Hint(HINT_CODE,p,s_id)
+		--protection (steal Boss Duel xD)
+		local e10=Effect.CreateEffect(c)
+		e10:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+		e10:SetType(EFFECT_TYPE_SINGLE)
+		e10:SetCode(EFFECT_CANNOT_TO_GRAVE)
+		c:RegisterEffect(e10)
+		local e11=e10:Clone()
+		e11:SetCode(EFFECT_CANNOT_TO_HAND)
+		c:RegisterEffect(e11)
+		local e12=e10:Clone()
+		e12:SetCode(EFFECT_CANNOT_TO_DECK) 
+		c:RegisterEffect(e12)
+		local e13=e10:Clone()
+		e13:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+		c:RegisterEffect(e13)
+	end
 	--note hand card
 	handnum[0]=5 --Duel.GetFieldGroupCount(0,LOCATION_HAND,0)
 	handnum[1]=5 --Duel.GetFieldGroupCount(1,LOCATION_HAND,0)
