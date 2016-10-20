@@ -54,7 +54,7 @@ function c7704.hfil(c)
 end
 function c7704.handcon(e)
 	local tp=e:GetHandlerPlayer()
-	return Duel.IsExistingMatchingCard(c7704.hfil,tp,LOCATION_MZONE,0,1,nil)
+	return c7704.condition(e,tp) and Duel.IsExistingMatchingCard(c7704.hfil,tp,LOCATION_MZONE,0,1,nil)
 end
 
 function c7704.thcon(e,tp,eg,ep,ev,re,r,rp)
