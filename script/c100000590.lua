@@ -46,6 +46,7 @@ function c100000590.sfilter(c)
 	return c:IsSSetable() and (c:IsCode(100000591) or c:IsCode(100000592) or c:IsCode(100000593) or c:IsCode(100000594) or c:IsCode(100000595))
 end
 function c100000590.activate(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local g=Duel.GetMatchingGroup(c100000590.desfilter,tp,LOCATION_ONFIELD,0,e:GetHandler())
 	Duel.Destroy(g,REASON_EFFECT)
 	local ft=Duel.GetLocationCount(tp,LOCATION_SZONE)
@@ -91,6 +92,7 @@ function c100000590.setfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_TRAP)
 end
 function c100000590.setop(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local g=Duel.GetMatchingGroup(c100000590.setfilter,tp,LOCATION_ONFIELD,0,nil)
 	local tc=g:GetFirst()
 	while tc do

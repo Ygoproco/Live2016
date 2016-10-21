@@ -10,20 +10,21 @@ function c511001586.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511001586.condition(e,tp,eg,ep,ev,re,r,rp)
-	return tp~=Duel.GetTurnPlayer()
+	return Duel.GetAttacker():IsControler(1-tp)
 end
 function c511001586.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tg=Duel.GetAttackTarget()
-	if chk==0 then return tg:IsOnField() and tg:GetAttack()>0 and tg:IsFaceup() and Duel.IsPlayerCanDraw(tp,1) end
+	if chk==0 then return tg and tg:IsOnField() and tg:GetAttack()>0 and tg:IsFaceup() and Duel.IsPlayerCanDraw(tp,1) end
 end
 function c511001586.activate(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetAttackTarget() then
+	local d=Duel.GetAttackTarget()
+	if d and d:IsRelateToBattle() then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetReset(RESET_EVENT+0xfe0000)
 		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
 		e1:SetValue(0)
-		Duel.GetAttackTarget():RegisterEffect(e1)
+		d:RegisterEffect(e1)
 		local e2=Effect.CreateEffect(e:GetHandler())
 		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e2:SetCode(EVENT_BATTLED)

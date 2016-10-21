@@ -2,7 +2,7 @@
 function c100000704.initial_effect(c)
 	--dishand
 	local e2=Effect.CreateEffect(c)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_PLAYER_TARGET)
+	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e2:SetCategory(CATEGORY_TODECK+CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
@@ -17,36 +17,28 @@ function c100000704.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
    Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD,nil)
 end
 function c100000704.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_DECK)>0 end
-	Duel.Hint(HINT_SELECTMSG,tp,564)
+	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_DECK)>0 and Duel.IsPlayerCanSpecialSummon(tp) 
+		and e:GetHandler():IsAbleToDeck() and Duel.GetLocationCount(tp,LOCATION_MZONE)>-1 end
+	Duel.Hint(HINT_SELECTMSG,tp,0)
 	local ac=Duel.AnnounceCard(tp)
-	e:SetLabel(ac)
-	e:GetHandler():SetHint(CHINT_CARD,ac)
+	Duel.SetTargetParam(ac)
+	Duel.SetOperationInfo(0,CATEGORY_ANNOUNCE,nil,0,tp,ANNOUNCE_CARD)
 end
 function c100000704.filter(c,ac,e,tp)
 	return c:IsType(TYPE_MONSTER) and c:IsCode(ac) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function c100000704.operation(e,tp,eg,ep,ev,re,r,rp)
-	local ac=e:GetLabel()
-	local g=Duel.SelectMatchingCard(tp,c100000704.filter,tp,0,LOCATION_DECK+LOCATION_EXTRA,1,1,nil,ac,e,tp)
-	local atk=g:GetFirst():GetAttack()
-	if g then
-		Duel.SpecialSummon(g,0,tp,tp,true,false,POS_FACEUP)
-		if atk>2000 then
-			if Duel.CheckLPCost(tp,atk) and Duel.SelectYesNo(tp,aux.Stringid(100000704,0)) then
-				Duel.PayLPCost(tp,atk)
-			else
-				Duel.SendtoDeck(e:GetHandler(),1-tp,1,REASON_EFFECT)
-				Duel.ShuffleDeck(1-tp)
-			end
-		else
-			if Duel.CheckLPCost(tp,2000) and Duel.SelectYesNo(tp,aux.Stringid(100000704,0)) then
-				Duel.PayLPCost(tp,2000)
-			else
-				Duel.SendtoDeck(e:GetHandler(),1-tp,1,REASON_EFFECT)
-				Duel.ShuffleDeck(1-tp)
-			end
-		end
+	local c=e:GetHandler()
+	local ac=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
+	local g=Duel.GetMatchingGroup(c100000704.filter,tp,0,LOCATION_DECK,nil,ac,e,tp)
+	Duel.ConfirmCards(tp,g)
+	if g:GetCount()<=0 or not c:IsRelateToEffect(e) or not c:IsAbleToDeck() then return end
+	if Duel.SendtoDeck(c,1-tp,2,REASON_EFFECT)<=0 then return end
+	Duel.BreakEffect()
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local tc=Duel.SelectMatchingCard(tp,c100000704.filter,tp,0,LOCATION_DECK,1,1,nil,ac,e,tp):GetFirst()
+	if tc and Duel.SpecialSummon(tc,0,tp,tp,true,false,POS_FACEUP)>0 then
+		tc:CompleteProcedure()
 	end
 end
 
