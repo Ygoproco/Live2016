@@ -5,7 +5,7 @@ function c73271204.initial_effect(c)
 	--
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(73271204,0))
-	e1:SetCategory(CATEGORY_TOHAND)
+	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -15,6 +15,7 @@ function c73271204.initial_effect(c)
 	--
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(73271204,1))
+	e2:SetCategory(CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_TO_GRAVE)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
@@ -25,10 +26,10 @@ function c73271204.initial_effect(c)
 end
 
 function c73271204.fil(c)
-	return c:IsSetCard(0xe6) and c:IsAbleToHand()
+	return c:IsSetCard(0xe6) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c73271204.spfil(c,e,tp)
-	return c:IsSetCard(0xe6) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+	return c:IsSetCard(0xe6) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function c73271204.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c73271204.fil(chkc) end
@@ -51,9 +52,9 @@ function c73271204.op(e,tp,eg,ep,ev,re,r,rp)
 end
 	
 function c73271204.excon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
+	if not re then return false end
 	local rc=re:GetHandler()
-	return c:IsReason(REASON_EFFECT) and rc and rc:IsSetCard(0xe6) and rc:IsType(TYPE_MONSTER)
+	return e:GetHandler():IsReason(REASON_EFFECT) and rc:IsSetCard(0xe6) and rc:IsType(TYPE_MONSTER)
 end
 function c73271204.exfil(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
