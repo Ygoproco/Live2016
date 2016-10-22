@@ -25,16 +25,15 @@ function c700000009.initial_effect(c)
 	e3:SetTarget(c700000009.reptg)
 	c:RegisterEffect(e3)
 end
-
 function c700000009.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local at=Duel.GetAttacker()
-	return at:GetControler()~=tp and Duel.GetAttackTarget()==nil
+	return at:IsControler(1-tp) and Duel.GetAttackTarget()==nil
 end
 function c700000009.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local seq=e:GetHandler():GetSequence()
 	local sc=Duel.GetFieldCard(tp,LOCATION_SZONE,13-seq)
-	if chk==0 then return sc and sc:IsDestructable() end
-	Duel.Destroy(sc,REASON_EFFECT+REASON_COST)
+	if chk==0 then return sc and sc:IsDestructable(e) end
+	Duel.Destroy(sc,REASON_COST)
 end
 function c700000009.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -48,7 +47,6 @@ function c700000009.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
-
 function c700000009.repfil(c)
 	return (c:GetSequence()==6 or c:GetSequence()==7) and c:IsDestructable()
 end

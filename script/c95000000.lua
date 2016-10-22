@@ -36,6 +36,7 @@ function c95000000.initial_effect(c)
 	e5:SetCode(EFFECT_CANNOT_LOSE_DECK)
 	e5:SetRange(LOCATION_REMOVED)
 	e5:SetTargetRange(1,0)
+	e5:SetCondition(c95000000.deckcon)
 	e5:SetValue(1)
 	c:RegisterEffect(e5)
 	--rearrange
@@ -51,9 +52,13 @@ function c95000000.initial_effect(c)
 	local e7=e6:Clone()
 	e7:SetCode(EVENT_CHAIN_SOLVED)
 	c:RegisterEffect(e7)
-	local e8=e6:Clone()
+	local e8=Effect.CreateEffect(c)
+	e8:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e8:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e8:SetCode(EVENT_ADJUST)
-	e8:SetCountLimit(999999)
+	e8:SetRange(LOCATION_REMOVED)
+	e8:SetCondition(c95000000.ordercon)
+	e8:SetOperation(c95000000.orderop)
 	c:RegisterEffect(e8)
 	--cannot banish
 	local e9=Effect.CreateEffect(c)
@@ -167,6 +172,9 @@ function c95000000.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_CARD,0,95000000)
 		Duel.SendtoHand(g,nil,REASON_RULE)
 	end
+end
+function c95000000.deckcon(e)
+	return Duel.GetTurnPlayer()==e:GetHandlerPlayer() and Duel.GetCurrentPhase()==PHASE_DRAW
 end
 function c95000000.ordercon(e,tp,eg,ep,ev,re,r,rp)
 	local ct=1
