@@ -22,13 +22,16 @@ end
 function c700000027.filter(c,e)
 	return aux.nzatk(c) and (not e or not c:IsImmuneToEffect(e))
 end
+function c700000027.cfilter(c)
+	return c:IsSetCard(0xba) and c:IsType(TYPE_MONSTER)
+end
 function c700000027.target(e,tp,ep,eg,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(aux.nzatk,tp,0,LOCATION_MZONE,1,nil) 
-		and Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_GRAVE,0,1,nil,0xba) end
+		and Duel.IsExistingMatchingCard(c700000027.cfilter,tp,LOCATION_GRAVE,0,1,nil) end
 end
 function c700000027.operation(e,tp,ep,eg,ev,re,r,rp)
 	local mg=Duel.GetMatchingGroupCount(c700000027.filter,tp,0,LOCATION_MZONE,nil,e)
-	local rc=Duel.GetMatchingGroupCount(Card.IsSetCard,tp,LOCATION_GRAVE,0,nil,0xba)
+	local rc=Duel.GetMatchingGroupCount(c700000027.cfilter,tp,LOCATION_GRAVE,0,nil)
 	if mg==0 or rc==0 then return end
 	repeat
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
