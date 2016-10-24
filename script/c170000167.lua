@@ -92,7 +92,7 @@ function c170000167.dscon(e,tp,eg,ep,ev,re,r,rp,chk)
 	return c:IsReason(REASON_DESTROY) and  e:GetHandler():GetPreviousAttackOnField()==0 and Duel.GetLP(tp)>=10000
 end
 function c170000167.filter(c,e,tp)
-	return c:IsCode(170000170) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+	return c:IsCode(82103466) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function c170000167.dstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
