@@ -19,7 +19,7 @@ function c7663.initial_effect(c)
 end
 
 function c7663.thfil(c)
-	return c:IsSetCard(0xf0) and not c:IsCode(7663) and c:IsAbleToHand()
+	return c:IsSetCard(0xf0) and c:IsType(TYPE_MONSTER) and not c:IsCode(7663) and c:IsAbleToHand()
 end
 function c7663.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c7663.thfil,tp,LOCATION_DECK,0,1,nil) end
