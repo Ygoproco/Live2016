@@ -19,8 +19,8 @@ function c511001665.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511001665.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsChainNegatable(ev) and Duel.IsChainDisablable(ev) end
-	Duel.NegateActivation(ev)
-	Duel.NegateEffect(ev)
+	--Duel.NegateActivation(ev)
+	--Duel.NegateEffect(ev)
 end
 function c511001665.filter(c,tp,eg,ep,ev,re,r,rp)
 	local te=c:GetActivateEffect()
@@ -34,6 +34,8 @@ function c511001665.filter(c,tp,eg,ep,ev,re,r,rp)
 end
 function c511001665.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c511001665.filter,tp,0,LOCATION_DECK,1,nil,tp,eg,ep,ev,re,r,rp) end
+	Duel.NegateActivation(ev)
+	Duel.NegateEffect(ev)
 end
 function c511001665.activate(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetMatchingGroup(c511001665.filter,tp,0,LOCATION_DECK,nil,tp,eg,ep,ev,re,r,rp)
