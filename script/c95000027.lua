@@ -12,7 +12,7 @@ function c95000027.initial_effect(c)
 end
 c95000027.mark=2
 function c95000027.condition(e,tp,eg,ep,ev,re,r,rp)
-	return tp~=ep and eg:GetCount()==1 and Duel.GetCurrentChain()==0
+	return tp~=ep and eg:GetCount()==1 and (Duel.GetCurrentChain()==0 or (Duel.GetFlagEffect(tp,95000027)>0 and Duel.GetCurrentChain()==1))
 end
 function c95000027.filter(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP,1-tp)

@@ -73,6 +73,7 @@ function c511002193.desop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(tp,hg)
 		local dg=hg:Filter(Card.IsType,nil,e:GetLabel())
 		Duel.Destroy(dg,REASON_EFFECT)
+		Duel.ShuffleHand(1-tp)
 	end
-	e:GetLabelObject():SetDescription(0)
+	e:SetDescription(0)
 end
