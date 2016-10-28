@@ -42,7 +42,7 @@ end
 
 
 function c7611.spfil(c,e,tp)
-	return c:IsSetCard(0xf3) and c:IsLevelBelow(4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x10f3) and c:IsLevelBelow(4) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c7611.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(c7611.spfil,tp,LOCATION_HAND+LOCATION_GRAVE,0,nil,e,tp)
