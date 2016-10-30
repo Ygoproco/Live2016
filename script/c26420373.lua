@@ -58,7 +58,7 @@ function c26420373.scop(e,tp,eg,ep,ev,re,r,rp)
 	if not c:IsRelateToEffect(e) then return end
 	local ct=e:GetLabel()
 	local sel
-	if c:GetLeftScale()-ct>0 then
+	if c:GetLeftScale()>1 then
 		sel=Duel.SelectOption(tp,aux.Stringid(26420373,1),aux.Stringid(26420373,2))
 	else
 		sel=Duel.SelectOption(tp,aux.Stringid(26420373,1))
