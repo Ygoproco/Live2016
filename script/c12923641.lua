@@ -22,30 +22,26 @@ function c12923641.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	c:SetTurnCounter(0)
 	local g=Duel.GetMatchingGroup(Card.IsCanTurnSet,tp,0,LOCATION_MZONE,nil)
-	e:SetLabelObject(g)
 	Duel.SetOperationInfo(0,CATEGORY_POSITION,g,g:GetCount(),0,0)
+	Duel.SetTargetCard(g)
 	--destroy
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-	e2:SetCode(EVENT_PHASE+PHASE_STANDBY)
-	e2:SetCountLimit(1)
-	e2:SetRange(LOCATION_SZONE)
-	e2:SetCondition(c12923641.descon)
-	e2:SetOperation(c12923641.desop)
-	e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,2)
-	c:RegisterEffect(e2)
-end
-function c12923641.filter(c,tp)
-	return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:IsCanTurnSet()
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
+	e1:SetCountLimit(1)
+	e1:SetRange(LOCATION_SZONE)
+	e1:SetCondition(c12923641.descon)
+	e1:SetOperation(c12923641.desop)
+	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,2)
+	c:RegisterEffect(e1)
 end
 function c12923641.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local g=e:GetLabelObject()
-	if not g then return end
-	g=g:Filter(c12923641.filter,nil,1-tp)
-	if g:GetCount()>0 then
-		Duel.ChangePosition(g,POS_FACEDOWN_DEFENSE)
+	local g=Duel.GetMatchingGroup(Card.IsCanTurnSet,tp,0,LOCATION_MZONE,nil)
+	local sg=g:Filter(Card.IsRelateToEffect,nil,e)
+	if sg:GetCount()>0 then
+		Duel.ChangePosition(sg,POS_FACEDOWN_DEFENSE)
 	end
 end
 function c12923641.descon(e,tp,eg,ep,ev,re,r,rp)
