@@ -110,7 +110,7 @@ function c7635.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c7635.thfil(c)
-	return c:IsCode(7626) and c:IsAbleToHand()
+	return c:IsCode(7626) and c:IsAbleToHand() and c:IsFaceup()
 end
 function c7635.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_REMOVED) and chkc:IsControler(tp) and c7635.thfil(chkc) end
