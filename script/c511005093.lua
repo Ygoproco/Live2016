@@ -1,4 +1,4 @@
---Booster Draft Duel
+--Booster Draft Duel (HIJACK)
 -- - Works with Single Duel
 
 local function getID()
@@ -92,47 +92,14 @@ local packopen=false
 local handnum={[0]=5;[1]=5}
 
 --DangerZone
+--(Disabled)
 
-local side={[0]={};[1]={}}
-local function _prepSide(p,g)
-	local c=g:GetFirst()
-	while c do
-		table.insert(side[p],c:GetOriginalCode())
-		c=g:GetNext()
-	end
-end
-
-local function _printDeck()
-	--[[
-	local io=require("io")
-	for p=0,1 do
-		local f=io.open("./deck/bdduel"..p..".ydk","w+")
-		f:write("#created by ...\n#main\n")
-		local g=Duel.GetFieldGroup(p,LOCATION_DECK,0)
-		local c=g:GetFirst()
-		while c do
-			f:write(c:GetOriginalCode().."\n")
-			c=g:GetNext()
-		end
-		f:write("#extra\n")
-		g=Duel.GetFieldGroup(p,LOCATION_EXTRA,0)
-		c=g:GetFirst()
-		while c do
-			f:write(c:GetOriginalCode().."\n")
-			c=g:GetNext()
-		end
-		f:write("!side\n")
-		for _,i in ipairs(side[p]) do
-			f:write(i.."\n")
-		end
-		f:close()
-	end
-	--]]
-end
+local skip_effects={}
 
 function scard.op(e,tp,eg,ep,ev,re,r,rp)
 	if packopen then e:Reset() return end
 	packopen=true
+	Duel.DisableShuffleCheck()
 	--Hint
 	Duel.Hint(HINT_CARD,0,s_id)
 	for p=0,1 do
@@ -155,7 +122,12 @@ function scard.op(e,tp,eg,ep,ev,re,r,rp)
 		e13:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 		c:RegisterEffect(e13)
 	end
-	--note hand card (5)
+	--note hand card
+	handnum[0]=5 --Duel.GetFieldGroupCount(0,LOCATION_HAND,0)
+	handnum[1]=5 --Duel.GetFieldGroupCount(1,LOCATION_HAND,0)
+	--SetLP
+	Duel.SetLP(0,8000)
+	Duel.SetLP(1,8000)
 	--FOR RANDOOM
 	local rseed=0
 	for i=1,6 do
@@ -165,60 +137,177 @@ function scard.op(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 	math.randomseed(rseed)
-	--
-	Duel.DisableShuffleCheck()
-	--remove all cards
 	local fg=Duel.GetFieldGroup(0,0x43,0x43)
+	--remove all cards
 	Duel.SendtoDeck(fg,nil,-2,REASON_RULE)
 	--Open packs
-	local g=Group.CreateGroup()
-	local p=0
-	repeat
-		if g:GetCount()==0 then
-			for u=1,3 do
+	--SKIP
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_SKIP_DP)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetTargetRange(1,1)
+	Duel.RegisterEffect(e1,0)
+	local e2=e1:Clone()
+	e2:SetCode(EFFECT_SKIP_M1)
+	Duel.RegisterEffect(e2,0)
+	local e3=e1:Clone()
+	e3:SetCode(EFFECT_SKIP_BP)
+	Duel.RegisterEffect(e3,0)
+	e:Reset()
+	local e4=e1:Clone()
+	e3:SetCode(EFFECT_SKIP_M2)
+	Duel.RegisterEffect(e4,0)
+	local e5=e1:Clone()
+	e5:SetCode(EFFECT_CANNOT_BP)
+	Duel.RegisterEffect(e5,0)
+	local e6=e1:Clone()
+	e6:SetCode(EFFECT_CANNOT_M2)
+	Duel.RegisterEffect(e6,0)
+	local e7=e1:Clone()
+	e7:SetCode(EFFECT_CANNOT_EP)
+	Duel.RegisterEffect(e7,0)
+	table.insert(skip_effects,e1)
+	table.insert(skip_effects,e2)
+	table.insert(skip_effects,e3)
+	table.insert(skip_effects,e4)
+	table.insert(skip_effects,e5)
+	table.insert(skip_effects,e6)
+	table.insert(skip_effects,e7)
+	local e5=Effect.CreateEffect(e:GetHandler())
+	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e5:SetCode(EVENT_PHASE_START+PHASE_STANDBY)
+	e5:SetCountLimit(1)
+	e5:SetCondition(scard.nt_cd)
+	e5:SetOperation(scard.nt_op)
+	Duel.RegisterEffect(e5,0)
+	e:Reset()
+end
+
+--Checks
+
+function scard.flag_chk(c)
+	return c:GetFlagEffect(s_id)==0
+end
+
+function scard.nt_cd(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnCount()>1
+end
+
+local playerpack=Group.CreateGroup()
+local playerpick={[0]={},[1]={},[2]={},[3]={}}
+local confirmchk=999
+local nump=2
+local p2_exists=false
+local p3_exists=false
+local postprocess=false
+
+function scard.nt_op(e,tp,eg,ep,ev,re,r,rp)
+	local tcount=Duel.GetTurnCount()
+	local tplayer=Duel.GetTurnPlayer()
+	if tcount<=4 then --determine 3rd/4th player
+		if Duel.IsExistingMatchingCard(scard.flag_chk,tplayer,0x43,0,1,nil) then
+			local fg=Duel.GetFieldGroup(tplayer,0x43,0x43)
+			--remove all cards
+			Duel.SendtoDeck(fg,nil,-2,REASON_RULE)
+			if tcount==2 then
+				p2_exists=true
+				nump=3
+			end
+			if tcount==3 then
+				p3_exists=true
+				nump=4
+			end
+		end
+	elseif not postprocess then --go ahead and pick cards
+		if nump==3 and tcount%4==3 then return end
+		Duel.DisableShuffleCheck()
+		local ppick
+		if nump==3 and tcount%4==0 then
+			ppick=playerpick[2]
+		elseif nump==2 then
+			ppick=playerpick[tplayer]
+		else
+			ppick=playerpick[(tcount-1)%4]
+		end
+		--Pick one
+		if playerpack:GetCount()==0 then
+			for p=1,3 do
 				for i=1,5 do
 					local cpack=pack[i]
 					local c=cpack[math.random(#cpack)]
-					g:AddCard(Duel.CreateToken(p,c))
+					playerpack:AddCard(Duel.CreateToken(tplayer,c))
 				end
 			end
-			Duel.SendtoDeck(g,nil,2,REASON_RULE)
-			Duel.ConfirmCards(1-p,g)
+			if nump==2 then
+				Duel.SendtoHand(playerpack,nil,REASON_RULE)
+				Duel.SendtoDeck(playerpack:Filter(Card.IsLocation,nil,LOCATION_HAND),nil,0,REASON_RULE)
+				confirmchk=tcount
+			end
 		end
-		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_TODECK)
-		local rc=g:Select(p,1,1,nil):GetFirst()
-		g:RemoveCard(rc)
-		local tc=Duel.CreateToken(p,rc:GetOriginalCode())
+		if nump==2 and tcount>confirmchk then
+			Duel.ConfirmCards(tplayer,playerpack)
+			confirmchk=999
+		elseif nump>2 then
+			Duel.SendtoHand(playerpack,nil,REASON_RULE)
+			Duel.SendtoDeck(playerpack:Filter(Card.IsLocation,nil,LOCATION_HAND),nil,0,REASON_RULE)
+			Duel.ConfirmCards(tplayer,playerpack)
+		end
+		Duel.Hint(HINT_SELECTMSG,tplayer,HINTMSG_TODECK)
+		local rc=playerpack:Select(tplayer,1,1,nil):GetFirst()
+		--local rc=playerpack:RandomSelect(tplayer,1):GetFirst() --testing purpose
+		playerpack:RemoveCard(rc)
 		Duel.SendtoDeck(rc,nil,-2,REASON_RULE)
-		Duel.SendtoHand(tc,nil,REASON_RULE)
-		if tc:IsLocation(LOCATION_HAND) then Duel.SendtoDeck(tc,nil,2,REASON_RULE) end
-		p=1-p
-	until g:GetCount()==0 and Duel.GetFieldGroupCount(0,LOCATION_DECK+LOCATION_EXTRA,0)>=45 and Duel.GetFieldGroupCount(1,LOCATION_DECK+LOCATION_EXTRA,0)>=45
-	--Confirm cards
-	for p=0,1 do
-		Duel.ConfirmCards(p,Duel.GetFieldGroup(p,LOCATION_DECK+LOCATION_EXTRA,0))
-	end
-	--Reduce (min. 40) if the player wants to
-	local rg=Group.CreateGroup()
-	for p=0,1 do
-		local dg=Duel.GetFieldGroup(p,LOCATION_DECK,0)
-		local ct=dg:GetCount()-40
-		if ct>0 and Duel.SelectYesNo(p,aux.Stringid(4002,7)) then
-			Duel.Hint(HINT_SELECTMSG,p,HINTMSG_REMOVE)
-			local sg=g:Select(p,1,ct,nil)
-			_prepSide(p,sg)
-			rg:Merge(sg)
+		if nump>2 then Duel.SendtoDeck(playerpack,nil,-2,REASON_RULE) end
+		table.insert(ppick,rc:GetOriginalCode())
+		if #playerpick[0]>=45 and #playerpick[1]>=45 and (not p2_exists or #playerpick[2]>=45) and (not p3_exists or #playerpick[3]>=45) then
+			Duel.SendtoDeck(playerpack,nil,-2,REASON_RULE)
+			postprocess=true
+		end
+	--end go ahead
+	else --postprocess
+		if Duel.GetFieldGroupCount(tplayer,LOCATION_DECK+LOCATION_HAND,0)==0 then
+			if nump==3 and tcount%4==3 then return end
+			local ppick
+			if nump==3 and tcount%4==0 then
+				ppick=playerpick[2]
+			elseif nump==2 then
+				ppick=playerpick[tplayer]
+			else
+				ppick=playerpick[(tcount-1)%4]
+			end
+			local g=Group.CreateGroup()
+			for _,c in ipairs(ppick) do
+				g:AddCard(Duel.CreateToken(tplayer,c))
+			end
+			Duel.DisableShuffleCheck()
+			Duel.SendtoHand(g,nil,REASON_RULE)
+			Duel.SendtoDeck(g:Filter(Card.IsLocation,nil,LOCATION_HAND),nil,0,REASON_RULE)
+			Duel.ShuffleDeck(tplayer)
+			Duel.SendtoHand(Duel.GetDecktopGroup(tplayer,5),nil,REASON_RULE)
+			if Duel.SelectYesNo(tplayer,aux.Stringid(4002,2)) then
+				local sg=Duel.GetFieldGroup(tplayer,LOCATION_HAND,0)
+				local ct=sg:GetCount()
+				Duel.SendtoDeck(sg,nil,1,REASON_RULE)
+				Duel.SendtoHand(Duel.GetDecktopGroup(tplayer,ct),nil,REASON_RULE)
+			end
+		elseif tcount%4==1 then
+			--resets
+			for _,ske in ipairs(skip_effects) do
+				ske:Reset()
+			end
+			--no attack this turn
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_FIELD)
+			e1:SetCode(EFFECT_CANNOT_BP)
+			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_PLAYER_TARGET)
+			e1:SetTargetRange(1,1)
+			e1:SetReset(RESET_PHASE+PHASE_END)
+			Duel.RegisterEffect(e1,0)
+			local e2=e1:Clone()
+			e2:SetCode(EFFECT_CANNOT_M2)
+			Duel.RegisterEffect(e2,0)
+			e:Reset()
 		end
 	end
-	if rg:GetCount()>0 then Duel.SendtoDeck(rg,nil,-2,REASON_RULE) end
-	--Shuffle Deck
-	for p=0,1 do
-		Duel.ShuffleDeck(p)
-	end
-	--Readd hand
-	for p=0,1 do
-		Duel.SendtoHand(Duel.GetDecktopGroup(p,handnum[p]),nil,REASON_RULE)
-	end
-	_printDeck()
-	e:Reset()
 end
