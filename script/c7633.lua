@@ -35,7 +35,7 @@ function c7633.initial_effect(c)
 end
 
 function c7633.mat_fil(c)
-	return c:GetPreviousLocation()==LOCATION_EXTRA
+	return c:GetPreviousLocation()==LOCATION_EXTRA and c:IsLocation(LOCATION_MZONE)
 end
 function c7633.splimit(e,se,sp,st)
 	return not e:GetHandler():IsLocation(LOCATION_EXTRA) or aux.fuslimit(e,se,sp,st)
@@ -61,8 +61,10 @@ end
 function c7633.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) then
-		local g=Duel.GetMatchingGroup(c7633.rmfilter2,tp,0,LOCATION_MZONE,nil,tc:GetAttribute())
-		g:AddCard(tc)
-		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
+		local at=tc:GetAttribute()
+		if Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)~=0 then
+			local g=Duel.GetMatchingGroup(c7633.rmfilter2,tp,0,LOCATION_MZONE,nil,at)
+			Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
+		end
 	end
 end
