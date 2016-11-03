@@ -34,12 +34,13 @@ function c511000745.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c511000745.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if e:GetHandler():IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if e:GetHandler():IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		Duel.Equip(tp,e:GetHandler(),tc)
 	end
 end
 function c511000745.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
+	local c=e:GetHandler()
+	if chk==0 then return not c:IsReason(REASON_REPLACE) and c:GetEquipTarget() end
 	if Duel.SelectYesNo(tp,aux.Stringid(511000745,0)) then
 		return true
 	else
@@ -50,7 +51,7 @@ function c511000745.repop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_EQUIP)
-	e2:SetCode(EFFECT_SET_ATTACK)
+	e2:SetCode(EFFECT_SET_ATTACK_FINAL)
 	e2:SetValue(c511000745.atkval)
 	e2:SetReset(RESET_EVENT+0x1fe0000)
 	c:RegisterEffect(e2)
