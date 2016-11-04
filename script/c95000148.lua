@@ -7,6 +7,7 @@ function c95000148.initial_effect(c)
 	e1:SetCategory(CATEGORY_ATKCHANGE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetTarget(c95000148.target)
+	e1:SetCondition(c95000148.atkcon)
 	e1:SetOperation(c95000148.operation)
 	c:RegisterEffect(e1)
 	--act in hand
@@ -24,10 +25,10 @@ function c95000148.filter(c)
 	return c:IsFaceup()
 end
 function c95000148.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c95000148.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c95000148.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and chkc:IsFaceup() end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	local g=Duel.SelectTarget(tp,c95000148.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	local g=Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 end
 function c95000148.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()

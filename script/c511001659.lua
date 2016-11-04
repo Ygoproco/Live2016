@@ -3,14 +3,13 @@ function c511001659.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,nil,10,3)
 	c:EnableReviveLimit()
-	--material
+	--Rank Up Check
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(32559361,0))
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e1:SetCode(EVENT_BATTLED)
-	e1:SetCondition(c511001659.con)
-	e1:SetTarget(c511001659.target)
-	e1:SetOperation(c511001659.operation)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetCondition(c511001659.rankupregcon)
+	e1:SetOperation(c511001659.rankupregop)
 	c:RegisterEffect(e1)
 	--damage
 	local e2=Effect.CreateEffect(c)
@@ -34,15 +33,6 @@ function c511001659.initial_effect(c)
 	e3:SetTarget(c511001659.damtg2)
 	e3:SetOperation(c511001659.damop2)
 	c:RegisterEffect(e3)
-	--atk limit
-	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_FIELD)
-	e4:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
-	e4:SetRange(LOCATION_MZONE)
-	e4:SetTargetRange(0,LOCATION_MZONE)
-	e4:SetCondition(c511001659.atcon)
-	e4:SetValue(c511001659.atlimit)
-	c:RegisterEffect(e4)
 	--battle indestructable
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_SINGLE)
@@ -61,8 +51,34 @@ function c511001659.initial_effect(c)
 	end
 end
 c511001659.xyz_number=9
-function c511001659.con(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetOverlayGroup():IsExists(Card.IsCode,1,nil,1992816)
+function c511001659.rumfilter(c)
+	return c:IsCode(1992816) and not c:IsPreviousLocation(LOCATION_OVERLAY)
+end
+function c511001659.rankupregcon(e,tp,eg,ep,ev,re,r,rp)
+		local rc=re:GetHandler()
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ) and (rc:IsSetCard(0x95) or rc:IsCode(100000581) or rc:IsCode(111011002) or rc:IsCode(511000580) or rc:IsCode(511002068) or rc:IsCode(511002164) or rc:IsCode(93238626)) and e:GetHandler():GetMaterial():IsExists(c511001659.rumfilter,1,nil)
+end
+function c511001659.rankupregop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+		--material
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(32559361,0))
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e1:SetCode(EVENT_BATTLED)
+	e1:SetTarget(c511001659.target)
+	e1:SetOperation(c511001659.operation)
+	e1:SetReset(RESET_EVENT+0x1fe0000)
+	c:RegisterEffect(e1)
+		--atk limit
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetTargetRange(0,LOCATION_MZONE)
+	e4:SetCondition(c511001659.atcon)
+	e4:SetValue(c511001659.atlimit)
+	e4:SetReset(RESET_EVENT+0x1fe0000)
+	c:RegisterEffect(e4)
 end
 function c511001659.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -111,7 +127,7 @@ function c511001659.damop2(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Damage(p,ct*800,REASON_EFFECT)
 end
 function c511001659.atcon(e)
-	return e:GetHandler():GetOverlayGroup():IsExists(Card.IsCode,1,nil,1992816) and e:GetHandler():GetOverlayCount()>0
+	return e:GetHandler():GetOverlayCount()>0
 end
 function c511001659.atlimit(e,c)
 	return c~=e:GetHandler()

@@ -68,7 +68,7 @@ function c511000990.initial_effect(c)
 			end
 		end
 		if Duel.IsPlayerAffectedByEffect(1-tp,5000) and Duel.SelectYesNo(1-tp,aux.Stringid(4002,8)) then  
- 			Duel.ConfirmCards(1-tp,g)
+ 			Duel.ConfirmCards(1-tp,mg)
  			local label=0
  			if mg:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) or (mc and mc:IsLocation(LOCATION_HAND)) then label=label+1 end
  			if mg:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) or (mc and mc:IsLocation(LOCATION_DECK)) then label=label+2 end

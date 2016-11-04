@@ -13,10 +13,10 @@ function c95000173.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_QP_ACT_IN_NTPHAND)
-	e2:SetCondition(c95000171.handcon)
+	e2:SetCondition(c95000173.handcon)
 	c:RegisterEffect(e2)
 end
-function c95000171.handcon(e)
+function c95000173.handcon(e)
 	return tp~=Duel.GetTurnPlayer()
 end
 function c95000173.filter(c)

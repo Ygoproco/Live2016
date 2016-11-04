@@ -1,4 +1,5 @@
 --Power Parasite
+--fixed by MLD
 function c511009339.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)

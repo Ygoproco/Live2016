@@ -38,6 +38,7 @@ function c95000114.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e1)
 end
+end
 
 function c95000114.handcon(e)
 	return tp~=Duel.GetTurnPlayer()

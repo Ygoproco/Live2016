@@ -1,4 +1,5 @@
 --Raidraptor - Iron Heart
+--fixed by MLD
 function c511009317.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)

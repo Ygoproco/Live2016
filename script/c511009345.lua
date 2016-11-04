@@ -1,4 +1,5 @@
 --Double Parasitic Rebirth
+--fixed by MLD
 function c511009345.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
