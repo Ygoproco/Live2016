@@ -13,6 +13,7 @@ function c511004341.condition(e,tp,ev,eg,ep,re,r,rp)
 	return Duel.GetTurnPlayer()~=tp
 end
 function c511004341.operation(e,tp,ev,eg,ep,re,r,rp)
-	Duel.NegateAttack()
-	Duel.SkipPhase(1-tp,PHASE_BATTLE,RESET_PHASE+PHASE_BATTLE,1)
+	if Duel.NegateAttack() then
+		Duel.SkipPhase(1-tp,PHASE_BATTLE,RESET_PHASE+PHASE_BATTLE,1)
+	end
 end

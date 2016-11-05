@@ -11,7 +11,6 @@ function c511004339.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511004339.filter1(c,e,tp)
-   
 	return c:IsFaceup() and c:GetCounter(0x1107)~=0 and Duel.IsExistingMatchingCard(c511004339.filter2,tp,0,LOCATION_MZONE,1,nil,e,tp,c,c:GetRace())
 end
 function c511004339.filter2(c,e,tp,mc,rc)
@@ -19,7 +18,7 @@ function c511004339.filter2(c,e,tp,mc,rc)
 end
 function c511004339.tg(e,tp,eg,ev,ep,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_SZONE) and chkc:IsControler(1-tp) and c511004339.filter1(chkc,e,tp) end
-	if chk==0 then return Duel.IsExistingMatchingCard(c511004339.filter1,tp,LOCATION_SZONE,0,1,nil,e,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c511004339.filter1,tp,LOCATION_SZONE,0,1,nil,e,tp) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
 end
 function c511004339.op(e,tp,eg,ev,ep,re,r,rp,chk)
 	local g1=Duel.SelectMatchingCard(tp,c511004339.filter1,tp,LOCATION_SZONE,0,1,1,nil,e,tp)
@@ -27,7 +26,7 @@ function c511004339.op(e,tp,eg,ev,ep,re,r,rp,chk)
 	if tc then
 		local g2=Duel.SelectMatchingCard(tp,c511004339.filter2,tp,0,LOCATION_MZONE,1,1,nil,e,tp,tc,tc:GetRace())
 		local mtc=g2:GetFirst()
-		if mtc then
+		if mtc and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 then
 		   Duel.MoveToField(mtc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 		   mtc:AddCounter(0x1107,1)
 		end

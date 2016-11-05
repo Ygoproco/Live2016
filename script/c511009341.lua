@@ -1,4 +1,5 @@
 --Parasitic Maneuver
+--fixed by MLD
 function c511009341.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)

@@ -2,11 +2,6 @@
 function c511009107.initial_effect(c)
 	--pendulum summon
 	aux.EnablePendulumAttribute(c)
-	--Activate
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCode(EVENT_FREE_CHAIN)
-	c:RegisterEffect(e1)
 	--atkup
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
@@ -72,9 +67,8 @@ function c511009107.repfilter(c,tp)
 		and c:IsSetCard(0xc6) and c:IsReason(REASON_BATTLE+REASON_EFFECT)
 end
 function c511009107.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local ct=eg:FilterCount(c511009107.repfilter,nil,tp)
-	local g=Duel.GetDecktopGroup(tp,ct)
-	if chk==0 then return true end
+	local ct=eg:FilterCount(c511009107.repfilter,nil,e:GetHandlerPlayer())
+	if chk==0 then return ct>0 end
 	if Duel.SelectYesNo(tp,aux.Stringid(43175858,0)) then
 		return true
 	else return false end

@@ -1,4 +1,5 @@
 --Parasite Generator
+--fixed by MLD
 function c511009347.initial_effect(c)	
 	--activate
 	local e1=Effect.CreateEffect(c)

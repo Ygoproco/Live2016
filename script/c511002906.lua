@@ -25,7 +25,7 @@ function c511002906.spcon(e,c)
 	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0 and Duel.IsCanRemoveCounter(c:GetControler(),1,0,0x107,3,REASON_COST)
 end
 function c511002906.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	Duel.RemoveCounter(tp,1,0,0x107,3,REASON_COST)
+	Duel.RemoveCounter(tp,1,0,0x107,3,REASON_RULE)
 end
 function c511002906.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil) end

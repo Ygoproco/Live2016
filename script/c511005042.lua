@@ -11,6 +11,12 @@ function scard.initial_effect(c)
 	e1:SetCondition(scard.sum_cd)
 	e1:SetDescription(aux.Stringid(4001,4))
 	c:RegisterEffect(e1)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetCode(EFFECT_ADD_SETCODE)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e2:SetValue(0x21b)
+	c:RegisterEffect(e2)
 end
 
 function scard.sum_cd(e,c)
