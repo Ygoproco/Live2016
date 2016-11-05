@@ -14,6 +14,16 @@ function c511002713.initial_effect(c)
 	e1:SetTarget(c511002713.destg)
 	e1:SetOperation(c511002713.desop)
 	c:RegisterEffect(e1)
+	--special summon
+	local e2=Effect.CreateEffect(c)
+	e2:SetCategory(CATEGORY_DESTROY)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+	e2:SetCode(EVENT_DESTROYED)
+	e2:SetCondition(c511002713.descon2)
+	e2:SetTarget(c511002713.destg)
+	e2:SetOperation(c511002713.desop)
+	c:RegisterEffect(e2)
 end
 function c511002713.sfilter(c)
 	return c:IsSetCard(0x21f) or c:IsSetCard(0x21) or c:IsCode(67105242) or c:IsCode(67987302)
@@ -36,4 +46,9 @@ function c511002713.desop(e,tp,eg,ep,ev,re,r,rp)
 	if tc and tc:IsRelateToEffect(e) then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
+end
+function c511002713.descon2(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return c:GetPreviousControler()==tp and c:IsPreviousLocation(LOCATION_MZONE)
+		and (c:IsPreviousSetCard(0x21f) or c:IsPreviousSetCard(0x21) or c:GetPreviousCodeOnField()==67105242 or c:GetPreviousCodeOnField()==67987302)
 end
