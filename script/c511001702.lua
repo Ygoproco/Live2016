@@ -13,13 +13,13 @@ function c511001702.filter(c,e,tp)
 	return c:GetAttack()==100 and c:IsSetCard(0xe6) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511001702.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>3 
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>3 and not Duel.IsPlayerAffectedByEffect(tp,59822133) 
 		and Duel.IsExistingMatchingCard(c511001702.filter,tp,LOCATION_DECK,0,4,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,4,0,LOCATION_DECK)
 end
 function c511001702.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<4 then return end
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<4 or Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
 	if not Duel.IsExistingMatchingCard(c511001702.filter,tp,LOCATION_DECK,0,4,nil,e,tp) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c511001702.filter,tp,LOCATION_DECK,0,4,4,nil,e,tp)

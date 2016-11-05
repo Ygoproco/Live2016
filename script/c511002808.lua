@@ -2,7 +2,7 @@
 function c511002808.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0xf1),aux.FilterBoolFunction(Card.IsRace,RACE_BEAST),true)
+	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0xf2),aux.FilterBoolFunction(Card.IsRace,RACE_BEAST),true)
 	--damage
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_DAMAGE)

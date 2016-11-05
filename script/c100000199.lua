@@ -11,20 +11,6 @@ function c100000199.initial_effect(c)
 	e2:SetTarget(c100000199.target)
 	e2:SetOperation(c100000199.activate)
 	c:RegisterEffect(e2)
-	if not c100000199.global_check then
-		c100000199.global_check=true
-		local ge1=Effect.CreateEffect(c)
-		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge1:SetCode(EVENT_DAMAGE_STEP_END)
-		ge1:SetOperation(c100000199.checkop)
-		Duel.RegisterEffect(ge1,0)
-	end
-end
-function c100000199.checkop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetAttacker()
-	if Duel.GetAttackTarget()==nil and tc:GetControler()==Duel.GetTurnPlayer() then
-		tc:RegisterFlagEffect(100000199,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,0)
-	end
 end
 function c100000199.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp
@@ -39,11 +25,12 @@ function c100000199.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(g,REASON_COST+REASON_DISCARD)
 end
 function c100000199.filter(c)
-	return c:GetFlagEffect(100000199)>0 and c:IsAttackBelow(1500)
+	return c:IsDirectAttacked() and c:IsAttackBelow(1500)
 end
 function c100000199.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c100000199.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c100000199.filter,tp,LOCATION_MZONE,0,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(c100000199.filter,tp,LOCATION_MZONE,0,1,nil) 
+		and Duel.IsPlayerCanDraw(tp,1) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,c100000199.filter,tp,LOCATION_MZONE,0,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,0)
@@ -52,13 +39,12 @@ end
 function c100000199.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	while Duel.Draw(tp,1,REASON_EFFECT)~=0 and tc and tc:IsFaceup() and tc:IsRelateToEffect(e) do
-		local tc=Duel.GetOperatedGroup():GetFirst()
-		Duel.ConfirmCards(tp,tc)		
-		if tc:IsType(TYPE_MONSTER) then		
-			if Duel.SendtoGrave(tc,REASON_EFFECT)~=0 then	
-				Duel.Damage(1-tp,tg:GetAttack(),REASON_EFFECT)
-				local p=e:GetHandler():GetControler()
-				if Duel.GetLP(1-p)<=0 and Duel.GetFieldGroupCount(p,LOCATION_DECK,0)<=0 then
+		local gc=Duel.GetOperatedGroup():GetFirst()
+		Duel.ConfirmCards(tp,gc)
+		if gc and gc:IsType(TYPE_MONSTER) then		
+			if Duel.SendtoGrave(gc,REASON_EFFECT)~=0 then	
+				Duel.Damage(1-tp,tc:GetAttack(),REASON_EFFECT)
+				if Duel.GetLP(1-tp)<=0 and Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<=0 then
 					return Duel.SetLP(tp,0)
 				end
 			end

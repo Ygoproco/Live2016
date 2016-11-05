@@ -85,12 +85,13 @@ function c511001114.crystalstobeastsop(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(c511001114.crystalstobeastfilter,tp,LOCATION_SZONE,0,nil,e,tp)
 	local gc=g:GetCount()
 	if gc==0 then return end
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ct=1 end
 	if gc<=ct then
-		Duel.SpecialSummon(g,0,tp,tp,true,false,POS_FACEUP)
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	else
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local sg=g:Select(tp,ct,ct,nil)
-		Duel.SpecialSummon(sg,0,tp,tp,true,false,POS_FACEUP)
+		Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
 function c511001114.sptg(e,tp,eg,ep,ev,re,r,rp,chk)

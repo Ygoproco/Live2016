@@ -5,17 +5,16 @@ function c511009325.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_BATTLE_DAMAGE)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCondition(c511009325.condition)
 	e1:SetTarget(c511009325.target)
 	e1:SetOperation(c511009325.activate)
 	c:RegisterEffect(e1)
-	
-	
 	--to hand
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(18563744,1))
 	e2:SetCategory(CATEGORY_ATKCHANGE)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCost(c511009325.atkcost)
@@ -67,8 +66,6 @@ function c511009325.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.XyzSummon(tp,xyz,g)
 	end
 end
-
---atk up
 function c511009325.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
@@ -76,15 +73,15 @@ end
 function c511009325.atkfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:GetOverlayCount()>0
 end
-function c511009325.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function c511009325.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c511009325.atkfilter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(c511009325.atkfilter,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,c511009325.atkfilter,tp,LOCATION_MZONE,0,1,1,nil)
 end
-function c511009325.activate(e,tp,eg,ep,ev,re,r,rp)
+function c511009325.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		local ct=tc:GetOverlayCount()
 		tc:RemoveOverlayCard(tp,ct,ct,REASON_EFFECT)
 		local e1=Effect.CreateEffect(e:GetHandler())

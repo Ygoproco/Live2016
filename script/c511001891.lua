@@ -53,6 +53,7 @@ function c511001891.operation(e,tp,eg,ep,ev,re,r,rp)
 			or not Duel.IsPlayerCanSpecialSummonMonster(tp,511001892,0,0x4011,tc:GetAttack(),tc:GetDefense(),
 			tc:GetLevel(),tc:GetRace(),tc:GetAttribute()) then return end
 		local token=Duel.CreateToken(tp,511001892)
+		token:CopyEffect(tc:GetOriginalCode(),RESET_EVENT+0xfe0000,1)
 		Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
@@ -76,7 +77,14 @@ function c511001891.operation(e,tp,eg,ep,ev,re,r,rp)
 		e5:SetCode(EFFECT_CHANGE_ATTRIBUTE)
 		e5:SetValue(tc:GetAttribute())
 		token:RegisterEffect(e5)
-		token:CopyEffect(tc:GetOriginalCode(),RESET_EVENT+0x1fe0000,1)
+		if tc:IsType(TYPE_EFFECT) and not token:IsType(TYPE_EFFECT) then
+			local e6=Effect.CreateEffect(c)
+			e6:SetType(EFFECT_TYPE_SINGLE)
+			e6:SetCode(EFFECT_ADD_TYPE)
+			e6:SetValue(TYPE_EFFECT)
+			e6:SetReset(RESET_EVENT+0x1fe0000)
+			token:RegisterEffect(e6)
+		end
 		Duel.SpecialSummonComplete()
 		c:SetCardTarget(token)
 	end

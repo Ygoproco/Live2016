@@ -22,10 +22,10 @@ function c511002906.initial_effect(c)
 end
 function c511002906.spcon(e,c)
 	if c==nil then return true end
-	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0 and Duel.IsCanRemoveCounter(c:GetControler(),1,0,0x1107,3,REASON_COST)
+	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0 and Duel.IsCanRemoveCounter(c:GetControler(),1,0,0x107,3,REASON_COST)
 end
 function c511002906.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	Duel.RemoveCounter(tp,1,0,0x1107,3,REASON_RULE)
+	Duel.RemoveCounter(tp,1,0,0x107,3,REASON_RULE)
 end
 function c511002906.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil) end

@@ -15,29 +15,44 @@ function c700000027.initial_effect(c)
 	e1:SetOperation(c700000027.operation)
 	c:RegisterEffect(e1)
 end
-
 function c700000027.cost(e,tp,ep,eg,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
+function c700000027.filter(c,e)
+	return aux.nzatk(c) and (not e or not c:IsImmuneToEffect(e))
+end
+function c700000027.atkfilter(c)
+	return c:IsSetCard(0xba) and c:IsType(TYPE_MONSTER)
+end
 function c700000027.target(e,tp,ep,eg,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(aux.nzatk,tp,0,LOCATION_MZONE,1,nil) and Duel.IsExistingMatchingCard(Card.IsSetCard,tp,LOCATION_GRAVE,0,1,nil,0xba) end
+	if chk==0 then return Duel.IsExistingMatchingCard(aux.nzatk,tp,0,LOCATION_MZONE,1,nil) 
+		and Duel.IsExistingMatchingCard(c700000027.atkfilter,tp,LOCATION_GRAVE,0,1,nil) end
 end
 function c700000027.operation(e,tp,ep,eg,ev,re,r,rp)
-	local mg=Duel.GetMatchingGroupCount(c700000027.filter1,tp,0,LOCATION_MZONE,nil)
-	local rc=Duel.GetMatchingGroupCount(Card.IsSetCard,tp,LOCATION_GRAVE,0,nil,0xba)
+	local mg=Duel.GetMatchingGroupCount(c700000027.filter,tp,0,LOCATION_MZONE,nil,e)
+	local rc=Duel.GetMatchingGroupCount(c700000027.atkfilter,tp,LOCATION_GRAVE,0,nil)
+	local g=Duel.GetMatchingGroup(c700000027.atkfilter,tp,LOCATION_GRAVE,0,nil)
+	local ct=g:GetFirst()
 	if mg==0 or rc==0 then return end
-	local b=true
-	while rc>0 and b and Duel.IsExistingMatchingCard(aux.nzatk,tp,0,LOCATION_MZONE,1,nil) do
-		local tg=Duel.SelectMatchingCard(tp,aux.nzatk,tp,0,LOCATION_MZONE,1,1,nil)
+	repeat
+		local code=ct:GetCode()
+		Duel.Hint(HINT_CARD,0,code)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+		local tg=Duel.SelectMatchingCard(tp,c700000027.filter,tp,0,LOCATION_MZONE,1,1,nil,e)
 		local tc=tg:GetFirst()
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetValue(-800)
-		e1:SetReset(RESET_EVENT+0x1ff0000)
-		tc:RegisterEffect(e1)
+		if tc then
+			Duel.HintSelection(tg)
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_UPDATE_ATTACK)
+			e1:SetValue(-800)
+			e1:SetReset(RESET_EVENT+0x1fe0000)
+			tc:RegisterEffect(e1)
+		else return
+		end
 		rc=rc-1
-		if rc>0 and Duel.IsExistingMatchingCard(aux.nzatk,tp,0,LOCATION_MZONE,1,nil) then b=Duel.SelectYesNo(tp,aux.Stringid(6528,8)) end
-	end
+		ct=g:GetNext()
+	until rc<=0 or not Duel.IsExistingMatchingCard(c700000027.filter,tp,0,LOCATION_MZONE,1,nil,e) 
+		or not Duel.SelectYesNo(tp,210)
 end

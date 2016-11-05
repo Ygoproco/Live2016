@@ -23,7 +23,7 @@ function c78872731.initial_effect(c)
 	end
 end
 function c78872731.tgfilter(c)
-	return c:IsSetCard(0xf2) and c:IsAbleToGrave()
+	return c:IsSetCard(0xf1) and c:IsAbleToGrave()
 end
 function c78872731.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c78872731.tgfilter,tp,LOCATION_DECK,0,1,nil) end

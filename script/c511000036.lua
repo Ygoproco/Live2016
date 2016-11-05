@@ -10,32 +10,23 @@ function c511000036.initial_effect(c)
 	e1:SetOperation(c511000036.activate)
 	c:RegisterEffect(e1)
 end
-function c511000036.filter(c)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsDestructable()
-end
 function c511000036.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetLP(tp)<Duel.GetLP(1-tp)
 end
-function c511000036.tfilter(c)
-	return c:IsDestructable()
-end
 function c511000036.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c511000036.tfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
-	local g=Duel.GetMatchingGroup(c511000036.tfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,0,g:GetCount()*300)
-	local c=e:GetHandler()
-	if chk==0 then return Duel.IsExistingMatchingCard(c511000036.tfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,c) end
-	local sg=Duel.GetMatchingGroup(c511000036.tfilter,tp,LOCATION_MZONE,LOCATION_MZONE,c)
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,sg:GetCount(),0,0)
 end
 function c511000036.activate(e,tp,eg,ep,ev,re,r,rp)
-	local g1=Duel.GetMatchingGroup(c511000036.tfilter,tp,LOCATION_MZONE,0,nil)
-	local g2=Duel.GetMatchingGroup(c511000036.tfilter,tp,0,LOCATION_MZONE,nil)
+	local g1=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,0,nil)
+	local g2=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
 	local ct1=Duel.Destroy(g1,REASON_EFFECT)
 	local ct2=Duel.Destroy(g2,REASON_EFFECT)
-	Duel.Damage(tp,ct1*300,REASON_EFFECT)
-	Duel.Damage(1-tp,ct2*300,REASON_EFFECT)
+	Duel.Damage(tp,ct1*300,REASON_EFFECT,true)
+	Duel.Damage(1-tp,ct2*300,REASON_EFFECT,true)
+	Duel.RDComplete()
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_PHASE_START+PHASE_END)

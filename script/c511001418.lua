@@ -59,11 +59,14 @@ function c511001418.spfilter2(c,e,tp)
 end
 function c511001418.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=e:GetLabelObject():GetLabelObject()
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and g:IsExists(c511001418.spfilter2,1,nil,e,tp) end
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,g:GetCount(),0,0)
 end
 function c511001418.damop(e,tp,eg,ep,ev,re,r,rp)
 	local g=e:GetLabelObject():GetLabelObject()
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
+	if g:GetCount()>ft then return end
 	local tc=g:GetFirst()
 	while tc do
 		Duel.SpecialSummonStep(tc,0,tc:GetOwner(),tc:GetOwner(),false,false,POS_FACEUP)

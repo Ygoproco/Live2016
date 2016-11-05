@@ -32,8 +32,9 @@ function c511000946.operation(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		local atk=tc:GetAttack()
 		if Duel.Destroy(tc,REASON_EFFECT)>0 then
-			Duel.Damage(1-tp,atk,REASON_EFFECT)
-			Duel.Damage(tp,atk,REASON_EFFECT)
+			Duel.Damage(1-tp,atk,REASON_EFFECT,true)
+			Duel.Damage(tp,atk,REASON_EFFECT,true)
+			Duel.RDComplete()
 		end
 	end
 end

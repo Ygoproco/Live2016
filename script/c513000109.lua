@@ -83,12 +83,12 @@ function c513000109.regop2(e,tp,eg,ep,ev,re,r,rp)
 end
 function c513000109.winop(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabelObject():GetLabel()==3 then
-		Duel.Win(PLAYER_NONE,0x55)
+		Duel.Win(PLAYER_NONE,0x57)
 	end
 	if e:GetLabelObject():GetLabel()==2 then
-		Duel.Win(tp,0x55)
+		Duel.Win(tp,0x57)
 	end
 	if e:GetLabelObject():GetLabel()==1 then
-		Duel.Win(1-tp,0x55)
+		Duel.Win(1-tp,0x57)
 	end
 end

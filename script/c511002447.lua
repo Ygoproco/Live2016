@@ -20,12 +20,12 @@ function c511002447.filter(c,e,tp)
 	return c:IsLevelBelow(3) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511002447.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>1
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>1 and not Duel.IsPlayerAffectedByEffect(tp,59822133) 
 		and Duel.IsExistingMatchingCard(c511002447.spfilter,tp,LOCATION_DECK,0,2,nil,e,tp)  end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_DECK)
 end
 function c511002447.activate(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<2 then return end
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<2 or Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
 	local g=Duel.GetMatchingGroup(c511002447.filter,tp,LOCATION_DECK,0,nil,e,tp)
 	if g:GetCount()<2 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)

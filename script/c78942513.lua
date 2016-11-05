@@ -43,11 +43,11 @@ function c78942513.activate(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e2)
 		local e3=Effect.CreateEffect(c)
 		e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e3:SetCode(EVENT_PHASE+PHASE_BATTLE)
+		e3:SetCode(EVENT_PHASE+PHASE_END)
 		e3:SetRange(LOCATION_MZONE)
 		e3:SetCountLimit(1)
 		e3:SetOperation(c78942513.posop)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		e3:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e3)
 	end
 end

@@ -13,6 +13,12 @@ function c511002054.initial_effect(c)
 	e1:SetTarget(c511002054.sptg)
 	e1:SetOperation(c511002054.spop)
 	c:RegisterEffect(e1)
+	--battle indestructable
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e2:SetValue(c511002054.indes)
+	c:RegisterEffect(e2)
 	if not c511002054.global_check then
 		c511002054.global_check=true
 		local ge2=Effect.CreateEffect(c)
@@ -22,22 +28,6 @@ function c511002054.initial_effect(c)
 		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
 		ge2:SetOperation(c511002054.numchk)
 		Duel.RegisterEffect(ge2,0)
-	end
-	--battle indestructable
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-	e2:SetValue(c511002054.indes)
-	c:RegisterEffect(e2)
-	if not c511002054.global_check then
-		c511002054.global_check=true
-		local ge3=Effect.CreateEffect(c)
-		ge3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge3:SetCode(EVENT_ADJUST)
-		ge3:SetCountLimit(1)
-		ge3:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge3:SetOperation(c511002054.numchk)
-		Duel.RegisterEffect(ge3,0)
 	end
 end
 c511002054.xyz_number=42
@@ -55,6 +45,7 @@ end
 function c511002054.spop(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft<=0 or not Duel.IsPlayerCanSpecialSummonMonster(tp,10389143,0,0x4011,2000,0,6,RACE_MACHINE,ATTRIBUTE_WIND) then return end
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
 	local fid=e:GetHandler():GetFieldID()
 	local g=Group.CreateGroup()
 	for i=1,ft do

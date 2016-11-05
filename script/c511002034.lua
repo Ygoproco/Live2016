@@ -9,7 +9,7 @@ function c511002034.initial_effect(c)
 	e1:SetCategory(CATEGORY_DISABLE+CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_CHAINING)
-	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL+EFFECT_FLAG_CARD_TARGET)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCondition(c511002034.condition)
 	e1:SetTarget(c511002034.target)
@@ -38,16 +38,19 @@ function c511002034.condition2(e,tp,eg,ep,ev,re,r,rp)
 		and not c:IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainDisablable(ev)
 end
 function c511002034.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
+	local rc=re:GetHandler()
+	if chk==0 then return rc and rc:IsCanBeEffectTarget(e) end
+	Duel.SetTargetCard(rc)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
-	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
+	if rc:IsDestructable() and rc:IsRelateToEffect(re) then
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
 	end
 end
 function c511002034.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	Duel.NegateEffect(ev)
 	local rc=re:GetHandler()
+	if not rc or not rc:IsRelateToEffect(e) then return end
+	Duel.NegateEffect(ev)
 	if rc:IsRelateToEffect(re) and Duel.Destroy(rc,REASON_EFFECT)>0 then
 		if c:IsRelateToEffect(e) and c:IsFaceup() then
 			local atk=rc:GetTextAttack()

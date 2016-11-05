@@ -63,7 +63,7 @@ function c52900000.regop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1)
 	e1:SetReset(RESET_EVENT+0x1ee0000+RESET_PHASE+PHASE_END)
-	e1:SetCondition(c52900000.sprcon)
+	e1:SetCondition(Auxiliary.SpiritReturnCondition)
 	e1:SetTarget(c52900000.sprtg)
 	e1:SetOperation(c52900000.sprop)
 	c:RegisterEffect(e1)
@@ -71,35 +71,28 @@ function c52900000.regop(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	c:RegisterEffect(e2)
 end
-function c52900000.sprcon(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if c:IsHasEffect(EFFECT_SPIRIT_DONOT_RETURN) then return false end
-	if e:IsHasType(EFFECT_TYPE_TRIGGER_F) then
-		return not c:IsHasEffect(EFFECT_SPIRIT_MAYNOT_RETURN)
-	else return c:IsHasEffect(EFFECT_SPIRIT_MAYNOT_RETURN) end
-end
 function c52900000.sprtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local b=true
-	if CARD_BLUEEYES_SPIRIT then
-		b=Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT)
-	else
-		b=Duel.IsPlayerAffectedByEffect(tp,59822133)
+	if chk==0 then
+		if e:IsHasType(EFFECT_TYPE_TRIGGER_F) then
+			return true
+		else
+			return Duel.GetLocationCount(tp,LOCATION_MZONE)>1
+				and not Duel.IsPlayerAffectedByEffect(tp,59822133)
+				and Duel.IsPlayerCanSpecialSummonMonster(tp,52900001,0,0x4011,1500,1500,4,RACE_WINDBEAST,ATTRIBUTE_WIND)
+		end
 	end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and not b and Duel.IsPlayerCanSpecialSummonMonster(tp,52900000+1,0,0x4011,1500,1500,4,RACE_WINDBEAST,ATTRIBUTE_WIND) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,2,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,0,0)
 end
 function c52900000.sprop(e,tp,eg,ep,ev,re,r,rp)
-	if CARD_BLUEEYES_SPIRIT then
-		if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then return end
-	else
-		if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
-	end 
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and c:IsFaceup() and Duel.SendtoHand(c,nil,REASON_EFFECT)>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>=2 and Duel.IsPlayerCanSpecialSummonMonster(tp,52900000+1,0,0x4011,1500,1500,4,RACE_WINDBEAST,ATTRIBUTE_WIND) then
+	if c:IsRelateToEffect(e) and c:IsFaceup() and Duel.SendtoHand(c,nil,REASON_EFFECT)~=0
+		and Duel.GetLocationCount(tp,LOCATION_MZONE)>1
+		and not Duel.IsPlayerAffectedByEffect(tp,59822133)
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,52900001,0,0x4011,1500,1500,4,RACE_WINDBEAST,ATTRIBUTE_WIND) then
 		for i=1,2 do
-			local token=Duel.CreateToken(tp,52900000+1)
+			local token=Duel.CreateToken(tp,52900001)
 			Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP)
 		end
 		Duel.SpecialSummonComplete()

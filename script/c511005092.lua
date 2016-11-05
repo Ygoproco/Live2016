@@ -34,6 +34,13 @@ if not scard.rc_ovr then
 		if c:IsType(TYPE_MONSTER) then return true end
 		return c_israce(c,r)
 	end
+	local d_createtoken=Duel.CreateToken
+	Duel.CreateToken=function(...)
+		local args={select(1,...)}
+		local c=d_createtoken(table.unpack(args))
+		c:RegisterFlagEffect(s_id,0,0,0)
+		return c
+	end
 end
 
 function scard.initial_effect(c)
@@ -46,10 +53,13 @@ function scard.initial_effect(c)
 	e1:SetCountLimit(1)
 	e1:SetOperation(scard.op)
 	Duel.RegisterEffect(e1,0)
-end
-
-function scard.cd(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnCount()==1
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e2:SetCode(EVENT_PHASE_START+PHASE_DRAW)
+	e2:SetCountLimit(1)
+	e2:SetCondition(scard.nt_cd)
+	e2:SetOperation(scard.nt_op)
+	Duel.RegisterEffect(e2,0)
 end
 
 --define pack
@@ -188,8 +198,6 @@ local pack={}
 	for _,v in ipairs(pack[4][3]) do table.insert(pack[4][5],v) end
 	for _,v in ipairs(pack[4][4]) do table.insert(pack[4][5],v) end
 local packopen=false
-local addok=false
-local drawok=false
 local handnum={[0]=5;[1]=5}
 
 --DangerZone
@@ -204,11 +212,12 @@ local function _prepSide(p,g)
 end
 
 local function _printDeck()
+--[[ uncomment this if you want to have deck listing
 	local io=require("io")
 	for p=0,1 do
 		local f=io.open("./deck/sealedpack"..p..".ydk","w+")
 		f:write("#created by ...\n#main\n")
-		local g=Duel.GetFieldGroup(p,LOCATION_DECK,0)
+		local g=Duel.GetFieldGroup(p,LOCATION_DECK+LOCATION_HAND,0)
 		local c=g:GetFirst()
 		while c do
 			f:write(c:GetOriginalCode().."\n")
@@ -227,17 +236,41 @@ local function _printDeck()
 		end
 		f:close()
 	end
+--]]
 end
 
 function scard.op(e,tp,eg,ep,ev,re,r,rp)
 	if packopen then e:Reset() return end
 	packopen=true
+	Duel.DisableShuffleCheck()
 	--Hint
 	Duel.Hint(HINT_CARD,0,s_id)
-	Duel.Hint(HINT_CODE,e:GetHandler():GetOwner(),s_id)
+	for p=0,1 do
+		local c=Duel.CreateToken(p,s_id)
+		Duel.Remove(c,POS_FACEUP,REASON_RULE)
+		Duel.Hint(HINT_CODE,p,s_id)
+		--protection (steal Boss Duel xD)
+		local e10=Effect.CreateEffect(c)
+		e10:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+		e10:SetType(EFFECT_TYPE_SINGLE)
+		e10:SetCode(EFFECT_CANNOT_TO_GRAVE)
+		c:RegisterEffect(e10)
+		local e11=e10:Clone()
+		e11:SetCode(EFFECT_CANNOT_TO_HAND)
+		c:RegisterEffect(e11)
+		local e12=e10:Clone()
+		e12:SetCode(EFFECT_CANNOT_TO_DECK) 
+		c:RegisterEffect(e12)
+		local e13=e10:Clone()
+		e13:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+		c:RegisterEffect(e13)
+	end
 	--note hand card
-	handnum[0]=Duel.GetFieldGroupCount(0,LOCATION_HAND,0)
-	handnum[1]=Duel.GetFieldGroupCount(1,LOCATION_HAND,0)
+	handnum[0]=5 --Duel.GetFieldGroupCount(0,LOCATION_HAND,0)
+	handnum[1]=5 --Duel.GetFieldGroupCount(1,LOCATION_HAND,0)
+	--SetLP
+	Duel.SetLP(0,8000)
+	Duel.SetLP(1,8000)
 	--FOR RANDOOM
 	local rseed=0
 	for i=1,6 do
@@ -255,7 +288,7 @@ function scard.op(e,tp,eg,ep,ev,re,r,rp)
 	for np=1,numpack do
 		for p=0,1 do
 			local n=math.random(4)
-			Duel.Hint(HINT_OPSELECTED,1-p,aux.Stringid(4002,2+n))
+			Duel.Hint(HINT_OPSELECTED,p,aux.Stringid(4002,2+n))
 			local g=Group.CreateGroup()
 			for i=1,5 do
 				local cpack=pack[n][i]
@@ -268,48 +301,21 @@ function scard.op(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SendtoDeck(g:Filter(Card.IsLocation,nil,LOCATION_HAND),nil,2,REASON_RULE)
 		end
 	end
-	e:Reset()
 	--next step
-	local e1=Effect.GlobalEffect()
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(s_id)
-	e1:SetOperation(scard.readd_op)
-	Duel.RegisterEffect(e1,0)
-	Duel.RaiseEvent(Group.CreateGroup(),s_id,Effect.GlobalEffect(),0,0,0,0)
-end
-
-function scard.readd_op(e,tp,eg,ep,ev,re,r,rp)
-	if addok then e:Reset() return end
-	addok=true
-	Duel.DisableShuffleCheck()
-	--Players remove from each deck until card=40
+	--Players remove from each deck until card>=40 (optional)
 	local rg=Group.CreateGroup()
 	for p=0,1 do
 		Duel.ConfirmCards(p,Duel.GetFieldGroup(p,LOCATION_DECK+LOCATION_EXTRA,0))
-		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_REMOVE)
 		local num=Duel.GetFieldGroupCount(p,LOCATION_DECK,0)-40
-		if num>0 then
-			local g=Duel.GetFieldGroup(p,LOCATION_DECK,0):Select(p,num,num,nil)
+		if num>0 and Duel.SelectYesNo(p,aux.Stringid(4002,7)) then
+			Duel.Hint(HINT_SELECTMSG,p,HINTMSG_REMOVE)
+			local g=Duel.GetFieldGroup(p,LOCATION_DECK,0):Select(p,1,num,nil)
 			_prepSide(p,g)
 			rg:Merge(g)
 		end
 	end
 	if rg:GetCount()>0 then Duel.SendtoDeck(rg,nil,-2,REASON_RULE) end
-	_printDeck()
-	e:Reset()
 	--next step
-	local e1=Effect.GlobalEffect()
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(s_id)
-	e1:SetOperation(scard.redraw_op)
-	Duel.RegisterEffect(e1,0)
-	Duel.RaiseEvent(Group.CreateGroup(),s_id,Effect.GlobalEffect(),0,0,0,0)
-end
-
-function scard.redraw_op(e,tp,eg,ep,ev,re,r,rp)
-	if drawok then e:Reset() return end
-	drawok=true
-	Duel.DisableShuffleCheck()
 	--Shuffle deck and add card
 	for p=0,1 do
 		Duel.ShuffleDeck(p)
@@ -321,14 +327,81 @@ function scard.redraw_op(e,tp,eg,ep,ev,re,r,rp)
 		if Duel.SelectYesNo(p,aux.Stringid(4002,2)) then
 			local sg=Duel.GetFieldGroup(p,LOCATION_HAND,0)
 			local ct=sg:GetCount()
-			Duel.SendtoDeck(sg,nil,0,REASON_RULE)
-			local c=sg:GetFirst()
-			while c do
-				Duel.MoveSequence(c,1)
-				c=sg:GetNext()
-			end
+			Duel.SendtoDeck(sg,nil,1,REASON_RULE)
+			--local c=sg:GetFirst()
+			--while c do
+			--	Duel.MoveSequence(c,1)
+			--	c=sg:GetNext()
+			--end
 			Duel.SendtoHand(Duel.GetDecktopGroup(p,ct),nil,REASON_RULE)
 		end
 	end
 	e:Reset()
+	--if someone wants/needs a deck listing (local hosting only), the function itself can be uncommented
+	_printDeck()
+end
+
+--Nocheat zone
+
+function scard.flag_chk(c)
+	return c:GetFlagEffect(s_id)==0
+end
+
+function scard.nt_cd(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnCount()>1 and Duel.IsExistingMatchingCard(scard.flag_chk,Duel.GetTurnPlayer(),0x43,0,1,nil)
+end
+
+function scard.nt_op(e,tp,eg,ep,ev,re,r,rp)
+	Duel.DisableShuffleCheck()
+	--Hint
+	local p=Duel.GetTurnPlayer()
+	Duel.Hint(HINT_CARD,p,s_id)
+	Duel.Hint(HINT_CODE,p,s_id)
+	--note hand card
+	local hn=5 --Duel.GetFieldGroupCount(p,LOCATION_HAND,0)
+	local fg=Duel.GetMatchingGroup(scard.flag_chk,p,0x43,0,nil)
+	--remove all cards
+	Duel.SendtoDeck(fg,nil,-2,REASON_RULE)
+	--Open packs (let's keep it at 10 for now)
+	local numpack=10
+	for np=1,numpack do
+		local n=math.random(4)
+		Duel.Hint(HINT_OPSELECTED,p,aux.Stringid(4002,2+n))
+		local g=Group.CreateGroup()
+		for i=1,5 do
+			local cpack=pack[n][i]
+			local c=cpack[math.random(#cpack)]
+			g:AddCard(Duel.CreateToken(p,c))
+		end
+		local ga=g:Filter(Card.IsAbleToHand,nil)
+		Duel.SendtoHand(g,nil,REASON_RULE)
+		Duel.ConfirmCards(p,g:Filter(Card.IsLocation,nil,LOCATION_EXTRA))
+		Duel.SendtoDeck(g:Filter(Card.IsLocation,nil,LOCATION_HAND),nil,2,REASON_RULE)
+	end
+	--next step
+	--Players remove from each deck until card>=40 (optional)
+	local rg=Group.CreateGroup()
+	Duel.ConfirmCards(p,Duel.GetFieldGroup(p,LOCATION_DECK+LOCATION_EXTRA,0))
+	local num=Duel.GetFieldGroupCount(p,LOCATION_DECK,0)-40
+	if num>0 and Duel.SelectYesNo(p,aux.Stringid(4002,7)) then
+		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_REMOVE)
+		local g=Duel.GetFieldGroup(p,LOCATION_DECK,0):Select(p,1,num,nil)
+		rg:Merge(g)
+	end
+	if rg:GetCount()>0 then Duel.SendtoDeck(rg,nil,-2,REASON_RULE) end
+	--next step
+	--Shuffle deck and add card
+	Duel.ShuffleDeck(p)
+	Duel.SendtoHand(Duel.GetDecktopGroup(p,hn),nil,REASON_RULE)
+	if Duel.SelectYesNo(p,aux.Stringid(4002,2)) then
+		local sg=Duel.GetFieldGroup(p,LOCATION_HAND,0)
+		local ct=sg:GetCount()
+		Duel.SendtoDeck(sg,nil,1,REASON_RULE)
+		--local c=sg:GetFirst()
+		--while c do
+		--	Duel.MoveSequence(c,1)
+		--	c=sg:GetNext()
+		--end
+		Duel.SendtoHand(Duel.GetDecktopGroup(p,ct),nil,REASON_RULE)
+	end
 end

@@ -11,14 +11,14 @@ function c95000017.initial_effect(c)
 end
 c95000017.mark=0
 function c95000017.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>3
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>3 and not Duel.IsPlayerAffectedByEffect(tp,59822133) 
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,95000018,0,0x4011,2000,0,0,0,0) end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,4,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,4,0,0)
 end
 function c95000017.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)>3 
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>3 and not Duel.IsPlayerAffectedByEffect(tp,59822133) 
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,95000018,0,0x4011,2000,0,0,0,0) then
 		for i=1,4 do
 			local token=Duel.CreateToken(tp,95000017+i)

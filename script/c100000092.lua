@@ -5,6 +5,7 @@ function c100000092.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_DESTROYED)
+	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e1:SetCondition(c100000092.condition)
 	e1:SetCost(c100000092.cost)
 	e1:SetTarget(c100000092.target)
@@ -35,7 +36,7 @@ function c100000092.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c100000092.filter,tp,0x13,0,1,1,nil,e,tp)
 	local tc=g:GetFirst()
-	if tc then
-		Duel.SpecialSummon(tc,0,tp,tp,true,false,POS_FACEUP)
+	if tc and Duel.SpecialSummon(tc,0,tp,tp,true,false,POS_FACEUP)>0 then
+		tc:CompleteProcedure()
 	end
 end

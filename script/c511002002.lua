@@ -1,31 +1,35 @@
---Performapal Barrier Balloon Baku
+--EMバリアバルーンバク
 function c511002002.initial_effect(c)
-	--no damage
+	--
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(511001684,0))
-	e1:SetType(EFFECT_TYPE_QUICK_O+EFFECT_TYPE_FIELD)
+	e1:SetType(EFFECT_TYPE_QUICK_O)
+	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_HAND)
-	e1:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
-	e1:SetCondition(c511002002.con)
-	e1:SetCost(c511002002.cost)
-	e1:SetOperation(c511002002.op)
+	e1:SetHintTiming(TIMING_DAMAGE_STEP)
+	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+	e1:SetCost(c511002002.dmcost)
+	e1:SetOperation(c511002002.dmop)
 	c:RegisterEffect(e1)
 end
-function c511002002.con(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetBattleDamage(tp)>0
-end
-function c511002002.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+function c511002002.dmcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() end
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST)
 end
-function c511002002.op(e,tp,eg,ep,ev,re,r,rp)
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(EVENT_PRE_BATTLE_DAMAGE)
-	e1:SetOperation(c511002002.damop)
-	e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
-	Duel.RegisterEffect(e1,tp)
+function c511002002.dmop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.CheckEvent(EVENT_PRE_BATTLE_DAMAGE) then
+		Duel.ChangeBattleDamage(tp,0)
+		Duel.ChangeBattleDamage(1-tp,0)
+	else
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(EVENT_PRE_BATTLE_DAMAGE)
+		e1:SetCountLimit(1)
+		e1:SetOperation(c511002002.nodamop)
+		e1:SetReset(RESET_PHASE+PHASE_END)
+		Duel.RegisterEffect(e1,tp)
+	end
 end
-function c511002002.damop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.ChangeBattleDamage(ep,0)
+function c511002002.nodamop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.ChangeBattleDamage(tp,0)
+	Duel.ChangeBattleDamage(1-tp,0)
 end

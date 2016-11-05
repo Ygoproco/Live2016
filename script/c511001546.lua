@@ -32,8 +32,10 @@ function c511001546.activate(e,tp,eg,ep,ev,re,r,rp)
 	local mg=tc:GetMaterial()
 	local sumable=true
 	local sumtype=tc:GetSummonType()
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
 	if Duel.Destroy(tc,REASON_EFFECT)==0 or bit.band(sumtype,SUMMON_TYPE_FUSION)~=SUMMON_TYPE_FUSION or mg:GetCount()==0
-		or mg:GetCount()>Duel.GetLocationCount(tp,LOCATION_MZONE)
+		or mg:GetCount()>ft
 		or mg:IsExists(c511001546.mgfilter,1,nil,e,tp,tc) then
 		sumable=false
 	end
@@ -42,8 +44,9 @@ function c511001546.activate(e,tp,eg,ep,ev,re,r,rp)
 		if Duel.SpecialSummon(mg,0,tp,tp,false,false,POS_FACEUP) then
 			Duel.BreakEffect()
 			local sum=mg:GetSum(Card.GetAttack)
-			Duel.Damage(1-tp,sum,REASON_EFFECT)
-			Duel.Damage(tp,sum,REASON_EFFECT)
+			Duel.Damage(1-tp,sum,REASON_EFFECT,true)
+			Duel.Damage(tp,sum,REASON_EFFECT,true)
+			Duel.RDComplete()
 		end
 	end
 end

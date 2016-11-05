@@ -67,17 +67,17 @@ function c511009343.initial_effect(c)
 	e1:SetOperation(c511009343.activate)
 	c:RegisterEffect(e1)
 end
+function c511009343.filter(c)
+	return c:IsFaceup() and c:GetLevel()>0
+end
 function c511009343.xyzfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_XYZ)
+	return c:IsFaceup() and c:IsType(TYPE_XYZ) and Duel.IsExistingTarget(c511009343.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,c)
 end
 function c511009343.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 if chkc then return chkc:IsLocation(LOCATION_MZONE) and c511009343.xyzfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c511009343.xyzfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(c511009343.xyzfilter,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	Duel.SelectTarget(tp,c511009343.xyzfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
-end
-function c511009343.filter(c)
-	return c:IsFaceup() and c:GetLevel()>0
+	Duel.SelectTarget(tp,c511009343.xyzfilter,tp,LOCATION_MZONE,0,1,1,nil)
 end
 function c511009343.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end

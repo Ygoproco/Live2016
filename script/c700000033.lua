@@ -1,5 +1,6 @@
 --Scripted by Eerie Code
 --Thorn Over Server - Van Darli Zuma
+--fixed and cleaned up by MLD
 function c700000033.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
@@ -24,7 +25,7 @@ function c700000033.initial_effect(c)
 	e2:SetOperation(c700000033.operation)
 	c:RegisterEffect(e2)
 end
-
+c700000033.miracle_synchro_fusion=true
 function c700000033.atkval(e,c)
 	local cont=c:GetControler()
 	local atk=2500-Duel.GetLP(cont)
@@ -33,16 +34,7 @@ function c700000033.atkval(e,c)
 end
 
 function c700000033.filter(c)
-	--return c:IsFaceup() and not c:GetAttack()==100
-	if c:IsFacedown() then 
-		--Debug.Message("Target facedown.")
-		return false
-	end
-	if c:GetAttack()==100 then
-		--Debug.Message("ATK equal to 100.")
-		return false
-	end
-	return true
+	return c:GetAttack()~=100 and c:IsFaceup()
 end
 function c700000033.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,100) end
@@ -55,7 +47,7 @@ function c700000033.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c700000033.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_ATTACK_FINAL)

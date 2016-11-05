@@ -73,7 +73,8 @@ function c30539496.spop(e,tp,eg,ep,ev,re,r,rp)
 		end
 		--Banish from Extra
 		local rg=Duel.GetFieldGroup(tp,0,LOCATION_EXTRA)
-		if rm and rg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(30539496,0)) then
+		if rm and rg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(30539496,2)) then
+			Duel.ConfirmCards(tp,rg)
 			local count=3
 			local stop=false
 			local sg=Group.CreateGroup()
@@ -83,7 +84,7 @@ function c30539496.spop(e,tp,eg,ep,ev,re,r,rp)
 				sg:AddCard(sg2:GetFirst())
 				rg:Remove(Card.IsCode,nil,sg2:GetFirst():GetCode())
 				count=count-1
-				if rg:GetCount()==0 or count==0 or not Duel.SelectYesNo(tp,aux.Stringid(30539496,1)) then
+				if rg:GetCount()==0 or count==0 or not Duel.SelectYesNo(tp,aux.Stringid(30539496,3)) then
 					stop=true
 				end
 			end
@@ -107,6 +108,6 @@ function c30539496.spop2(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c30539496.thfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end

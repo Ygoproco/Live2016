@@ -22,12 +22,12 @@ function c511000276.filter(c,e,tp)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511000276.tg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>3 and not Duel.IsPlayerAffectedByEffect(tp,59822133) 
 		and Duel.IsExistingMatchingCard(c511000276.filter,tp,LOCATION_EXTRA,0,4,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function c511000276.op(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=3 then return end
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=3 or Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
 	local g=Duel.GetMatchingGroup(c511000276.filter,tp,LOCATION_EXTRA,0,nil,e,tp)
 	if g:GetCount()<=3 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
@@ -37,7 +37,7 @@ function c511000276.op(e,tp,eg,ep,ev,re,r,rp)
 		local tc=sg:GetFirst()
 		while tc do
 			Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
-			tc:RegisterFlagEffect(511000276,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1,fid)
+			tc:RegisterFlagEffect(51100276,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1,fid)
 			tc=sg:GetNext()
 		end
 		Duel.SpecialSummonComplete()
@@ -56,7 +56,7 @@ function c511000276.op(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c511000276.rmfilter(c,fid)
-	return c:GetFlagEffectLabel(511000276)==fid
+	return c:GetFlagEffectLabel(51100276)==fid
 end
 function c511000276.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	local g=e:GetLabelObject()

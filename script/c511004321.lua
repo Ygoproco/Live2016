@@ -1,14 +1,7 @@
---ローガーディアン a.k.a Skull Skull Servant (DOR)
+--Skull Skull Servant (DOR)
+--scripted by GameMaster (GM)
 function c511004321.initial_effect(c)
-	--change name to Skull Servant -->32274490
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e1:SetCode(EFFECT_CHANGE_CODE)
-	e1:SetRange(LOCATION_MZONE+LOCATION_GRAVE)
-	e1:SetValue(32274490)
-	c:RegisterEffect(e1)
-	--flip effect & atkupdate of all skull servant currently on the field by 300 pts
+	--atk/def up 300 skullServant
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(511004321,0))
 	e2:SetCategory(CATEGORY_ATKCHANGE)
@@ -34,10 +27,9 @@ function c511004321.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetLabel(fid)
 		e1:SetReset(RESET_EVENT+0x1ff0000)
 		c:RegisterEffect(e1)
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_UPDATE_DEFENSE)
+		c:RegisterEffect(e2)
 	end
 end
 	
-	
---Scripter Notes:
---When this card is flipped face-up, all Skull Servants are increased by 300 points.
---The flip eff only works for original skull servants, this Anime Atk points wont update. So to overcome this problem, i've decided to adding Harpie Harpist eff (56585883) to Skull Servant DOR

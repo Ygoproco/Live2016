@@ -4,7 +4,7 @@
 function c7610.initial_effect(c)
 	--
 	c:EnableReviveLimit()
-	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0xf3),c7610.mat_fil,true)
+	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0x10f3),c7610.mat_fil,true)
 	--Must first be Fusion Summoned
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)

@@ -3,6 +3,5 @@ function c100003001.initial_effect(c)
 	aux.AddRitualProcEqual(c,c100003001.ritual_filter)
 end
 function c100003001.ritual_filter(c)
-	local code=c:GetCode()
-	return code==100003002 or code==100003003 or code==100003004
+	return c:IsSetCard(0x2093) and bit.band(c:GetType(),0x81)==0x81
 end

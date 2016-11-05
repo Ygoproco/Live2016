@@ -25,9 +25,10 @@ function c511002659.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,c511002659.filter,tp,0x13,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
-		if ft>1 and not Duel.IsPlayerAffectedByEffect(tp,59822133) and Duel.IsPlayerCanSpecialSummonMonster(tp,18027139,0,0x4011,0,0,1,RACE_BEAST,ATTRIBUTE_EARTH) then
+		if ft>1 and Duel.IsPlayerCanSpecialSummonMonster(tp,18027139,0,0x4011,0,0,1,RACE_BEAST,ATTRIBUTE_EARTH) then
 			Duel.BreakEffect()
 			ft=ft-1
+			if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
 			for i=1,ft do
 				local token=Duel.CreateToken(tp,18027139)
 				Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP)

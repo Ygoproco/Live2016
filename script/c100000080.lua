@@ -40,7 +40,8 @@ end
 function c100000080.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local r=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	if r<=0 or not Duel.IsPlayerCanSpecialSummonMonster(tp,100000082,0,0x4011,3000,1000,10,RACE_FIEND,ATTRIBUTE_DARK) then return end 
+	if r<=0 or not Duel.IsPlayerCanSpecialSummonMonster(tp,100000082,0,0x4011,3000,1000,10,RACE_FIEND,ATTRIBUTE_DARK) then return end
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then r=1 end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
 	while r	do
@@ -78,7 +79,8 @@ end
 function c100000080.operation2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local r=Duel.GetLocationCount(1-tp,LOCATION_MZONE)
-	if r<=0 or not Duel.IsPlayerCanSpecialSummonMonster(tp,100000082,0,0x4011,3000,1000,10,RACE_FIEND,ATTRIBUTE_DARK) then return end 
+	if r<=0 or not Duel.IsPlayerCanSpecialSummonMonster(tp,100000082,0,0x4011,3000,1000,10,RACE_FIEND,ATTRIBUTE_DARK) then return end
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then r=1 end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
 	while r	do

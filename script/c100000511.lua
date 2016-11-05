@@ -1,64 +1,74 @@
-﻿--Ｖ・ＨＥＲＯ ポイズナー
+--Ｖ・ＨＥＲＯ ポイズナー
 function c100000511.initial_effect(c)	
 	--send 
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(100000511,0))
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetCode(EVENT_DAMAGE)
 	e1:SetRange(LOCATION_GRAVE)
-	e1:SetCondition(c100000511.recon)
-	e1:SetTarget(c100000511.rectg)
-	e1:SetOperation(c100000511.recop)
+	e1:SetCondition(c100000511.pcon)
+	e1:SetTarget(c100000511.ptg)
+	e1:SetOperation(c100000511.pop)
 	c:RegisterEffect(e1)
 	--special summon
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetCode(EVENT_FREE_CHAIN)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetRange(LOCATION_SZONE)
-	e2:SetCost(c100000511.cost)
+	e2:SetCost(c100000511.spcost)
+	e2:SetTarget(c100000511.sptg)
 	e2:SetOperation(c100000511.spop)
 	c:RegisterEffect(e2)
-	--destroy
-	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(100000511,1))
-	e3:SetCategory(CATEGORY_ATKCHANGE)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e3:SetCondition(c100000511.descon)
-	e3:SetTarget(c100000511.destg)
-	e3:SetOperation(c100000511.desop)
-	c:RegisterEffect(e3)
 end
-function c100000511.recon(e,tp,eg,ep,ev,re,r,rp)
+function c100000511.pcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep==tp
 end
-function c100000511.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and c:GetLocation()==LOCATION_GRAVE end
+function c100000511.ptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
+	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,e:GetHandler(),1,0,0)
 end
-function c100000511.recop(e,tp,eg,ep,ev,re,r,rp)
+function c100000511.pop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:GetLocation()~=LOCATION_GRAVE then return false end
+	if not c:IsRelateToEffect(e) or Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
-	c:RegisterFlagEffect(100000501,RESET_EVENT+0x1fe0000,0,1)
+	Duel.RaiseEvent(c,47408488,e,0,tp,0,0)
 end
-
-function c100000511.costfilter(c)
-	return c:IsSetCard(0x5008)
-end
-function c100000511.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,c100000511.costfilter,1,nil) end
-	local g=Duel.SelectReleaseGroup(tp,c100000511.costfilter,1,1,nil)
+function c100000511.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.CheckReleaseGroup(tp,Card.IsSetCard,1,nil,0x5008) end
+	local g=Duel.SelectReleaseGroup(tp,Card.IsSetCard,1,1,nil,0x5008)
 	Duel.Release(g,REASON_COST)
+end
+function c100000511.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
-function c100000511.spop(e,tp,eg,ep,ev,re,r,rp,c)	
-	if not e:GetHandler():IsRelateToEffect(e) then return end
-	Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)
+function c100000511.spop(e,tp,eg,ep,ev,re,r,rp,c)
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
+	if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+		local g=Duel.SelectMatchingCard(tp,Card.IsFaceup,tp,0,LOCATION_MZONE,1,1,nil)
+		local tc=g:GetFirst()
+		if tc then
+			Duel.HintSelection(g)
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_SET_ATTACK_FINAL)
+			e1:SetValue(tc:GetAttack()/2)
+			e1:SetReset(RESET_EVENT+0x1fe0000)
+			tc:RegisterEffect(e1)
+			local e2=e1:Clone()
+			e2:SetCode(EFFECT_SET_DEFENSE_FINAL)
+			e2:SetValue(tc:GetDefense()/2)
+			tc:RegisterEffect(e2)
+		end
+	else
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false) then
+			Duel.SendtoGrave(c,REASON_RULE)
+		end
+	end
 end
 
 function c100000511.descon(e,tp,eg,ep,ev,re,r,rp)
@@ -83,7 +93,7 @@ function c100000511.desop(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e1)
 		local e2=Effect.CreateEffect(e:GetHandler())
 		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetCode(EFFECT_SET_DEFENSE)
+		e2:SetCode(EFFECT_SET_DEFENCE)
 		e2:SetReset(RESET_EVENT+0x1fe0000)
 		e2:SetValue(def/2)
 		tc:RegisterEffect(e2)

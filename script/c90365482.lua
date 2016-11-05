@@ -17,7 +17,7 @@ function c90365482.initial_effect(c)
 	e4:SetCategory(CATEGORY_DISABLE)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_SUMMON_SUCCESS)
-	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e4:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e4:SetTarget(c90365482.tg)
 	e4:SetOperation(c90365482.op)
 	c:RegisterEffect(e4)
@@ -27,7 +27,7 @@ function c90365482.initial_effect(c)
 end
 
 function c90365482.fil(c)
-	return c:IsFaceup() and not c:IsType(TYPE_SPIRIT)
+	return c:IsFaceup()
 end
 function c90365482.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c90365482.fil(chkc) end

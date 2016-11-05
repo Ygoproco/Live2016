@@ -28,7 +28,7 @@ function c4145852.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0
 end
 function c4145852.spfilter(c,e,tp)
-	return c:IsSetCard(0xf2) and not c:IsCode(4145852) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0xf1) and not c:IsCode(4145852) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c4145852.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c4145852.spfilter(chkc,e,tp) end

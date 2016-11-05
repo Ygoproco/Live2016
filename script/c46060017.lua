@@ -34,7 +34,7 @@ function c46060017.desfil(c)
 	return c:IsFaceup() and c:IsDestructable()
 end
 function c46060017.spfil(c,e,tp)
-	return c:IsSetCard(0xf2) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0xf1) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c46060017.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local lc=Duel.GetLocationCount(tp,LOCATION_MZONE)
@@ -64,7 +64,7 @@ function c46060017.xyzcon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(r,REASON_DESTROY+REASON_EFFECT)==REASON_DESTROY+REASON_EFFECT
 end
 function c46060017.xyzfil(c)
-	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsSetCard(0xf2)
+	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsSetCard(0xf1)
 end
 function c46060017.xyztg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c46060017.xyzfil(chkc) end

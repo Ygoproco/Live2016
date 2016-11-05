@@ -2,7 +2,8 @@
 function c511000061.initial_effect(c)
 	--Return
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_QUICK_O)
+	--e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetType(EFFECT_TYPE_ACTIVATE)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -18,7 +19,7 @@ function c511000061.rtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c511000061.rfilter(chkc) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and Duel.IsExistingTarget(c511000061.rfilter,tp,LOCATION_MZONE,0,1,nil) end
-	e:SetType(EFFECT_TYPE_ACTIVATE)
+	--e:SetType(EFFECT_TYPE_ACTIVATE)
 	Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,c511000061.rfilter,tp,LOCATION_MZONE,0,1,1,nil)

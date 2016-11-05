@@ -36,4 +36,5 @@ function c511000929.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511000929.op(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Damage(1-ep,ev,REASON_EFFECT)
+	Duel.RDComplete()
 end
