@@ -14,7 +14,8 @@ function c511001893.condition(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()
 	if ep==tp or not re:IsActiveType(TYPE_MONSTER) or not Duel.IsChainDisablable(ev) then return false end
-	return a and d and a:IsControler(1-tp) and re:GetHandler()==a and d:IsControler(tp) and a:GetLevel()<=d:GetLevel()
+	return a and d and a:IsControler(1-tp) and re:GetHandler()==a and d:IsControler(tp) and a:GetLevel()>0 and d:GetLevel()>0 
+		and a:GetLevel()<=d:GetLevel() 
 end
 function c511001893.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
