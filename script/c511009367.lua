@@ -31,14 +31,14 @@ function c511009367.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetCountLimit(1)
-	e3:SetCost(c511009367.descost)
+	
+	e3:SetCondition(c511009367.descond)
 	e3:SetTarget(c511009367.destg)
 	e3:SetOperation(c511009367.desop)
 	c:RegisterEffect(e3)
 	--tohand
 	local e4=Effect.CreateEffect(c)
 	e4:SetCategory(CATEGORY_TOHAND)
-	e4:SetDescription(aux.Stringid(70821187,0))
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -67,31 +67,30 @@ end
 
 function c511009367.effcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
+	-- Debug.Message(c:IsPreviousLocation(LOCATION_HAND))
 	return c:IsSummonType(SUMMON_TYPE_PENDULUM) and c:IsFaceup() and c:IsAttackPos() and c:IsPreviousLocation(LOCATION_HAND)
 end
 function c511009367.regop(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():RegisterFlagEffect(511009367,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
 end
 
-
-function c511009367.descost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	e:GetHandler():RegisterFlagEffect(511009366,0,0,1)
-end
 function c511009367.desfilter(c)
 	return c:IsFaceup()
 end
+function c511009367.descond(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():GetFlagEffect(511009367)~=0
+end
 function c511009367.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-if chkc then return chkc:IsLocation(LOCATION_MZONE) and c511009367.desfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c511009367.desfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+-- if chkc then return chkc:IsLocation(LOCATION_MZONE) and c511009367.desfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,c511009367.desfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+	local g=Duel.SelectTarget(tp,aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,g:GetFirst():GetControler(),800)
 end
 function c511009367.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) then
 		local p=tc:GetControler()
 		if Duel.Destroy(tc,REASON_EFFECT)~=0 then
 			Duel.Damage(p,800,REASON_EFFECT)

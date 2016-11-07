@@ -2,25 +2,18 @@
 function c511009368.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0x9f),aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_DARK),true)
-	--damage
+	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0x9f),c511009368.ffilter,true)
+		--damage
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(29343734,0))
 	e1:SetCategory(CATEGORY_TODECK)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetCondition(c511009368.damcon)
-	e1:SetTarget(c511009368.rettg)
-	e1:SetOperation(c511009368.retop)
+	e1:SetTarget(c511009368.damtg)
+	e1:SetOperation(c511009368.damop)
 	c:RegisterEffect(e1)
-	
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetCode(EFFECT_MATERIAL_CHECK)
-	e2:SetValue(c511009368.valcheck)
-	c:RegisterEffect(e2)
-	
-		--destroy
+	--destroy
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_DESTROY+CATEGORY_DAMAGE)
 	e3:SetType(EFFECT_TYPE_IGNITION)
@@ -31,8 +24,17 @@ function c511009368.initial_effect(c)
 	e3:SetTarget(c511009368.target)
 	e3:SetOperation(c511009368.operation)
 	c:RegisterEffect(e3)
+	-- valcheck	
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_SINGLE)
+	e4:SetCode(EFFECT_MATERIAL_CHECK)
+	e4:SetValue(c511009368.valcheck)
+	e4:SetLabelObject(e3)
+	c:RegisterEffect(e4)
 end
-
+function c511009368.ffilter(c)
+	return c:IsAttribute(ATTRIBUTE_DARK) and c:GetLevel()>=5
+end
 function c511009368.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION
 end
@@ -53,11 +55,13 @@ end
 function c511009368.valcheck(e,c)
 	local g=c:GetMaterial()
 	if g:IsExists(c511009368.matfilter,1,nil) then
-		c:RegisterFlagEffect(511009368,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
+		e:GetLabelObject():SetLabel(1)
+		else 
+		e:GetLabelObject():SetLabel(0)
 	end
 end
 function c511009368.condition(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetFlagEffect(511009368)~=0
+	return e:GetLabel()==1
 end
 function c511009368.filter(c)
 	return c:IsFaceup()
@@ -75,7 +79,7 @@ end
 function c511009368.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
-		local atk=tc:GetTextAttack()
+		local atk=tc:GetAttack()
 		if atk<0 then atk=0 end
 		if Duel.Destroy(tc,REASON_EFFECT)~=0 then
 			Duel.Damage(1-tp,atk,REASON_EFFECT)

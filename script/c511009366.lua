@@ -41,29 +41,26 @@ function c511009366.initial_effect(c)
 	e4:SetTarget(c511009366.eftg)
 	e4:SetOperation(c511009366.efop)
 	c:RegisterEffect(e4)
-	if not c89792713.global_check then
-		c89792713.global_check=true
+	if not c511009366.global_check then
+		c511009366.global_check=true
 		local ge=Effect.CreateEffect(c)
 		ge:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		ge:SetCode(EVENT_CHAINING)
-		ge:SetOperation(c89792713.checkop)
+		ge:SetOperation(c511009366.checkop)
 		Duel.RegisterEffect(ge,0)
 	end
 end
-function c2948263.checkcon(e,tp,eg,ep,ev,re,r,rp)
-	return re:IsActiveType(TYPE_MONSTER) and re:GetFlagEffect(511009366)==0
-end
-function c89792713.checkop(e,tp,eg,ep,ev,re,r,rp)
+function c511009366.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
 	while tc do
-		if tc:IsFaceup() then
+		if tc:IsFaceup() and tc:IsType(TYPE_MONSTER) then
 			tc:RegisterFlagEffect(511009366,RESET_EVENT,0,1)
 		end
 		tc=eg:GetNext()
 	end
 end
 function c511009366.thfil(c)
-	return c:IsSetCard(0x414) and c:IsAbleToHand()
+	return c:IsSetCard(0x1414) and c:IsAbleToHand()
 end
 function c511009366.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c511009366.thfil,tp,LOCATION_DECK,0,1,nil) end
@@ -83,16 +80,15 @@ function c511009366.atlimit(e,c)
 	return c:IsControler(1-tp) and not c:IsType(TYPE_PENDULUM) and not c:IsImmuneToEffect(e)
 end
 function c511009366.atlimit2(e,c)
-	local tp=e:GetHandlerPlayer()
 	local lsc=Duel.GetFieldCard(tp,LOCATION_SZONE,6):GetLeftScale()
 	local rsc=Duel.GetFieldCard(tp,LOCATION_SZONE,7):GetRightScale()
 	local lv=c:GetLevel()
 	if lsc>rsc then lsc,rsc=rsc,lsc end
-	return lsc and rsc and c:IsControler(1-tp) and (lv>lsc and lv<rsc) and not c:IsImmuneToEffect(e)
+	return lsc and rsc and (lv>lsc and lv<rsc) and not c:IsImmuneToEffect(e)
 end
 
 function c511009366.effilter(c)
-	return c:IsFaceup() and c:IsSummonType(SUMMON_TYPE_PENDULUM) and c:IsPreviousLocation(LOCATION_HAND) and c:IsSetCard(0x414) and	c:GetFlagEffect(511009366)==0	and c:IsReleasableByEffect()
+	return c:IsFaceup() and c:IsSummonType(SUMMON_TYPE_PENDULUM) and c:IsPreviousLocation(LOCATION_HAND) and c:IsSetCard(0x1414) and	c:GetFlagEffect(511009366)==0	and c:IsReleasableByEffect()
 end
 function c511009366.eftg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c511009366.effilter(chkc) end
@@ -100,13 +96,12 @@ function c511009366.eftg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
 	local g=Duel.SelectTarget(tp,c511009366.effilter,tp,LOCATION_MZONE,0,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_CONTROL,g,1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_HANDES,nil,0,tp,1)
 end
 function c511009366.efop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	local c=e:GetHandler()
 	if tc:IsFaceup() and tc:IsRelateToEffect(e) and not tc:IsImmuneToEffect(e) and Duel.Release(tc,REASON_EFFECT)>0 then
+		e:GetHandler():RegisterFlagEffect(tc:GetCode(),RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
 		Duel.MajesticCopy(c,tc)
 		Duel.MajesticCopy(c,tc)
 	end
