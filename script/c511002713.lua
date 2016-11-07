@@ -14,7 +14,7 @@ function c511002713.initial_effect(c)
 	e1:SetTarget(c511002713.destg)
 	e1:SetOperation(c511002713.desop)
 	c:RegisterEffect(e1)
-	--special summon
+	--destroy (when self is destroyed)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_DESTROY)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
