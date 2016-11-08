@@ -17,7 +17,7 @@ function c61622107.activate(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.GetFieldGroupCount(p,0xe,0)
 	if ct>=6 then
 		Duel.Hint(HINT_SELECTMSG,p,HINTMSG_TOGRAVE)
-		local g=Duel.SelectMatchingCard(p,nil,tp,0xe,0,ct-5,ct-5,e:GetHandler())
+		local g=Duel.SelectMatchingCard(p,nil,p,0xe,0,ct-5,ct-5,e:GetHandler())
 		Duel.SendtoGrave(g,REASON_RULE)
 	end
 	ct=Duel.GetFieldGroupCount(1-p,0xe,0)
