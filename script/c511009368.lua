@@ -19,8 +19,8 @@ function c511009368.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e2:SetCondition(c511010239.matregcon)
-	e2:SetOperation(c511010239.matregop)
+	e2:SetCondition(c511009368.matregcon)
+	e2:SetOperation(c511009368.matregop)
 	c:RegisterEffect(e2)
 	--destroy
 	local e3=Effect.CreateEffect(c)
@@ -58,10 +58,10 @@ end
 function c511009368.matfilter(c)
 	return c:IsType(TYPE_PENDULUM) 
 end
-function c511010239.matregcon(e,tp,eg,ep,ev,re,r,rp)
+function c511009368.matregcon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION and e:GetHandler():GetMaterial():IsExists(c511009368.matfilter,1,nil)
 end
-function c511010239.matregop(e,tp,eg,ep,ev,re,r,rp)
+function c511009368.matregop(e,tp,eg,ep,ev,re,r,rp)
 		local c=e:GetHandler()
 		c:RegisterFlagEffect(511009368,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
 end
