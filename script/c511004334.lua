@@ -3,8 +3,8 @@
 function c511004334.initial_effect(c)
 	--battled
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(EVENT_BATTLED)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e1:SetCode(EVENT_BATTLE_CONFIRM)
 	e1:SetCondition(c511004334.condition)
 	e1:SetOperation(c511004334.atop)
 	c:RegisterEffect(e1)

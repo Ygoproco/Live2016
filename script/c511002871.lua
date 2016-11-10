@@ -3,39 +3,23 @@ function c511002871.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,nil,5,4)
 	c:EnableReviveLimit()
-	--destroy
+	--Rank Up Check
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(49456901,0))
-	e1:SetCategory(CATEGORY_DESTROY)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e1:SetTarget(c511002871.destg)
-	e1:SetOperation(c511002871.desop)
+	e1:SetCondition(c511002871.rankupregcon)
+	e1:SetOperation(c511002871.rankupregop)
 	c:RegisterEffect(e1)
-	--negate activate
+	--destroy
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(49456901,1))
-	e2:SetCategory(CATEGORY_NEGATE+CATEGORY_HANDES)
-	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
-	e2:SetType(EFFECT_TYPE_QUICK_O)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetCode(EVENT_CHAINING)
-	e2:SetCondition(c511002871.condition)
-	e2:SetCost(c511002871.cost)
-	e2:SetTarget(c511002871.target)
-	e2:SetOperation(c511002871.operation)
+	e2:SetDescription(aux.Stringid(49456901,0))
+	e2:SetCategory(CATEGORY_DESTROY)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e2:SetTarget(c511002871.destg)
+	e2:SetOperation(c511002871.desop)
 	c:RegisterEffect(e2)
-	if not c511002871.global_check then
-		c511002871.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c511002871.numchk)
-		Duel.RegisterEffect(ge2,0)
-	end
 	--battle indestructable
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
@@ -54,6 +38,31 @@ function c511002871.initial_effect(c)
 	end
 end
 c511002871.xyz_number=104
+
+function c511002871.rumfilter(c)
+	return c:IsCode(2061963) and not c:IsPreviousLocation(LOCATION_OVERLAY)
+end
+function c511002871.rankupregcon(e,tp,eg,ep,ev,re,r,rp)
+		local rc=re:GetHandler()
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ) and (rc:IsSetCard(0x95) or rc:IsCode(100000581) or rc:IsCode(111011002) or rc:IsCode(511000580) or rc:IsCode(511002068) or rc:IsCode(511002164) or rc:IsCode(93238626)) and e:GetHandler():GetMaterial():IsExists(c511002871.rumfilter,1,nil)
+end
+function c511002871.rankupregop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+		--negate activate
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(49456901,1))
+	e1:SetCategory(CATEGORY_NEGATE+CATEGORY_HANDES)
+	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+	e1:SetType(EFFECT_TYPE_QUICK_O)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetCode(EVENT_CHAINING)
+	e1:SetCondition(c511002871.condition)
+	e1:SetCost(c511002871.cost)
+	e1:SetTarget(c511002871.target)
+	e1:SetOperation(c511002871.operation)
+	e1:SetReset(RESET_EVENT+0x1fe0000)
+	c:RegisterEffect(e1)
+end
 function c511002871.desfilter(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsDestructable()
 end
@@ -73,7 +82,6 @@ end
 function c511002871.condition(e,tp,eg,ep,ev,re,r,rp,chk)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and ep~=tp
 		and re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
-		and e:GetHandler():GetOverlayGroup():IsExists(Card.IsCode,1,nil,2061963)
 end
 function c511002871.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end

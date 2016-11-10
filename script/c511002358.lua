@@ -19,5 +19,5 @@ function c511002358.indval(e,c)
 	return c:IsLevelAbove(4)
 end
 function c511002358.efilter(e,te)
-	return te:IsActiveType(TYPE_MONSTER) and te:IsLevelAbove(4)
+	return te:IsActiveType(TYPE_MONSTER) and te:GetHandler():IsLevelAbove(4)
 end

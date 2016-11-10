@@ -15,9 +15,11 @@ function c511002730.initial_effect(c)
 		ge1:SetCode(EFFECT_CANNOT_LOSE_LP)
 		ge1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 		ge1:SetTargetRange(1,0)
+		ge1:SetLabel(0)
 		ge1:SetCondition(c511002730.con2)
 		Duel.RegisterEffect(ge1,0)
 		local ge2=ge1:Clone()
+		ge2:SetLabel(1)
 		Duel.RegisterEffect(ge2,1)
 		local ge3=Effect.CreateEffect(c)
 		ge3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
@@ -26,8 +28,8 @@ function c511002730.initial_effect(c)
 		Duel.RegisterEffect(ge3,0)
 	end
 end
-function c511002730.con2(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFlagEffect(tp,511002521)>0
+function c511002730.con2(e)
+	return Duel.GetFlagEffect(e:GetLabel(),511002521)>0
 end
 function c511002730.op(e,tp,eg,ep,ev,re,r,rp)
 	local ph=Duel.GetCurrentPhase()

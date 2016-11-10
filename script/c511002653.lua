@@ -29,7 +29,15 @@ function c511002653.activate(e,tp,eg,ep,ev,re,r,rp)
 		local tc2=g:GetFirst()
 		if tc2 then
 			Duel.HintSelection(g)
-			tc:CopyEffect(tc2:GetOriginalCode(),RESET_EVENT+0x1fe0000,1)
+			tc:CopyEffect(tc2:GetOriginalCode(),RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,1)
+			if not tc:IsType(TYPE_EFFECT) then
+				local e1=Effect.CreateEffect(e:GetHandler())
+				e1:SetType(EFFECT_TYPE_SINGLE)
+				e1:SetCode(EFFECT_ADD_TYPE)
+				e1:SetValue(TYPE_EFFECT)
+				e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+				tc:RegisterEffect(e1)
+			end
 		end
 	end
 end

@@ -51,7 +51,7 @@ function c7609.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c7609.ffilter(c)
-	return c:IsFusionSetCard(0xf3) or c:IsFusionCode(96622984,22011689,69105797)
+	return c:IsFusionSetCard(0x10f3) or c:IsFusionCode(96622984,22011689,69105797)
 end
 function c7609.rmfilter(c,lv)
 	return c:IsFaceup() and c:IsLevelBelow(lv) and c:IsAbleToRemove()
@@ -74,7 +74,7 @@ function c7609.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=c:GetBattleTarget()
 	e:SetLabelObject(tc)
-	return tc and tc:IsFaceup() and tc:GetAttack()>=1000
+	return tc and tc:IsFaceup()
 end
 function c7609.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -83,7 +83,7 @@ end
 function c7609.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=e:GetLabelObject()
-	if  tc:IsRelateToEffect(e) and tc:IsFaceup() and tc:GetAttack()>=1000 then
+	if  tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)

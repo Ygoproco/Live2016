@@ -12,9 +12,10 @@ function c511009327.initial_effect(c)
 end
 function c511009327.filter1(c,e,tp)
 	return c:IsSetCard(0x10db) and c:IsType(TYPE_XYZ) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		and Duel.IsExistingMatchingCard(c511009327.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,c:GetRank()+2)
+		and Duel.IsExistingMatchingCard(c511009327.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,c:GetRank()+2,c:GetCode())
 end
-function c511009327.filter2(c,e,tp,mc,rk)
+function c511009327.filter2(c,e,tp,mc,rk,code)
+	if c:GetOriginalCode()==6165656 and code~=48995978 then return false end
 	return c:GetRank()==rk and mc:IsCanBeXyzMaterial(c)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 end

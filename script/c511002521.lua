@@ -41,7 +41,7 @@ function c511002521.op(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ResetFlagEffect(0,511002521)
 	end
 	if Duel.GetLP(1)<=0 and ph~=PHASE_DAMAGE then
-		Duel.RaiseEvent(Duel.GetMatchingGroup(nil,0,0xff,0,nil),511002521,e,0,0,0,0)
+		Duel.RaiseEvent(Duel.GetMatchingGroup(nil,1,0xff,0,nil),511002521,e,0,0,0,0)
 		Duel.ResetFlagEffect(1,511002521)
 	end
 	if Duel.GetLP(0)>0 and Duel.GetFlagEffect(0,511002521)==0 then

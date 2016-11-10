@@ -26,7 +26,7 @@ function c100000297.initial_effect(c)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
 	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
-	e4:SetRange(LOCATION_MZONE)
+	e4:SetRange(LOCATION_SZONE)
 	e4:SetCode(EFFECT_SEND_REPLACE)
 	e4:SetTarget(c100000297.reptg)
 	e4:SetOperation(c100000297.repop)
@@ -54,7 +54,7 @@ end
 function c100000297.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local eq=e:GetHandler():GetEquipTarget()
-	if chk==0 then return c:GetDestination()==LOCATION_GRAVE 
+	if chk==0 then return eq and c:GetDestination()==LOCATION_GRAVE 
 		and Duel.IsExistingMatchingCard(c100000297.filter,tp,LOCATION_MZONE,0,1,eq) end
 	if Duel.SelectYesNo(tp,aux.Stringid(100000297,0)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)

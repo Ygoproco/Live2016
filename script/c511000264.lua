@@ -42,7 +42,8 @@ function c511000264.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c511000264.op(e,tp,eg,ep,ev,re,r,rp)
-	local e1=Effect.CreateEffect(e:GetHandler())
+	local c=e:GetHandler()
+	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_CHAIN_SOLVING)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
@@ -50,15 +51,26 @@ function c511000264.op(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetOperation(c511000264.imop)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
+	if c:IsRelateToEffect(e) and c:IsFaceup() then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetCode(EFFECT_SPSUMMON_PROC_G)
+		e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetRange(LOCATION_MZONE)
+		e1:SetCondition(c511000264.discon)
+		e1:SetOperation(c511000264.disop)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		c:RegisterEffect(e1)
+	end
 end
 function c511000264.cfilter(c)
 	return c:IsLocation(LOCATION_MZONE) and c:IsFaceup() and c:IsRace(RACE_DEVINE)
 end
 function c511000264.imcon(e,tp,eg,ep,ev,re,r,rp)
 	if re:IsActiveType(TYPE_MONSTER) or not Duel.IsChainDisablable(ev) then return false end
-	local res,teg,tep,tev,tre,tr,trp=Duel.CheckEvent(EVENT_BECOME_TARGET,true)
-	if res and tre:IsActiveType(TYPE_SPELL+TYPE_TRAP) and teg:IsExists(c511000264.cfilter,1,nil) then
-		return true
+	if re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then
+		local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
+		if g and g:IsExists(c511000264.cfilter,1,nil) then return true end
 	end
 	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_DESTROY)
 	if ex and tg~=nil and tc+tg:FilterCount(c511000264.cfilter,nil)-tg:GetCount()>0 then
@@ -85,6 +97,10 @@ function c511000264.imcon(e,tp,eg,ep,ev,re,r,rp)
 		return true
 	end
 	ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_CONTROL)
+	if ex and tg~=nil and tc+tg:FilterCount(c511000264.cfilter,nil)-tg:GetCount()>0 then
+		return true
+	end
+	ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_DISABLE)
 	if ex and tg~=nil and tc+tg:FilterCount(c511000264.cfilter,nil)-tg:GetCount()>0 then
 		return true
 	end
@@ -129,4 +145,64 @@ end
 function c511000264.drop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(p,d,REASON_EFFECT)
+end
+function c511000264.tgg(c,card)
+	return c:GetCardTarget() and c:GetCardTarget():IsContains(card) and not c:IsDisabled()
+end
+function c511000264.disfilter(c)
+	local eqg=c:GetEquipGroup():Filter(c511000264.dischk,nil)
+	local tgg=Duel.GetMatchingGroup(c511000264.tgg,0,LOCATION_ONFIELD,LOCATION_ONFIELD,nil,c)
+	eqg:Merge(tgg)
+	return c:IsRace(RACE_DEVINE) and eqg:GetCount()>0
+end
+function c511000264.dischk(c)
+	return not c:IsDisabled()
+end
+function c511000264.discon(e,c,og)
+	if c==nil then return true end
+	local tp=c:GetControler()
+	return Duel.IsExistingMatchingCard(c511000264.disfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil)
+end
+function c511000264.disop(e,tp,eg,ep,ev,re,r,rp,c,og)
+	Duel.Hint(HINT_CARD,0,511000264)
+	local g=Duel.GetMatchingGroup(c511000264.disfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	local sg=Group.CreateGroup()
+	local tc=g:GetFirst()
+	while tc do
+		local eqg=tc:GetEquipGroup():Filter(c511000264.dischk,nil)
+		local tgg=Duel.GetMatchingGroup(c511000264.tgg,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil,tc)
+		sg:Merge(eqg)
+		sg:Merge(tgg)
+		tc=g:GetNext()
+	end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
+	local dg=sg:Select(tp,1,99,nil)
+	local dc=dg:GetFirst()
+	while dc do
+		Duel.NegateRelatedChain(dc,RESET_TURN_SET)
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetCode(EFFECT_DISABLE)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		dc:RegisterEffect(e1)
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e2:SetCode(EFFECT_DISABLE_EFFECT)
+		e2:SetValue(RESET_TURN_SET)
+		e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		dc:RegisterEffect(e2)
+		if dc:IsType(TYPE_TRAPMONSTER) then
+			local e3=Effect.CreateEffect(c)
+			e3:SetType(EFFECT_TYPE_SINGLE)
+			e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+			e3:SetCode(EFFECT_DISABLE_TRAPMONSTER)
+			e3:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+			dc:RegisterEffect(e3)
+		end
+		dc=dg:GetNext()
+	end
+	Duel.BreakEffect()
+	return
 end

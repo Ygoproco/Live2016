@@ -25,9 +25,10 @@ end
 function c511009054.filter1(c,e,tp)
 	local rk=c:GetRank()
 	return c:IsFaceup() and c:IsType(TYPE_XYZ)
-		and Duel.IsExistingMatchingCard(c511009054.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,rk+1)
+		and Duel.IsExistingMatchingCard(c511009054.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,c,rk+1,c:GetCode())
 end
-function c511009054.filter2(c,e,tp,mc,rk)
+function c511009054.filter2(c,e,tp,mc,rk,code)
+	if c:GetOriginalCode()==6165656 and code~=48995978 then return false end
 	return c:GetRank()==rk and mc:IsCanBeXyzMaterial(c)
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 end
