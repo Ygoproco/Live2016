@@ -7,10 +7,10 @@ function c7605.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	if EFFECT_CHANGE_FUSION_ATTRIBUTE then
 		e1:SetCode(EFFECT_CHANGE_FUSION_ATTRIBUTE)
+		e1:SetValue(ATTRIBUTE_DARK)
 	else
-		e1:SetCode(EFFECT_CHANGE_ATTRIBUTE)
+		e1:SetCode(FATTRIBUTE_DARK)
 	end 
-	e1:SetValue(ATTRIBUTE_DARK)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
 	e1:SetTarget(c7605.attrtg)
