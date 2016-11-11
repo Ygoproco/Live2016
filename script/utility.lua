@@ -1732,5 +1732,20 @@ function Auxiliary.bfgcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
     Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
+--Function to check the fusion attribute
+function Card.IsFusionAttribute(c,att)
+	local att2=0x01
+	while att2<0x41 do
+		local a=att2+0x10000000
+		if c:IsHasEffect(a) and att==att2 then 
+			return true
+		elseif c:IsHasEffect(a) and att~=att2 then
+			return false
+		else
+			att2=att2*2
+		end
+	end
+	return c:IsAttribute(att)
+end
 
 pcall(dofile,"init.lua")
