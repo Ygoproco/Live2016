@@ -1770,16 +1770,17 @@ function Auxiliary.EquipFilter(c,p,f)
 end
 function Auxiliary.EquipTarget(tg,p,f)
 	return	function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-				local player
+				local player=nil
 				if p==0 then
 					player=tp
 				elseif p==1 then
 					player=1-tp
-				else player=p
+				elseif p==PLAYER_ALL or p==nil then
+					player=PLAYER_ALL
 				end
 				if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() 
 					and (p==PLAYER_ALL or chkc:IsControler(p)) and Auxiliary.EquipFilter(chkc,player,f) end
-				if chk==0 then return Duel.IsExistingTarget(Auxiliary.EquipFilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,player,f) end
+				if chk==0 then return player~=nil and Duel.IsExistingTarget(Auxiliary.EquipFilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,player,f) end
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
 				local g=Duel.SelectTarget(tp,Auxiliary.EquipFilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,player,f)
 				if tg then tg(e,tp,eg,ep,ev,re,r,rp,g:GetFirst()) end
