@@ -3,29 +3,23 @@ function c511002872.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,nil,5,4)
 	c:EnableReviveLimit()
-	--damage
+	--Rank Up Check
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(85121942,0))
-	e1:SetCategory(CATEGORY_DAMAGE)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e1:SetCode(EVENT_BATTLE_DESTROYING)
-	e1:SetCondition(c511002872.damcon)
-	e1:SetTarget(c511002872.damtg)
-	e1:SetOperation(c511002872.damop)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetCondition(c511002872.rankupregcon)
+	e1:SetOperation(c511002872.rankupregop)
 	c:RegisterEffect(e1)
-	--destroy
+	--damage
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_DAMAGE)
-	e2:SetDescription(aux.Stringid(85121942,1))
-	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetCountLimit(1)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetCondition(c511002872.descon)
-	e2:SetCost(c511002872.descost)
-	e2:SetTarget(c511002872.destg)
-	e2:SetOperation(c511002872.desop)
+	e2:SetDescription(aux.Stringid(85121942,0))
+	e2:SetCategory(CATEGORY_DAMAGE)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e2:SetCode(EVENT_BATTLE_DESTROYING)
+	e2:SetCondition(c511002872.damcon)
+	e2:SetTarget(c511002872.damtg)
+	e2:SetOperation(c511002872.damop)
 	c:RegisterEffect(e2)
 	if not c511002872.global_check then
 		c511002872.global_check=true
@@ -55,6 +49,29 @@ function c511002872.initial_effect(c)
 	end
 end
 c511002872.xyz_number=105
+function c511002872.rumfilter(c)
+	return c:IsCode(59627393) and not c:IsPreviousLocation(LOCATION_OVERLAY)
+end
+function c511002872.rankupregcon(e,tp,eg,ep,ev,re,r,rp)
+		local rc=re:GetHandler()
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ) and (rc:IsSetCard(0x95) or rc:IsCode(100000581) or rc:IsCode(111011002) or rc:IsCode(511000580) or rc:IsCode(511002068) or rc:IsCode(511002164) or rc:IsCode(93238626)) and e:GetHandler():GetMaterial():IsExists(c511002872.rumfilter,1,nil)
+end
+function c511002872.rankupregop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+		--destroy
+	local e1=Effect.CreateEffect(c)
+	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_DAMAGE)
+	e1:SetDescription(aux.Stringid(85121942,1))
+	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e1:SetCountLimit(1)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetCost(c511002872.descost)
+	e1:SetTarget(c511002872.destg)
+	e1:SetOperation(c511002872.desop)
+	e1:SetReset(RESET_EVENT+0x1fe0000)
+	c:RegisterEffect(e1)
+end
 function c511002872.damcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local bc=c:GetBattleTarget()
@@ -73,9 +90,6 @@ end
 function c511002872.damop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Damage(p,d,REASON_EFFECT)
-end
-function c511002872.descon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetOverlayGroup():IsExists(Card.IsCode,1,nil,59627393)
 end
 function c511002872.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end

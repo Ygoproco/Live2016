@@ -27,7 +27,15 @@ function c95000158.initial_effect(c)
 	e6:SetCode(EFFECT_IMMUNE_EFFECT)
 	e6:SetValue(c95000158.ctcon2)
 	c:RegisterEffect(e6)
-	
+	--cannot set
+	local e7=Effect.CreateEffect(c)
+	e7:SetType(EFFECT_TYPE_FIELD)
+	e7:SetCode(EFFECT_CANNOT_SSET)
+	e7:SetRange(LOCATION_SZONE)
+	e7:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e7:SetTargetRange(1,0)
+	e7:SetTarget(c95000158.sfilter)
+	c:RegisterEffect(e7)
 	-- Add Action Card
 	local e8=Effect.CreateEffect(c)
 	e8:SetDescription(aux.Stringid(95000158,0))
@@ -38,7 +46,14 @@ function c95000158.initial_effect(c)
 	e8:SetTarget(c95000158.Acttarget)
 	e8:SetOperation(c95000158.operation)
 	c:RegisterEffect(e8)
-	
+	--damage amp
+	local e9=Effect.CreateEffect(c)
+	e9:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+	e9:SetRange(LOCATION_SZONE)
+	e9:SetCode(EVENT_PRE_BATTLE_DAMAGE)
+	e9:SetCondition(c95000158.dcon)
+	e9:SetOperation(c95000158.dop)
+	c:RegisterEffect(e9)
 	--
 	local eb=Effect.CreateEffect(c)
 	eb:SetType(EFFECT_TYPE_FIELD)
@@ -57,14 +72,7 @@ function c95000158.initial_effect(c)
 	ee:SetCode(EFFECT_CANNOT_REMOVE)
 	c:RegisterEffect(ee)
 	
-	--damage amp
-	local e6=Effect.CreateEffect(c)
-	e6:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-	e6:SetRange(LOCATION_SZONE)
-	e6:SetCode(EVENT_PRE_BATTLE_DAMAGE)
-	e6:SetCondition(c95000158.dcon)
-	e6:SetOperation(c95000158.dop)
-	c:RegisterEffect(e6)
+	
 end
 function c95000158.ctcon2(e,re)
 	return re:GetHandler()~=e:GetHandler()
@@ -117,11 +125,8 @@ function c95000158.op(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 
-function c95000158.aclimit(e,re)
-	return re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_SPELL) and re:GetHandler():IsType(TYPE_FIELD)
-end
-function c95000158.aclimit2(e,c)
-	return c:IsType(TYPE_FIELD)
+function c95000158.sfilter(e,c,tp)
+	return c:IsType(TYPE_FIELD) 
 end
 function c95000158.tgn(e,c)
 	return c==e:GetHandler()
@@ -148,7 +153,6 @@ ac=math.random(1,#tableAction)
 e:SetLabel(tableAction[ac])
 end
 function c95000158.operation(e,tp,eg,ep,ev,re,r,rp)
-if Duel.SelectYesNo(1-tp,aux.Stringid(95000158,0)) then
 local dc=Duel.TossDice(tp,1)
 if dc==2 or dc==4 or dc==6 then
 
@@ -166,8 +170,6 @@ if dc==5 or dc==6 then
 		  local token=Duel.CreateToken(1-tp,e:GetLabel())
 		Duel.SendtoHand(token,nil,REASON_EFFECT)
 		end
-
-end
 
 end
 end
@@ -219,6 +221,16 @@ function c95000158.returnop(e)
 	e1:SetOperation(c95000158.operation)
 	e1:SetReset(RESET_EVENT+0x1fe0000)
 	fc:RegisterEffect(e1)
+	--cannot set
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_CANNOT_SSET)
+	e4:SetRange(LOCATION_SZONE)
+	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e4:SetTargetRange(1,0)
+	e4:SetReset(RESET_EVENT+0x1fe0000)
+	e4:SetTarget(c95000158.sfilter)
+	fc:RegisterEffect(e4)
 	fc:RegisterFlagEffect(195000158,RESET_EVENT+0x1fe0000,0,1)
 	end
 end
@@ -227,7 +239,7 @@ function c95000158.IRLcondition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp
 end
 function c95000158.dcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:GetFirst():IsDefensePos() and eg:GetFirst():IsRace(RACE_ROCK) and Duel.GetTurnPlayer()==tp
+	return eg:GetFirst():IsDefencePos() and eg:GetFirst():IsRace(RACE_ROCK) and Duel.GetTurnPlayer()==tp
 end
 function c95000158.dop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ChangeBattleDamage(ep,ev*2)

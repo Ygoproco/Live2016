@@ -26,9 +26,5 @@ function c511002417.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(1-tp,c511002417.filter,1-tp,LOCATION_DECK,0,1,1,nil,ac,e,tp)
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,1-tp,1-tp,false,false,POS_FACEUP_ATTACK)
-	else
-		local dg=Duel.GetFieldGroup(tp,0,LOCATION_DECK)
-		Duel.ConfirmCards(tp,dg)
-		Duel.ShuffleDeck(1-tp)
 	end
 end

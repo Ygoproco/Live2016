@@ -22,18 +22,22 @@ end
 function c700000027.filter(c,e)
 	return aux.nzatk(c) and (not e or not c:IsImmuneToEffect(e))
 end
-function c700000027.cfilter(c)
+function c700000027.atkfilter(c)
 	return c:IsSetCard(0xba) and c:IsType(TYPE_MONSTER)
 end
 function c700000027.target(e,tp,ep,eg,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(aux.nzatk,tp,0,LOCATION_MZONE,1,nil) 
-		and Duel.IsExistingMatchingCard(c700000027.cfilter,tp,LOCATION_GRAVE,0,1,nil) end
+		and Duel.IsExistingMatchingCard(c700000027.atkfilter,tp,LOCATION_GRAVE,0,1,nil) end
 end
 function c700000027.operation(e,tp,ep,eg,ev,re,r,rp)
 	local mg=Duel.GetMatchingGroupCount(c700000027.filter,tp,0,LOCATION_MZONE,nil,e)
-	local rc=Duel.GetMatchingGroupCount(c700000027.cfilter,tp,LOCATION_GRAVE,0,nil)
+	local rc=Duel.GetMatchingGroupCount(c700000027.atkfilter,tp,LOCATION_GRAVE,0,nil)
+	local g=Duel.GetMatchingGroup(c700000027.atkfilter,tp,LOCATION_GRAVE,0,nil)
+	local ct=g:GetFirst()
 	if mg==0 or rc==0 then return end
 	repeat
+		local code=ct:GetCode()
+		Duel.Hint(HINT_CARD,0,code)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 		local tg=Duel.SelectMatchingCard(tp,c700000027.filter,tp,0,LOCATION_MZONE,1,1,nil,e)
 		local tc=tg:GetFirst()
@@ -48,6 +52,7 @@ function c700000027.operation(e,tp,ep,eg,ev,re,r,rp)
 		else return
 		end
 		rc=rc-1
+		ct=g:GetNext()
 	until rc<=0 or not Duel.IsExistingMatchingCard(c700000027.filter,tp,0,LOCATION_MZONE,1,nil,e) 
 		or not Duel.SelectYesNo(tp,210)
 end

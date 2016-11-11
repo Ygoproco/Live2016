@@ -1,4 +1,5 @@
 --Shadow Guardsmen
+--fixed by MLD
 function c511009030.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)

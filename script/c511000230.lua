@@ -20,6 +20,9 @@ function c511000230.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 c511000230.xyz_number=1
+function c511000230.con(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetAttackTarget()~=nil
+end
 function c511000230.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)

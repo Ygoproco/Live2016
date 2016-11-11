@@ -3,24 +3,20 @@ function c511001431.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,nil,5,3)
 	c:EnableReviveLimit()
+	--Rank Up Check
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_CHANGE_DAMAGE)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e1:SetTargetRange(1,0)
-	e1:SetValue(c511001431.damval)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetCondition(c511001431.rankupregcon)
+	e1:SetOperation(c511001431.rankupregop)
 	c:RegisterEffect(e1)
-	--Negate
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(55888045,0))
-	e2:SetCategory(CATEGORY_DISABLE)
-	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetCode(EFFECT_CHANGE_DAMAGE)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetCondition(c511001431.discon)
-	e2:SetCost(c511001431.discost)
-	e2:SetTarget(c511001431.distg)
-	e2:SetOperation(c511001431.disop)
+	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e2:SetTargetRange(1,0)
+	e2:SetValue(c511001431.damval)
 	c:RegisterEffect(e2)
 	if not c511001431.global_check then
 		c511001431.global_check=true
@@ -50,6 +46,29 @@ function c511001431.initial_effect(c)
 	end
 end
 c511001431.xyz_number=106
+
+function c511001431.rumfilter(c)
+	return c:IsCode(88177324) and not c:IsPreviousLocation(LOCATION_OVERLAY)
+end
+function c511001431.rankupregcon(e,tp,eg,ep,ev,re,r,rp)
+		local rc=re:GetHandler()
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ) and (rc:IsSetCard(0x95) or rc:IsCode(100000581) or rc:IsCode(111011002) or rc:IsCode(511000580) or rc:IsCode(511002068) or rc:IsCode(511002164) or rc:IsCode(93238626)) and e:GetHandler():GetMaterial():IsExists(c511001431.rumfilter,1,nil)
+end
+function c511001431.rankupregop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	--Negate
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(55888045,0))
+	e1:SetCategory(CATEGORY_DISABLE)
+	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetCondition(c511001431.discon)
+	e1:SetCost(c511001431.discost)
+	e1:SetTarget(c511001431.distg)
+	e1:SetOperation(c511001431.disop)
+	e1:SetReset(RESET_EVENT+0x1fe0000)
+	c:RegisterEffect(e1)
+end
 function c511001431.damval(e,re,val,r,rp,rc)
 	if e:GetHandler():IsPosition(POS_FACEUP_ATTACK) and bit.band(r,REASON_EFFECT)~=0 then return 0
 	else return val end

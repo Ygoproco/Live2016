@@ -1,4 +1,5 @@
 --Parasite Queen
+--fixed by MLD
 function c511009344.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()

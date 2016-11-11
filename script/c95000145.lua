@@ -1,4 +1,4 @@
---Action Card - Candy Coat
+--Action Card - Invisibility
 function c95000145.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)

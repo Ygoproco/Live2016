@@ -10,12 +10,28 @@ function c511001145.initial_effect(c)
 	e1:SetTarget(c511001145.target)
 	e1:SetOperation(c511001145.activate)
 	c:RegisterEffect(e1)
+	if not c511001145.global_check then
+		c511001145.global_check=true
+		--check obsolete ruling
+		local ge1=Effect.CreateEffect(c)
+		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge1:SetCode(EVENT_DRAW)
+		ge1:SetOperation(c511001145.checkop)
+		Duel.RegisterEffect(ge1,0)
+	end
+end
+function c511001145.checkop(e,tp,eg,ep,ev,re,r,rp)
+	if bit.band(r,REASON_RULE)~=0 and Duel.GetTurnCount()==1 then
+		--obsolete
+		Duel.RegisterFlagEffect(tp,62765383,0,0,1)
+		Duel.RegisterFlagEffect(1-tp,62765383,0,0,1)
+	end
 end
 function c511001145.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local g=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
 		g:RemoveCard(e:GetHandler())
-		return g:GetCount()>0 and g:FilterCount(Card.IsDiscardable,nil)==g:GetCount()
+		return g:GetCount()==0 or g:FilterCount(Card.IsDiscardable,nil)==g:GetCount()
 	end
 	local g=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
 	Duel.SendtoGrave(g,REASON_COST+REASON_DISCARD)
@@ -28,13 +44,15 @@ function c511001145.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511001145.activate(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	Duel.ShuffleDeck(p)
+	Duel.BreakEffect()
 	local g=Duel.GetDecktopGroup(p,1)
 	local tc=g:GetFirst()
 	Duel.Draw(p,d,REASON_EFFECT)
 	Duel.ConfirmCards(1-p,tc)
 	Duel.ShuffleHand(p)
 	if (Duel.GetLocationCount(tp,LOCATION_SZONE)>0 or tc:IsType(TYPE_FIELD)) and tc:IsType(TYPE_SPELL) 
-		and tc:CheckActivateEffect(false,false,false)~=nil and Duel.SelectYesNo(tp,aux.Stringid(28265983,0)) then
+		and tc:CheckActivateEffect(false,false,false)~=nil then
 		local tpe=tc:GetType()
 		local te=tc:GetActivateEffect()
 		local tg=te:GetTarget()
@@ -44,13 +62,18 @@ function c511001145.activate(e,tp,eg,ep,ev,re,r,rp)
 		e:SetProperty(te:GetProperty())
 		Duel.ClearTargetCard()
 		if bit.band(tpe,TYPE_FIELD)~=0 then
-			local of=Duel.GetFieldCard(1-tp,LOCATION_SZONE,5)
-			if of then Duel.Destroy(of,REASON_RULE) end
-			of=Duel.GetFieldCard(tp,LOCATION_SZONE,5)
-			if of and Duel.Destroy(of,REASON_RULE)==0 then Duel.SendtoGrave(tc,REASON_RULE) end
+			local fc=Duel.GetFieldCard(1-tp,LOCATION_SZONE,5)
+			if Duel.GetFlagEffect(tp,62765383)>0 then
+				if fc then Duel.Destroy(fc,REASON_RULE) end
+				of=Duel.GetFieldCard(tp,LOCATION_SZONE,5)
+				if fc and Duel.Destroy(fc,REASON_RULE)==0 then Duel.SendtoGrave(tc,REASON_RULE) end
+			else
+				Duel.GetFieldCard(tp,LOCATION_SZONE,5)
+				if fc and Duel.SendtoGrave(fc,REASON_RULE)==0 then Duel.SendtoGrave(tc,REASON_RULE) end
+			end
 		end
 		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
-		Duel.Hint(HINT_CARD,0,tc:GetCode())
+		Duel.Hint(HINT_CARD,0,tc:GetOriginalCode())
 		tc:CreateEffectRelation(te)
 		if bit.band(tpe,TYPE_EQUIP+TYPE_CONTINUOUS+TYPE_FIELD)==0 then
 			tc:CancelToGrave(false)
