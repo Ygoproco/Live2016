@@ -1,12 +1,12 @@
 --召喚獣コキュートス
 --Cocytus the Eidolon Beast
 --Scripted by Eerie Code
-function c7629.initial_effect(c)
+function c85908279.initial_effect(c)
 	c:EnableReviveLimit()
 	if Card.IsFusionAttribute then
-		aux.AddFusionProcCodeFun(c,7626,aux.FilterBoolFunction(Card.IsFusionAttribute,ATTRIBUTE_WATER),1,true,true)
+		aux.AddFusionProcCodeFun(c,86120751,aux.FilterBoolFunction(Card.IsFusionAttribute,ATTRIBUTE_WATER),1,true,true)
 	else
-		aux.AddFusionProcCodeFun(c,7626,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER),1,true,true)
+		aux.AddFusionProcCodeFun(c,86120751,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER),1,true,true)
 	end
 	--defense attack
 	local e1=Effect.CreateEffect(c)
@@ -28,10 +28,10 @@ function c7629.initial_effect(c)
 	e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e5:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	e5:SetRange(LOCATION_MZONE)
-	e5:SetValue(c7629.indval)
+	e5:SetValue(c85908279.indval)
 	c:RegisterEffect(e5)
 end
 
-function c7629.indval(e,re,tp)
+function c85908279.indval(e,re,tp)
 	return tp~=e:GetHandlerPlayer()
 end

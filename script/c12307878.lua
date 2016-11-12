@@ -1,13 +1,13 @@
 --召喚獣プルガトリオ
 --Purgatorio the Eidolon Beast
 --Script by nekrozar
-function c7630.initial_effect(c)
+function c12307878.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
 	if Card.IsFusionAttribute then
-		aux.AddFusionProcCodeFun(c,7626,aux.FilterBoolFunction(Card.IsFusionAttribute,ATTRIBUTE_FIRE),1,true,true)
+		aux.AddFusionProcCodeFun(c,86120751,aux.FilterBoolFunction(Card.IsFusionAttribute,ATTRIBUTE_FIRE),1,true,true)
 	else
-		aux.AddFusionProcCodeFun(c,7626,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_FIRE),1,true,true)
+		aux.AddFusionProcCodeFun(c,86120751,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_FIRE),1,true,true)
 	end
 	--atk
 	local e1=Effect.CreateEffect(c)
@@ -15,7 +15,7 @@ function c7630.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
 	e1:SetRange(LOCATION_MZONE)
-	e1:SetValue(c7630.atkval)
+	e1:SetValue(c12307878.atkval)
 	c:RegisterEffect(e1)
 	--attack all
 	local e2=Effect.CreateEffect(c)
@@ -29,6 +29,6 @@ function c7630.initial_effect(c)
 	e3:SetCode(EFFECT_PIERCE)
 	c:RegisterEffect(e3)
 end
-function c7630.atkval(e,c)
+function c12307878.atkval(e,c)
 	return Duel.GetFieldGroupCount(c:GetControler(),0,LOCATION_ONFIELD)*200
 end
