@@ -27,7 +27,7 @@ function c511009355.activate(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(p,d,REASON_EFFECT)
 	Duel.BreakEffect()
-	if Duel.IsExistingMatchingCard(c511000578.tgfilter,tp,LOCATION_HAND,0,1,nil) then
+	if Duel.IsExistingMatchingCard(c511009355.tgfilter,tp,LOCATION_HAND,0,1,nil) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 		local dg=Duel.SelectMatchingCard(tp,c511009355.tgfilter,tp,LOCATION_HAND,0,1,1,nil)
 		Duel.SendtoGrave(dg,REASON_EFFECT)
