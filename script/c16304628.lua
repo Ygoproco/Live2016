@@ -3,7 +3,7 @@ function c16304628.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
 	if Card.IsFusionAttribute then
-		aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0x3008),aux.FilterBoolFunction(Card.IsFusionAttribute,ATTRIBUTE_EARTH),true)
+		aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0x3008),aux.FilterBoolFunction(Card.IsFusionAttribute,ATTRIBUTE_EARTH,c),true)
 	else
 		aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0x3008),aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_EARTH),true)
 	end

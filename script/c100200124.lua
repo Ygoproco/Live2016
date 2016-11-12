@@ -5,7 +5,7 @@ function c100200124.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
 	if Card.IsFusionAttribute then
-		aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsType,TYPE_FUSION),aux.FilterBoolFunction(Card.IsFusionAttribute,ATTRIBUTE_DARK),true)
+		aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsType,TYPE_FUSION),aux.FilterBoolFunction(Card.IsFusionAttribute,ATTRIBUTE_DARK,c),true)
 	else
 		aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsType,TYPE_FUSION),aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_DARK),true)
 	end

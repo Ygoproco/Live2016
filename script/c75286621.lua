@@ -4,7 +4,7 @@
 function c75286621.initial_effect(c)
 	c:EnableReviveLimit()
 	if Card.IsFusionAttribute then
-		aux.AddFusionProcCodeFun(c,86120751,aux.FilterBoolFunction(Card.IsFusionAttribute,ATTRIBUTE_LIGHT),1,true,true)
+		aux.AddFusionProcCodeFun(c,86120751,aux.FilterBoolFunction(Card.IsFusionAttribute,ATTRIBUTE_LIGHT,c),1,true,true)
 	else
 		aux.AddFusionProcCodeFun(c,86120751,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_LIGHT),1,true,true)
 	end
