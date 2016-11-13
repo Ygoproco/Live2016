@@ -56,7 +56,7 @@ function c511009368.funcon(e,g,gc,chkfnf)
 	local mg=g:Filter(Card.IsCanBeFusionMaterial,nil,e:GetHandler())
 	if gc then
 		if not gc:IsCanBeFusionMaterial(e:GetHandler()) then return false end
-		return (c511009368.mat_fil(gc,c) and mg:IsExists(f2,1,gc))
+		return (c511009368.mat_fil(gc,c) and mg:IsExists(f2,1,gc,c))
 			or (f2(gc) and mg:IsExists(c511009368.mat_fil,1,gc,c)) end
 	local g1=Group.CreateGroup() local g2=Group.CreateGroup() local fs=false
 	local tc=mg:GetFirst()
@@ -77,7 +77,7 @@ function c511009368.funop(e,tp,eg,ep,ev,re,r,rp,gc,chkfnf)
 	if gc then
 		local sg=Group.CreateGroup()
 		if c511009368.mat_fil(gc,c) then sg:Merge(g:Filter(f2,gc)) end
-		if f2(gc) then sg:Merge(g:Filter(c511009368.mat_fil,gc)) end
+		if f2(gc) then sg:Merge(g:Filter(c511009368.mat_fil,gc,c)) end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
 		local g1=sg:Select(tp,1,1,nil)
 		Duel.SetFusionMaterial(g1)
@@ -91,7 +91,7 @@ function c511009368.funop(e,tp,eg,ep,ev,re,r,rp,gc,chkfnf)
 	else g1=sg:Select(tp,1,1,nil) end
 	local tc1=g1:GetFirst()
 	sg:RemoveCard(tc1)
-	local b1=c511009368.mat_fil(tc1)
+	local b1=c511009368.mat_fil(tc1,c)
 	local b2=f2(tc1)
 	if b1 and not b2 then sg:Remove(c511009368.FConditionFilterF2r1,nil,c) end
 	if b2 and not b1 then sg:Remove(c511009368.FConditionFilterF2r2,nil,c) end
