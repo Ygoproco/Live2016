@@ -1,8 +1,15 @@
 --スターヴ・ヴェノム・フュージョン・ドラゴン
 function c41209827.initial_effect(c)
 	--fusion material
+	--aux.AddFusionProcFunRep(c,c41209827.ffilter,2,false)
 	c:EnableReviveLimit()
-	aux.AddFusionProcFunRep(c,c41209827.ffilter,2,false)
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_SINGLE)
+	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e0:SetCode(EFFECT_FUSION_MATERIAL)
+	e0:SetCondition(c41209827.funcon)
+	e0:SetOperation(c41209827.funop)
+	c:RegisterEffect(e0)
 	--atk up
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(41209827,0))
@@ -37,13 +44,53 @@ function c41209827.initial_effect(c)
 	e3:SetOperation(c41209827.desop)
 	c:RegisterEffect(e3)
 end
-function c41209827.ffilter(c)
+function c41209827.ffilter(c,fc)
 	if Card.IsFusionAttribute then
-		return c:IsFusionAttribute(ATTRIBUTE_DARK) and c:IsLocation(LOCATION_MZONE) and not c:IsType(TYPE_TOKEN)
+		return c:IsFusionAttribute(ATTRIBUTE_DARK,fc) and c:IsLocation(LOCATION_MZONE) and not c:IsType(TYPE_TOKEN)
 	else
 		return c:IsAttribute(ATTRIBUTE_DARK) and c:IsLocation(LOCATION_MZONE) and not c:IsType(TYPE_TOKEN)
 	end
 end
+function c41209827.funcon(e,g,gc,chkfnf)
+	if g==nil then return false end
+	local c=e:GetHandler()
+	local chkf=bit.band(chkfnf,0xff)
+	local mg=g:Filter(Card.IsCanBeFusionMaterial,nil,e:GetHandler())
+	if gc then
+		if not gc:IsCanBeFusionMaterial(e:GetHandler()) then return false end
+		return c41209827.ffilter(gc,c) and mg:IsExists(c41209827.ffilter,1,gc,c) end
+	local g1=mg:Filter(c41209827.ffilter,nil,c)
+	if chkf~=PLAYER_NONE then
+		return g1:FilterCount(Card.IsOnField,nil)~=0 and g1:GetCount()>=2
+	else return g1:GetCount()>=2 end
+end
+function c41209827.funop(e,tp,eg,ep,ev,re,r,rp,gc,chkfnf)
+	local chkf=bit.band(chkfnf,0xff)
+	local c=e:GetHandler()
+	local g=eg:Filter(Card.IsCanBeFusionMaterial,nil,e:GetHandler())
+	if gc then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
+		local g1=g:FilterSelect(tp,c41209827.ffilter,1,1,gc,c)
+		Duel.SetFusionMaterial(g1)
+		return
+	end
+	local sg=g:Filter(c41209827.ffilter,nil,c)
+	if chkf==PLAYER_NONE or sg:GetCount()==2 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
+		local g1=sg:Select(tp,2,2,nil)
+		Duel.SetFusionMaterial(g1)
+		return
+	end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
+	local g1=sg:FilterSelect(tp,Auxiliary.FConditionCheckF,1,1,nil,chkf)
+	if 2>1 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
+		local g2=sg:Select(tp,2-1,2-1,g1:GetFirst())
+		g1:Merge(g2)
+	end
+	Duel.SetFusionMaterial(g1)
+end
+
 function c41209827.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION
 end
