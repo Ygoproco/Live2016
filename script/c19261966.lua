@@ -38,7 +38,7 @@ function c19261966.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c19261966.ffilter1(c)
-	return c:IsFusionSetCard(0x9d) and not c:IsHasEffect(6205579) end
+	return c:IsFusionSetCard(0x9d) and not c:IsHasEffect(6205579)
 end
 function c19261966.ffilter2(c,fc)
 	if Card.IsFusionAttribute then
