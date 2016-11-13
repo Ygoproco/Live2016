@@ -175,18 +175,6 @@ end
 --Adjustment for cards with particular procedures
 function c6205579.adjust(e,tp,eg,ep,ev,re,r,rp)
 	local mt
-	--エルシャドール・アノマリリス (El Shaddoll Anoyatyllis)
-	if c19261966 then
-		mt=c19261966
-		mt.ffilter1=function(c) return c:IsFusionSetCard(0x9d) and not c:IsHasEffect(6205579) end
-		mt.ffilter2=c6205579.elshad_filter(ATTRIBUTE_WATER)
-	end
-	--エルシャドール・ネフィリム (El Shaddoll Construct)
-	if c20366274 then
-		mt=c20366274
-		mt.ffilter1=function(c) return c:IsFusionSetCard(0x9d) and not c:IsHasEffect(6205579) end
-		mt.ffilter2=c6205579.elshad_filter(ATTRIBUTE_LIGHT)
-	end
 	--メタルフォーゼ・オリハルク (Metalfoes Orichalc)
 	if c28016193 then
 		mt=c28016193
@@ -197,34 +185,16 @@ function c6205579.adjust(e,tp,eg,ep,ev,re,r,rp)
 		mt=c4688231
 		mt.filter1=function(c) return c:IsFusionSetCard(0xe1) and not c:IsHasEffect(6205579) end
 	end
-	--エルシャドール・エグリスタ (El Shaddoll Grysta)
-	if c48424886 then
-		mt=c48424886
-		mt.ffilter1=function(c) return c:IsFusionSetCard(0x9d) and not c:IsHasEffect(6205579) end
-		mt.ffilter2=c6205579.elshad_filter(ATTRIBUTE_FIRE)
-	end
 	--メタルフォーゼ・カーディナル (Metalfoes Crimsonite)
 	if c54401832 then
 		mt=c54401832
 		mt.filter1=function(c) return c:IsFusionSetCard(0xe1) and not c:IsHasEffect(6205579) end
 		mt.filter2=function(c) return c:IsAttackBelow(3000) and not c:IsHasEffect(6205579) end
 	end
-	--エルシャドール・ウェンディゴ (El Shaddoll Wendigo)
-	if c74009824 then
-		mt=c74009824
-		mt.ffilter1=function(c) return c:IsFusionSetCard(0x9d) and not c:IsHasEffect(6205579) end
-		mt.ffilter2=c6205579.elshad_filter(ATTRIBUTE_WIND)
-	end
 	--ワーム・ゼロ (Worm Zero)
 	if c74506079 then
 		mt=c74506079
 		mt.ffilter=function(c) return c:IsFusionSetCard(0x3e) and c:IsRace(RACE_REPTILE) and not c:IsHasEffect(6205579) end
-	end
-	--エルシャドール・シェキナーガ (El Shaddoll Shekhinaga)
-	if c74822425 then
-		mt=c74822425
-		mt.ffilter1=function(c) return c:IsFusionSetCard(0x9d) and not c:IsHasEffect(6205579) end
-		mt.ffilter2=c6205579.elshad_filter(ATTRIBUTE_EARTH)
 	end
 	--フルメタルフォーゼ・アルカエスト (Fullmetalfoes Alkahest)
 	if c77693536 then
@@ -241,21 +211,5 @@ function c6205579.adjust(e,tp,eg,ep,ev,re,r,rp)
 	if c84058253 then
 		mt=c84058253
 		mt.ffilter=function(c) return c:IsFusionSetCard(0x1093) and not c:IsHasEffect(6205579) end
-	end
-	--エルシャドール・ミドラーシュ (El Shaddoll Winda)
-	if c94977269 then
-		mt=c94977269
-		mt.ffilter1=function(c) return c:IsFusionSetCard(0x9d) and not c:IsHasEffect(6205579) end
-		mt.ffilter2=c6205579.elshad_filter(ATTRIBUTE_DARK)
-	end
-end
---Material filter for El Shaddoll monsters
-function c6205579.elshad_filter(attr)
-	return function(c)
-		if Card.IsFusionAttribute then
-			return (c:IsFusionAttribute(attr) or c:IsHasEffect(4904633)) and not c:IsHasEffect(6205579)
-		else
-			return (c:IsAttribute(attr) or c:IsHasEffect(4904633)) and not c:IsHasEffect(6205579)
-		end
 	end
 end

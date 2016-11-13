@@ -3,6 +3,14 @@
 --Scripted by Eerie Code
 function c89181134.initial_effect(c)
 	--fusattribute
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_FIELD)
+	e0:SetCode(0x10000000)
+	e0:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e0:SetRange(LOCATION_MZONE)
+	e0:SetTargetRange(1,0)
+	c:RegisterEffect(e0)
+	--
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	if EFFECT_CHANGE_FUSION_ATTRIBUTE then
@@ -26,14 +34,18 @@ function c89181134.initial_effect(c)
 	e2:SetOperation(c89181134.operation)
 	c:RegisterEffect(e2)
 	if not Card.IsFusionAttribute then
-		function Card.IsFusionAttribute(c,att)
-			local att2=0x01
-			while att2<ATTRIBUTE_DEVINE do
-				local a=att2+0x10000000
-				if c:IsHasEffect(a) then
-					return bit.band(att,att2)==att
-				else
-					att2=att2*2
+		function Card.IsFusionAttribute(c,att,fc)
+			local tp=fc:GetControler()
+			local gc=Duel.IsPlayerAffectedByEffect(tp,0x10000000)
+			if gc then
+				local att2=0x01
+				while att2<ATTRIBUTE_DEVINE do
+					local a=att2+0x10000000
+					if c:IsHasEffect(a) then
+						return bit.band(att,att2)==att
+					else
+						att2=att2*2
+					end
 				end
 			end
 			return c:IsAttribute(att)
