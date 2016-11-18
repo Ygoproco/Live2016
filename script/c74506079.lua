@@ -20,18 +20,34 @@ function c74506079.ffilter(c)
 	if c:IsHasEffect(6205579) then return false end
 	return (c:IsFusionSetCard(0x3e) and c:IsRace(RACE_REPTILE)) or c:IsHasEffect(511002961)
 end
-function c74506079.fscondition(e,g,gc)
+function c74506079.fscondition(e,g,gc,chkfnf)
 	if g==nil then return true end
-	if gc then return gc:IsCanBeFusionMaterial(e:GetHandler()) and c74506079.ffilter(gc) and g:IsExists(c74506079.ffilter,1,gc) end
+	local chkf=bit.band(chkfnf,0xff)
+	if gc then
+		if not (gc:IsCanBeFusionMaterial(e:GetHandler()) and c74506079.ffilter(gc)) then return false end
+		if chkf~=PLAYER_NONE and not (aux.FConditionCheckF(gc,chkf) or g:IsExists(aux.FConditionCheckF,nil,chkf)) then return false end
+		return g:IsExists(c74506079.ffilter,1,gc)
+	end
 	local g1=g:Filter(c74506079.ffilter,nil)
 	if chkf~=PLAYER_NONE then
-		return g1:FilterCount(Card.IsOnField,nil)~=0 and g1:GetCount()>=2
+		return g1:FilterCount(aux.FConditionCheckF,nil,chkf)~=0 and g1:GetCount()>=2
 	else return g1:GetCount()>=2 end
 end
-function c74506079.fsoperation(e,tp,eg,ep,ev,re,r,rp,gc)
+function c74506079.fsoperation(e,tp,eg,ep,ev,re,r,rp,gc,chkfnf)
+	local chkf=bit.band(chkfnf,0xff)
 	if gc then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-		local g1=eg:FilterSelect(tp,c74506079.ffilter,1,63,gc)
+		local sel=chkf==PLAYER_NONE or aux.FConditionCheckF(gc,chkf)
+		local mg=eg:Clone()
+		local g1=Group.CreateGroup()
+		if not sel then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
+			g1:Merge(mg:Filter(c74506079.ffilter,gc):FilterSelect(tp,aux.FConditionCheckF,1,1,nil))
+			if Duel.SelectYesNo(tp,210) then sel=true end
+		end
+		if sel then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
+			g1:Merge(mg:FilterSelect(tp,c74506079.ffilter,1,63,gc))
+		end
 		Duel.SetFusionMaterial(g1)
 		return
 	end
