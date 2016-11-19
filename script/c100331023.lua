@@ -33,18 +33,16 @@ function c100331023.evalue(e,re,rp)
 	return re:IsActiveType(TYPE_SPELL) and rp~=e:GetHandlerPlayer()
 end
 function c100331023.thcfilter(c,tp)
-	local pl=c:GetPreviousLocation()
-	local ps=c:GetPreviousSequence()
-	return c:IsType(TYPE_PENDULUM) and c:IsSetCard(0x98)
-		and c:IsPreviousPosition(POS_FACEUP) 
-		and (pl==LOCATION_MZONE or (pl==LOCATION_SZONE and (ps==6 or ps==7))
-		and not c:IsFacedown()
+	if (c:IsType(TYPE_PENDULUM) and c:IsSetCard(0x98) and c:IsPreviousPosition(POS_FACEUP)) then return true end
+    local pl=c:GetPreviousLocation()
+    local ps=c:GetPreviousSequence()
 end
 function c100331023.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg and eg:IsExists(c100331023.thcfilter,1,nil,tp)
 end
 function c100331023.thfilter(c)
-	return c:IsType(TYPE_PENDULUM) and c:IsSetCard(0x98) and c:IsAbleToHand()
+	if c:IsType(TYPE_PENDULUM) and c:IsSetCard(0x98) and c:IsAbleToHand()
+	then return true end
 end
 function c100331023.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100331023.thfilter,tp,LOCATION_DECK,0,1,nil) end
