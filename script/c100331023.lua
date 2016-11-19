@@ -37,7 +37,7 @@ function c100331023.thcfilter(c,tp)
 	local ps=c:GetPreviousSequence()
 	return c:IsType(TYPE_PENDULUM) and c:IsSetCard(0x98)
 		and c:IsPreviousPosition(POS_FACEUP) 
-		and (pl==LOCATION_MZONE or (pl==LOCATION_SZONE and (ps==6 or ps==7))
+		and (pl==LOCATION_MZONE or (pl==LOCATION_SZONE and (ps==6 or ps==7)))
 		and not c:IsFacedown()
 end
 function c100331023.thcon(e,tp,eg,ep,ev,re,r,rp)
