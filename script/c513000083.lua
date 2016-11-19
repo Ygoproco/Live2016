@@ -97,20 +97,18 @@ function c513000083.eqlimit(e,c)
 end
 function c513000083.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local ec=e:GetHandler():GetEquipTarget()
-	return ep==tp and (e:GetHandler()==ec or e:GetHandler()==ec)
+	return ep==tp and (ec==Duel.GetAttacker() or ec==Duel.GetAttackTarget())
 end
 function c513000083.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
+	local ec=c:GetEquipTarget()
 	if not c:IsRelateToEffect(e) then return end
 	--Atk Change
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_EQUIP)
-	e1:SetCode(EFFECT_SET_ATTACK)
-	e1:SetValue(c513000083.val)
+	e1:SetCode(EFFECT_SET_ATTACK_FINAL)
+	e1:SetValue(ec:GetAttack()*2)
 	e1:SetReset(RESET_EVENT+0x1fe0000)
 	c:RegisterEffect(e1)
 	Duel.ChainAttack()
-end
-function c513000083.val(e,c)
-	return c:GetAttack()*2
 end
