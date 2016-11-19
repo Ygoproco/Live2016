@@ -154,7 +154,7 @@ function c511000369.regop(e,tp,eg,ep,ev,re,r,rp)
 	c:RegisterEffect(e1)
 end
 function c511000369.atkupcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()==tp and Duel.GetCurrentPhase()>=0x08 and ph<=0x80
+	return Duel.GetTurnPlayer()==tp and Duel.GetCurrentPhase()>=0x08 and Duel.GetCurrentPhase()<=0x80
 end
 function c511000369.atkupop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
