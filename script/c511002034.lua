@@ -50,8 +50,27 @@ function c511002034.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local rc=re:GetHandler()
 	if not rc or not rc:IsRelateToEffect(e) then return end
-	Duel.NegateEffect(ev)
-	if rc:IsRelateToEffect(re) and Duel.Destroy(rc,REASON_EFFECT)>0 then
+	Duel.NegateRelatedChain(rc,RESET_TURN_SET)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e1:SetCode(EFFECT_DISABLE)
+	e1:SetReset(RESET_EVENT+0x1fe0000)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e2:SetCode(EFFECT_DISABLE_EFFECT)
+	e2:SetValue(RESET_TURN_SET)
+	e2:SetReset(RESET_EVENT+0x1fe0000)
+	local e3=nil
+	if rc:IsType(TYPE_TRAPMONSTER) then
+		e3=Effect.CreateEffect(c)
+		e3:SetType(EFFECT_TYPE_SINGLE)
+		e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e3:SetCode(EFFECT_DISABLE_TRAPMONSTER)
+		e3:SetReset(RESET_EVENT+0x1fe0000)
+	end
+	if rc:RegisterEffect(e1) and rc:RegisterEffect(e2) and (e3==nil or rc:RegisterEffect(e3)) and rc:IsRelateToEffect(re) and Duel.Destroy(rc,REASON_EFFECT)>0 then
 		if c:IsRelateToEffect(e) and c:IsFaceup() then
 			local atk=rc:GetTextAttack()
 			if atk<=0 then return end

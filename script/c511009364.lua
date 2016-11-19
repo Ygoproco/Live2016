@@ -24,7 +24,7 @@ function c511009364.initial_effect(c)
 	--special summon
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(7241272,1))
-	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1)
@@ -32,8 +32,7 @@ function c511009364.initial_effect(c)
 	e3:SetTarget(c511009364.sptg)
 	e3:SetOperation(c511009364.spop)
 	c:RegisterEffect(e3)
-	
-		if not c511009364.global_check then
+	if not c511009364.global_check then
 		c511009364.global_check=true
 		c511009364[0]=0
 		c511009364[1]=0

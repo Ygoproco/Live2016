@@ -28,10 +28,6 @@ function c95000013.activate(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetCondition(c95000013.dircon)
 			e1:SetReset(RESET_EVENT+0x1fe0000)
 			tc:RegisterEffect(e1)
-		else
-			if not tc:IsImmuneToEffect(e) and tc:IsAbleToChangeControler() then
-				Duel.Destroy(tc,REASON_EFFECT)
-			end
 		end
 	end
 end

@@ -92,11 +92,7 @@ function c511001295.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
-		if not Duel.GetControl(tc,tp) then
-			if not tc:IsImmuneToEffect(e) and tc:IsAbleToChangeControler() then
-				Duel.Destroy(tc,REASON_EFFECT)
-			end
-		else
+		if Duel.GetControl(tc,tp) then
 			if c:GetFlagEffect(511001295)==0 then
 				c:RegisterFlagEffect(511001295,RESET_EVENT+0x1fe0000,0,0)
 				local e1=Effect.CreateEffect(c)

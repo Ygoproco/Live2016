@@ -19,18 +19,15 @@ function c100100118.filter(c)
 	return c:IsControlerCanBeChanged() and c:IsPosition(POS_FACEUP_DEFENSE)
 end
 function c100100118.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and c100100118.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c100100118.filter,tp,0,LOCATION_MZONE,1,nil) end
-	return true
+	if chk==0 then return Duel.IsExistingMatchingCard(c100100118.filter,tp,0,LOCATION_MZONE,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_CONTROL,nil,1,1-tp,LOCATION_MZONE)
 end
 function c100100118.activate(e,tp,eg,ep,ev,re,r,rp)
-	local dg=Duel.GetMatchingGroup(c100100118.filter,tp,0,LOCATION_MZONE,nil)		
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
-	local tdg=dg:Select(tp,1,1,nil)
-	local tc=tdg:GetFirst()
-	if tc and not Duel.GetControl(tc,tp,PHASE_END,1) then
-		if not tc:IsImmuneToEffect(e) and tc:IsAbleToChangeControler() then
-			Duel.Destroy(tc,REASON_EFFECT)
-		end
+	local g=Duel.SelectMatchingCard(tp,c100100118.filter,tp,0,LOCATION_MZONE,1,1,nil)
+	local tc=g:GetFirst()
+	if tc then
+		Duel.HintSelection(g)
+		Duel.GetControl(tc,tp,PHASE_END,1)
 	end
 end

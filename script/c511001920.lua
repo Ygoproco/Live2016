@@ -16,7 +16,7 @@ function c511001920.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c511001920.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function c511001920.filter(c)
-	return c:IsSetCard(0x1034) and c:GetCode()~=7093411 and c:IsAbleToHand()
+	return c:IsSetCard(0x1034) and not c:IsCode(7093411) and c:IsAbleToHand()
 end
 function c511001920.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c511001920.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
