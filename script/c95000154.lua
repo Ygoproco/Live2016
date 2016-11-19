@@ -4,7 +4,6 @@ function c95000154.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetCondition(c95000154.condition)
 	e1:SetOperation(c95000154.activate)
 	c:RegisterEffect(e1)
 	--act in hand
@@ -16,9 +15,6 @@ function c95000154.initial_effect(c)
 end
 function c95000154.handcon(e)
 	return tp~=Duel.GetTurnPlayer()
-end
-function c95000154.actcondition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp and Duel.GetCurrentPhase()==PHASE_BATTLE
 end
 function c95000154.activate(e,tp,eg,ep,ev,re,r,rp)
 	local e1=Effect.CreateEffect(e:GetHandler())
