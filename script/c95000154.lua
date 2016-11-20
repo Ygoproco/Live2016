@@ -4,7 +4,6 @@ function c95000154.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetCondition(c95000154.condition)
 	e1:SetOperation(c95000154.activate)
 	c:RegisterEffect(e1)
 	--act in hand
@@ -17,17 +16,14 @@ end
 function c95000154.handcon(e)
 	return tp~=Duel.GetTurnPlayer()
 end
-function c95000154.actcondition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp and Duel.GetCurrentPhase()==PHASE_BATTLE
-end
 function c95000154.activate(e,tp,eg,ep,ev,re,r,rp)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetCode(EVENT_CHAINING)
-	e2:SetCondition(c95000154.condition2)
-	e2:SetTarget(c95000154.target2)
-	e2:SetOperation(c95000154.activate2)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e1:SetCode(EVENT_CHAINING)
+	e1:SetCondition(c95000154.condition2)
+	e1:SetTarget(c95000154.target2)
+	e1:SetOperation(c95000154.activate2)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
 end
