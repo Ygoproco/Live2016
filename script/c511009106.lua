@@ -13,11 +13,11 @@ function c511009106.initial_effect(c)
 	c:RegisterEffect(e1)
 	--spsummon
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetTarget(c511009106.ftarget)
-	e2:SetOperation(c511009106.foperation)
+	e2:SetTarget(c511009106.ftg)
+	e2:SetOperation(c511009106.fop)
 	c:RegisterEffect(e2)
 end
 function c511009106.condition(e,tp,eg,ep,ev,re,r,rp)
@@ -51,7 +51,7 @@ function c511009106.filter2(c,e,tp,m,f,gc)
 	return c:IsType(TYPE_FUSION) and (not f or f(c))
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,gc)
 end
-function c511009106.ftarget(e,tp,eg,ep,ev,re,r,rp,chk)
+function c511009106.ftg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then
 		local mg1=Duel.GetMatchingGroup(Card.IsCanBeFusionMaterial,tp,LOCATION_MZONE,0,c)
@@ -69,7 +69,7 @@ function c511009106.ftarget(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
-function c511009106.foperation(e,tp,eg,ep,ev,re,r,rp)
+function c511009106.fop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsFacedown() or not c:IsRelateToEffect(e) or c:IsImmuneToEffect(e) then return end
 	local mg1=Duel.GetMatchingGroup(c511009106.filter1,tp,LOCATION_MZONE,0,c,e)

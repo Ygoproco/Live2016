@@ -28,9 +28,5 @@ function c511001018.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) and Duel.GetControl(tc,tp) then
 		Duel.ChangePosition(tc,POS_FACEUP_DEFENSE)
-	else
-		if not tc:IsImmuneToEffect(e) and tc:IsAbleToChangeControler() then
-			Duel.Destroy(tc,REASON_EFFECT)
-		end
 	end
 end

@@ -23,8 +23,8 @@ function c511002109.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c511002109.ffilter(c)
-	return c:IsSetCard(0x204) or c:IsCode(7391448) or c:IsCode(63364266) or c:IsCode(98637386) or c:IsCode(84305651) 
-		or c:IsCode(58901502) or c:IsCode(59255742)
+	return c:IsFusionSetCard(0x204) or c:IsFusionCode(7391448) or c:IsFusionCode(63364266) or c:IsFusionCode(98637386) or c:IsFusionCode(84305651) 
+		or c:IsFusionCode(58901502) or c:IsFusionCode(59255742)
 end
 function c511002109.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttacker()
@@ -95,11 +95,7 @@ function c511002109.atkop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetValue(1)
 		e2:SetReset(RESET_PHASE+PHASE_DAMAGE)
 		tc:RegisterEffect(e2)
-		if not Duel.GetControl(tc,tp) then
-			if not tc:IsImmuneToEffect(e) and tc:IsAbleToChangeControler() then
-				Duel.Destroy(tc,REASON_EFFECT)
-			end
-		end
+		Duel.GetControl(tc,tp)
 	end
 end
 function c511002109.ctcon(e,tp,eg,ep,ev,re,r,rp)

@@ -25,11 +25,7 @@ function c511002771.sumop(e,tp,eg,ep,ev,re,r,rp)
 	if tc then
 		Duel.HintSelection(g)
 		if Duel.ChangePosition(tc,POS_FACEUP_DEFENSE)>0 then
-			if not Duel.GetControl(tc,tp) then
-				if not tc:IsImmuneToEffect(e) and tc:IsAbleToChangeControler() then
-					Duel.Destroy(tc,REASON_EFFECT)
-				end
-			end
+			Duel.GetControl(tc,tp)
 		end
 	end
 end
