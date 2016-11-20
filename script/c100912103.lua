@@ -32,7 +32,7 @@ end
 function c100912103.otcon(e,c)
 	if c==nil then return true end
 	return c:GetLevel()>4 and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c100912103.otfilter,c:GetControler(),,LOCATION_ONFIELD,0,1,nil)
+		and Duel.IsExistingMatchingCard(c100912103.otfilter,c:GetControler(),LOCATION_ONFIELD,0,1,nil)
 end
 function c100912103.otop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
