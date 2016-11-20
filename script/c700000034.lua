@@ -1,17 +1,17 @@
 --Scripted by Eerie Code
 --Ancient Gear Chaos Fusion
+--fixed by MLD
 function c700000034.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
 	e1:SetCost(c700000034.cost)
 	e1:SetTarget(c700000034.target)
 	e1:SetOperation(c700000034.activate)
 	c:RegisterEffect(e1)
 end
-
 function c700000034.cfilter(c)
 	return c:IsCode(24094653) and c:IsAbleToGraveAsCost()
 end

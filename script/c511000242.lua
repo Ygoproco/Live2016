@@ -75,12 +75,9 @@ end
 function c511000242.unaffectedval(e,te)
 	return (te:IsActiveType(TYPE_SPELL) or te:IsActiveType(TYPE_TRAP)) and te:GetOwnerPlayer()~=e:GetHandlerPlayer()
 end
-function c511000242.tributefilter(c)
-	return not c:IsPreviousLocation(LOCATION_MZONE,1,nil)
-end
 function c511000242.controlcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,c511000242.tributefilter,1,e:GetHandler()) end
-	local g=Duel.SelectReleaseGroup(tp,c511000242.tributefilter,1,1,e:GetHandler())
+	if chk==0 then return Duel.CheckReleaseGroup(tp,nil,1,nil) end
+	local g=Duel.SelectReleaseGroup(tp,nil,1,1,nil)
 	Duel.Release(g,REASON_COST)
 end
 function c511000242.controlfilter(c)
@@ -95,10 +92,8 @@ function c511000242.controltg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c511000242.controlop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() and not Duel.GetControl(tc,tp,PHASE_END,1) then
-		if not tc:IsImmuneToEffect(e) and tc:IsAbleToChangeControler() then
-			Duel.Destroy(tc,REASON_EFFECT)
-		end
+	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
+		Duel.GetControl(tc,tp,PHASE_END,1)
 	end
 end
 function c511000242.nofieldcon(e)

@@ -53,11 +53,7 @@ function c511000773.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
 		tc=g:Select(tp,1,1,nil):GetFirst()
 	end
-	if not Duel.GetControl(tc,tp) then
-		if not tc:IsImmuneToEffect(e) and tc:IsAbleToChangeControler() then
-			Duel.Destroy(tc,REASON_EFFECT)
-		end
-	end
+	Duel.GetControl(tc,tp)
 	c:SetCardTarget(tc)
 end
 function c511000773.checkop(e,tp,eg,ep,ev,re,r,rp)
@@ -69,11 +65,7 @@ function c511000773.retop(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabelObject():GetLabel()~=0 then return end
 	local tc=e:GetHandler():GetFirstCardTarget()
 	if tc and tc:IsLocation(LOCATION_MZONE) then
-		if not Duel.GetControl(tc,1-tp) then
-			if not tc:IsImmuneToEffect(e) and tc:IsAbleToChangeControler() then
-				Duel.Destroy(tc,REASON_EFFECT)
-			end
-		end
+		Duel.GetControl(tc,1-tp)
 	end
 end
 function c511000773.descon(e,tp,eg,ep,ev,re,r,rp)

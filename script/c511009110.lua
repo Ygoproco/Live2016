@@ -2,7 +2,7 @@
 function c511009110.initial_effect(c)
 	--Fusion Summon
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_TOHAND)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -38,17 +38,8 @@ function c511009110.initial_effect(c)
 		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e2:SetOperation(c511009110.operation)
 		Duel.RegisterEffect(e2,0)
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c511009110.numchk)
-		Duel.RegisterEffect(ge2,0)
 	end
 end
-
-------------fusion-------------------
 function c511009110.fuscost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.CheckLPCost(tp,500) end
 	Duel.PayLPCost(tp,500)
@@ -112,8 +103,6 @@ function c511009110.fusoperation(e,tp,eg,ep,ev,re,r,rp)
 		tc:CompleteProcedure()
 	end
 end
-
-------------damage while fusion monster on the field---------
 function c511009110.efcon(e,tp,eg,ep,ev,re,r,rp)
 	return r==REASON_FUSION
 end
@@ -147,9 +136,6 @@ function c511009110.damop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Damage(p,d,REASON_EFFECT)
 end
-
-
--------------summon from grave-----------
 function c511009110.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local ec=eg:GetFirst()
 	return ec:IsControler(tp) and ec:IsType(TYPE_FUSION) and ev>0

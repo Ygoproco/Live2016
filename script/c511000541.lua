@@ -14,7 +14,7 @@ function c511000541.filter(c)
 	return c:IsAttackBelow(500) and c:IsFaceup()
 end
 function c511000541.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:GetLocation()==LOCATION_MZONE and c511000541.filter(chkc) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c511000541.filter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(c511000541.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	local d=Duel.TossDice(tp,1)
 	e:SetLabel(d)
@@ -28,7 +28,7 @@ function c511000541.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
 		e1:SetValue(tc:GetAttack()*e:GetLabel())
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		e1:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e1)
 	end
 end

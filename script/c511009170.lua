@@ -34,5 +34,5 @@ function c511009170.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c511009170.atktg(e,c)
-	return not c:IsSetCard(0x2016)
+	return c:IsSetCard(0x2016)
 end

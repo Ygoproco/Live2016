@@ -28,9 +28,7 @@ function c511001297.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c511001297.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and not Duel.GetControl(tc,tp) then
-		if not tc:IsImmuneToEffect(e) and tc:IsAbleToChangeControler() then
-			Duel.Destroy(tc,REASON_EFFECT)
-		end
+	if tc and tc:IsRelateToEffect(e) then
+		Duel.GetControl(tc,tp)
 	end
 end

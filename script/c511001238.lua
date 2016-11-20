@@ -28,10 +28,5 @@ function c511001238.ctlop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
 		sg=sg:Select(1-tp,1,1,nil)
 	end
-	local tc=sg:GetFirst()
-	if not Duel.GetControl(tc,tp) then
-		if not tc:IsImmuneToEffect(e) and tc:IsAbleToChangeControler() then
-			Duel.Destroy(tc,REASON_EFFECT)
-		end
-	end
+	Duel.GetControl(sg:GetFirst(),tp)
 end

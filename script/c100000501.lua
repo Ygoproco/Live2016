@@ -2,7 +2,7 @@
 function c100000501.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetTarget(c100000501.target)
@@ -10,7 +10,7 @@ function c100000501.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c100000501.filter1(c,e)
-	return c:IsCanBeFusionMaterial()and c:IsSetCard(0x5008) and c:IsAbleToRemove() and c:GetFlagEffect(100000501)~=0
+	return c:IsCanBeFusionMaterial() and c:IsSetCard(0x5008) and c:IsAbleToRemove() and c:GetFlagEffect(100000501)~=0
 end
 function c100000501.filter2(c,e,tp,m,chkf)
 	return c:IsType(TYPE_FUSION) and c:GetCode()~=46759931 and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false)

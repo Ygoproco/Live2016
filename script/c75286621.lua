@@ -26,14 +26,14 @@ end
 function c75286621.condition(e,tp,eg,ep,ev,re,r,rp)
 	return (re:IsActiveType(TYPE_MONSTER) or re:IsHasType(EFFECT_TYPE_ACTIVATE)) and Duel.IsChainNegatable(ev)
 end
-function c75286621.cfilter(c,type)
-	return c:IsType(type) and c:IsAbleToGraveAsCost()
+function c75286621.cfilter(c,ty)
+	return c:IsType(ty) and c:IsAbleToGraveAsCost()
 end
 function c75286621.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local type=re:GetActiveType()
-	if chk==0 then return Duel.IsExistingMatchingCard(c75286621.cfilter,tp,LOCATION_HAND,0,1,nil,type) end
+	local ty=bit.band(re:GetActiveType(),TYPE_MONSTER+TYPE_SPELL+TYPE_TRAP)
+	if chk==0 then return Duel.IsExistingMatchingCard(c75286621.cfilter,tp,LOCATION_HAND,0,1,nil,ty) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,c75286621.cfilter,tp,LOCATION_HAND,0,1,1,nil,type)
+	local g=Duel.SelectMatchingCard(tp,c75286621.cfilter,tp,LOCATION_HAND,0,1,1,nil,ty)
 	Duel.SendtoGrave(g,REASON_COST)
 end
 function c75286621.target(e,tp,eg,ep,ev,re,r,rp,chk)
