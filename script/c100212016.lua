@@ -53,6 +53,7 @@ function c100212016.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function c100212016.thop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) or c:IsPosition(POS_FACEUP_ATTACK) then return end
 	Duel.ChangePosition(c,POS_FACEUP_ATTACK)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
