@@ -31,6 +31,7 @@ function c511009368.initial_effect(c)
 	c:RegisterEffect(e2)
 	--destroy
 	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(66970002,0))
 	e3:SetCategory(CATEGORY_DESTROY+CATEGORY_DAMAGE)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -131,30 +132,25 @@ function c511009368.matregcon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION and e:GetHandler():GetMaterial():IsExists(c511009368.matfilter,1,nil)
 end
 function c511009368.matregop(e,tp,eg,ep,ev,re,r,rp)
-		local c=e:GetHandler()
-		c:RegisterFlagEffect(511009368,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
+	local c=e:GetHandler()
+	c:RegisterFlagEffect(511009368,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
 end
-function c511009368.condition(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():GetFlagEffect(511009368)~=0 end
-end
-function c511009368.filter(c)
-	return c:IsFaceup() 
+function c511009368.condition(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():GetFlagEffect(511009368)~=0
 end
 function c511009368.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and c511009368.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c511009368.filter,tp,0,LOCATION_MZONE,1,nil) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) end
+	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,c511009368.filter,tp,0,LOCATION_MZONE,1,1,nil)
-	local atk=g:GetFirst():GetTextAttack()
-	if atk<0 then atk=0 end
+	local g=Duel.SelectTarget(tp,aux.TRUE,tp,0,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,atk)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,g:GetFirst():GetAttack())
 end
 function c511009368.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsControler(1-tp) then
-		local atk=tc:GetTextAttack()
-		if atk<0 then atk=0 end
+	if tc:IsRelateToEffect(e) then
+		local atk=tc:GetAttack()
+		if atk<0 or tc:IsFacedown() then atk=0 end
 		if Duel.Destroy(tc,REASON_EFFECT)~=0 then
 			Duel.Damage(1-tp,atk,REASON_EFFECT)
 		end
