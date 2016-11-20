@@ -26,7 +26,7 @@ end
 function c15555120.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then
 		local lv=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
-		return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and c15555120.filter(chkc,e:GetLabel()) end
+		return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and c15555120.filter(chkc,lv) end
 	if chk==0 then
 		if e:GetLabel()~=1 then return false end
 		e:SetLabel(0)
