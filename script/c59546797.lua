@@ -29,10 +29,7 @@ function c59546797.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c59546797.spcon(e,tp,eg,ep,ev,re,r,rp)
-	local bt=Duel.GetAttacker()
-	if bt and bt:IsControler(tp) then return true end
-	bt=Duel.GetAttackTarget()
-	return bt and bt:IsControler(tp)
+	return Duel.GetCurrentPhase()==PHASE_BATTLE_STEP
 end
 function c59546797.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsStatus(STATUS_CHAINING) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
