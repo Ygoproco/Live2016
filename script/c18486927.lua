@@ -62,10 +62,6 @@ function c18486927.nmfil(c)
 end
 function c18486927.nmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	--local opt=Duel.SelectOption(tp,c18486927.gn[1],c18486927.gn[2],c18486927.gn[3],c18486927.gn[4],c18486927.gn[5],c18486927.gn[6],c18486927.gn[7],c18486927.gn[8],c18486927.gn[9],c18486927.gn[10])+1
-	--local nm=c18486927.gc[opt]
-	--e:SetLabel(nm)
-	--Duel.SetTargetParam(nm)
 	local ac=0
 	local lp=true
 	while lp do
@@ -73,7 +69,6 @@ function c18486927.nmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 		local tk=Duel.CreateToken(tp,ac)
 		if c18486927.nmfil(tk) then lp=false end
 	end
-	--Debug.Message("Fusion Tag: "..ac)
 	Duel.SetTargetParam(ac)
 	e:SetLabel(ac)
 	Duel.SetOperationInfo(0,CATEGORY_ANNOUNCE,nil,0,tp,ANNOUNCE_CARD)
@@ -88,7 +83,7 @@ function c18486927.nmop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetRange(LOCATION_MZONE)
 		e1:SetCode(EFFECT_CHANGE_CODE)
 		e1:SetValue(ac)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE)
 		c:RegisterEffect(e1)
 	end
 end
