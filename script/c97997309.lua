@@ -52,7 +52,7 @@ function c97997309.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c97997309.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function c97997309.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	c38049934.check=true
+	c97997309.check=true
 	if chk==0 then return true end
 end
 function c97997309.filter1(c)
