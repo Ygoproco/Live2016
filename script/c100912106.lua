@@ -56,7 +56,7 @@ function c100912106.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		local op=0
 		if b1 and b2 then op=Duel.SelectOption(tp,aux.Stringid(100912106,0),aux.Stringid(100912106,1))
 		elseif b1 then op=Duel.SelectOption(tp,aux.Stringid(100912106,0))
-		else op=Duel.SelectOption(tp,aux.Stringid(100912106,1))+1 end
+		elseif b2 then op=Duel.SelectOption(tp,aux.Stringid(100912106,1)) end
 		if op==0 then
 			e:SetCategory(CATEGORY_SPECIAL_SUMMON)
 			e:SetProperty(EFFECT_FLAG_CARD_TARGET)
