@@ -56,13 +56,7 @@ function c100214102.activate(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetCode(EFFECT_DISABLE_EFFECT)
 		e2:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e2,true)
-		Duel.SpecialSummonComplete()
 		tc:CompleteProcedure()
-				if tc:IsRelateToEffect(e) then
-			c:SetCardTarget(tc)
-			e:GetLabelObject():SetLabelObject(tc)
-			c:CreateRelation(tc,RESET_EVENT+0x5020000)
-			tc:CreateRelation(c,RESET_EVENT+0x5fe0000)
-		end
+		Duel.SpecialSummonComplete()
 	end
 end

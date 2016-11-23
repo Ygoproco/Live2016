@@ -65,6 +65,7 @@ function c100912043.op(e,tp,eg,ep,ev,re,r,rp)
 	e3:SetCode(EFFECT_AVOID_BATTLE_DAMAGE)
 	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e3:SetTargetRange(1,0)
+	e3:SetValue(1)
 	e3:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e3,tp)
 end
