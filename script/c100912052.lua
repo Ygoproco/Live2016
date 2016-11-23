@@ -4,6 +4,7 @@
 function c100912052.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(100912052,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -13,6 +14,7 @@ function c100912052.initial_effect(c)
 	c:RegisterEffect(e1)
 	--Summon Materials
 	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(100912052,1))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
