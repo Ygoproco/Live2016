@@ -65,16 +65,18 @@ function c511002769.cfilter(c,e,tp)
 		and mg:GetCount()>1 and Duel.IsExistingMatchingCard(c511002769.xyzfilter,tp,LOCATION_EXTRA,0,1,nil,mg)
 end
 function c511002769.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c511002769.cfilter,tp,LOCATION_MZONE,0,1,nil,e,tp) end
+	e:SetLabel(1)
+	if chk==0 then return true end
+end
+function c511002769.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then
+		if e:GetLabel()~=1 then return false end
+		e:SetLabel(0)
+		return Duel.IsExistingMatchingCard(c511002769.cfilter,tp,LOCATION_MZONE,0,1,nil,e,tp) and Duel.GetLocationCount(tp,LOCATION_MZONE)>-1 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local rg=Duel.SelectMatchingCard(tp,c511002769.cfilter,tp,LOCATION_MZONE,0,1,1,nil,e,tp)
 	Duel.Remove(rg,POS_FACEUP,REASON_COST)
-	e:SetLabel(rg:GetFirst():GetRank())
-end
-function c511002769.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1 end
-	local rk=e:GetLabel()
-	e:SetLabel(0)
+	local rk=rg:GetFirst():GetRank()
 	Duel.SetTargetParam(rk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end

@@ -11,7 +11,17 @@ function c511002140.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511002140.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckLPCost(tp,1000) end
+	e:SetLabel(1)
+	if chk==0 then return true end
+end
+function c511002140.filter(c)
+	return c:IsFaceup() and c:IsCode(47408488)
+end
+function c511002140.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then
+		if e:GetLabel()~=1 then return false end
+		e:SetLabel(0)
+		return Duel.CheckLPCost(tp,1000) and Duel.IsExistingMatchingCard(c511002140.filter,tp,LOCATION_ONFIELD,0,1,nil) end
 	local lp=Duel.GetLP(tp)
 	local t={}
 	local f=math.floor((lp)/1000)
@@ -23,17 +33,11 @@ function c511002140.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(17078030,0))
 	local announce=Duel.AnnounceNumber(tp,table.unpack(t))
 	Duel.PayLPCost(tp,announce)
-	e:SetLabel(announce/1000)
-end
-function c511002140.filter(c)
-	return c:IsFaceup() and c:IsCode(47408488)
-end
-function c511002140.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c511002140.filter,tp,LOCATION_ONFIELD,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_COUNTER,g,1,0x6,e:GetLabel())
+	Duel.SetTargetParam(announce/1000)
+	Duel.SetOperationInfo(0,CATEGORY_COUNTER,g,1,0x6,announce/1000)
 end
 function c511002140.activate(e,tp,eg,ep,ev,re,r,rp)
-	local ct=e:GetLabel()
+	local ct=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
 	local g=Duel.GetMatchingGroup(c511002140.filter,tp,LOCATION_ONFIELD,0,nil)
 	if g:GetCount()<=0 then return end
 	if g:GetCount()==1 then

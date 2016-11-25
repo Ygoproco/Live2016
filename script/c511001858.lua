@@ -25,17 +25,22 @@ function c511001858.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetAttacker():IsControler(1-tp) and Duel.GetLP(tp)<=2000
 end
 function c511001858.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	e:SetLabel(1)
 	if chk==0 then return true end
-	e:SetLabel(math.floor(Duel.GetLP(tp)/2))
-	Duel.PayLPCost(tp,math.floor(Duel.GetLP(tp)/2))
 end
 function c511001858.filter(c)
 	return c:IsFaceup() and c511001858.collection[c:GetCode()] and c:IsAbleToRemove()
 end
 function c511001858.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c511001858.filter,tp,LOCATION_MZONE,0,1,nil) end
+	if chk==0 then
+		if e:GetLabel()~=1 then return false end
+		e:SetLabel(0)
+		return Duel.IsExistingMatchingCard(c511001858.filter,tp,LOCATION_MZONE,0,1,nil) end
+	local lp=math.floor(Duel.GetLP(tp)/2)
+	Duel.PayLPCost(tp,lp)
 	local g=Duel.GetMatchingGroup(c511001858.filter,tp,LOCATION_MZONE,0,nil)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
+	Duel.SetTargetParam(lp)
 end
 function c511001858.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
@@ -51,7 +56,7 @@ function c511001858.activate(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_UPDATE_ATTACK)
 			e1:SetReset(RESET_EVENT+0x1fe0000)
-			e1:SetValue(e:GetLabel())
+			e1:SetValue(Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM))
 			tc:RegisterEffect(e1)
 		end
 	end

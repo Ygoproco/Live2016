@@ -6,6 +6,7 @@ function c511001917.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCost(c511001917.cost)
+	e1:SetTarget(c511001917.target)
 	e1:SetOperation(c511001917.activate)
 	c:RegisterEffect(e1)
 end
@@ -17,17 +18,26 @@ function c511001917.cfilter2(c,tp)
 		and Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,c)
 end
 function c511001917.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c511001917.cfilter1,tp,LOCATION_MZONE,0,1,nil) 
-		and Duel.IsExistingMatchingCard(c511001917.cfilter2,tp,0,LOCATION_MZONE,1,nil,tp) end
+	e:SetLabel(1)
+	if chk==0 then return true end
+end
+function c511001917.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then
+		if e:GetLabel()~=1 then return false end
+		e:SetLabel(0)
+		return Duel.IsExistingMatchingCard(c511001917.cfilter1,tp,LOCATION_MZONE,0,1,nil) 
+			and Duel.IsExistingMatchingCard(c511001917.cfilter2,tp,0,LOCATION_MZONE,1,nil,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
 	local g2=Duel.SelectMatchingCard(tp,c511001917.cfilter2,tp,0,LOCATION_MZONE,1,1,nil,tp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
 	local g1=Duel.SelectMatchingCard(tp,c511001917.cfilter1,tp,LOCATION_MZONE,0,1,1,nil)
 	g1:Merge(g2)
+	local atk=g1:GetSum(Card.GetAttack)
 	Duel.Release(g1,REASON_COST)
-	e:SetLabel(g1:GetSum(Card.GetPreviousAttackOnField))
+	Duel.SetTargetParam(atk)
 end
 function c511001917.activate(e,tp,eg,ep,ev,re,r,rp)
+	local atk=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	local g=Duel.SelectMatchingCard(tp,Card.IsFaceup,tp,0,LOCATION_MZONE,1,1,nil)
 	local tc=g:GetFirst()
@@ -36,7 +46,7 @@ function c511001917.activate(e,tp,eg,ep,ev,re,r,rp)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetValue(e:GetLabel())
+		e1:SetValue(atk)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e1)
 		local e2=Effect.CreateEffect(e:GetHandler())
@@ -56,8 +66,7 @@ function c511001917.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c511001917.descon(e,tp,eg,ep,ev,re,r,rp)
-	local tc=e:GetLabelObject()
-	return tc
+	return e:GetLabelObject()
 end
 function c511001917.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()

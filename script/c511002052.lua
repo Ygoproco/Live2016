@@ -31,14 +31,14 @@ function c511002052.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local rg=Duel.SelectReleaseGroup(tp,c511002052.cfilter,1,1,nil,tp)
 	local atk=rg:GetFirst():GetTextAttack()
 	if atk<0 then atk=0 end
-	e:SetLabel(atk)
 	Duel.Release(rg,REASON_COST)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,c511002052.filter,tp,0,LOCATION_MZONE,1,1,nil)
+	Duel.SetTargetParam(atk)
 end
 function c511002052.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	local atk=e:GetLabel()
+	local atk=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
 	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
@@ -58,12 +58,12 @@ function c511002052.atkop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetTurnPlayer()==e:GetOwnerPlayer() then
 		if c:GetAttack()>0 then
 			Duel.Hint(HINT_CARD,0,511002052)
+			local e1=Effect.CreateEffect(e:GetOwner())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_UPDATE_ATTACK)
+			e1:SetValue(-atk)
+			e1:SetReset(RESET_EVENT+0x1fe0000)
+			c:RegisterEffect(e1)
 		end
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetValue(-atk)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
-		c:RegisterEffect(e1)
 	end
 end

@@ -179,19 +179,20 @@ end
 function c419.op2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(c419.filterxyz,c:GetControler(),LOCATION_EXTRA,LOCATION_EXTRA,nil)
+	if g:GetCount()<=0 then return end
+	local xg=Group.CreateGroup()
+	for i=1,15 do
+		local tck=Duel.CreateToken(tp,419)
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_XYZ_LEVEL)
+		e1:SetValue(i)
+		tck:RegisterEffect(e1)
+		xg:AddCard(tck)
+	end
+	xg:KeepAlive()
 	local tc=g:GetFirst()
 	while tc do
-		local xg=Group.CreateGroup()
-		for i=1,15 do
-			local tck=Duel.CreateToken(tp,419)
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_XYZ_LEVEL)
-			e1:SetValue(i)
-			tck:RegisterEffect(e1)
-			xg:AddCard(tck)
-		end
-		xg:KeepAlive()
 		if tc:GetFlagEffect(419)==0 then
 			local e1=Effect.CreateEffect(tc)
 			e1:SetType(EFFECT_TYPE_FIELD)

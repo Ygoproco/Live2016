@@ -15,42 +15,74 @@ function c511002034.initial_effect(c)
 	e1:SetTarget(c511002034.target)
 	e1:SetOperation(c511002034.operation)
 	c:RegisterEffect(e1)
-	local e2=e1:Clone()
-	e2:SetDescription(aux.Stringid(82044279,1))
-	e2:SetCondition(c511002034.condition2)
-	c:RegisterEffect(e2)
 end
 function c511002034.condition(e,tp,eg,ep,ev,re,r,rp)
-	local rc=re:GetHandler()
-	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
-	return re:IsActiveType(TYPE_MONSTER) and rc:IsLevelAbove(5) and loc==LOCATION_MZONE
-		and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainDisablable(ev)
+	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
 end
 function c511002034.cfilter(c)
 	return c:IsLevelAbove(5) and c:IsLocation(LOCATION_MZONE)
 end
-function c511002034.condition2(e,tp,eg,ep,ev,re,r,rp)
-	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
-	local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
-	if not g then return false end
-	local c=e:GetHandler()
-	return re:IsActiveType(TYPE_MONSTER) and g:IsExists(c511002034.cfilter,1,nil)
-		and not c:IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainDisablable(ev)
-end
-function c511002034.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local rc=re:GetHandler()
-	if chk==0 then return rc and rc:IsCanBeEffectTarget(e) end
-	Duel.SetTargetCard(rc)
-	Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
-	if rc:IsDestructable() and rc:IsRelateToEffect(re) then
-		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
+function c511002034.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then
+		local g=Group.CreateGroup()
+		for i=1,ev do
+			local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
+			local tc=te:GetHandler()
+			if tc and tc:IsCanBeEffectTarget(e) and te:IsActiveType(TYPE_MONSTER) then
+				local loc=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_LOCATION)
+				if tc:IsLevelAbove(5) and loc==LOCATION_MZONE then g:AddCard(tc) end
+				if re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then
+					local tg=Duel.GetChainInfo(i,CHAININFO_TARGET_CARDS)
+					if tg and tg:IsExists(c511002034.cfilter,1,nil) then g:AddCard(tc) end
+				end
+			end
+		end
+		return g:IsContains(chkc) end
+	if chk==0 then
+		local g=Group.CreateGroup()
+		for i=1,ev do
+			local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
+			local tc=te:GetHandler()
+			if tc and tc:IsCanBeEffectTarget(e) and te:IsActiveType(TYPE_MONSTER) then
+				local loc=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_LOCATION)
+				if tc:IsLevelAbove(5) and loc==LOCATION_MZONE then g:AddCard(tc) end
+				if re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then
+					local tg=Duel.GetChainInfo(i,CHAININFO_TARGET_CARDS)
+					if tg and tg:IsExists(c511002034.cfilter,1,nil) then g:AddCard(tc) end
+				end
+			end
+		end
+		return g:GetCount()>0 end
+	local g=Group.CreateGroup()
+	for i=1,ev do
+		local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
+		local tc=te:GetHandler()
+		if tc and tc:IsCanBeEffectTarget(e) and te:IsActiveType(TYPE_MONSTER) then
+			local loc=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_LOCATION)
+			local check=false
+			if tc:IsLevelAbove(5) and loc==LOCATION_MZONE then g:AddCard(tc) end
+			if re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then
+				local tg=Duel.GetChainInfo(i,CHAININFO_TARGET_CARDS)
+				if tg and tg:IsExists(c511002034.cfilter,1,nil) then g:AddCard(tc) end
+			end
+			if check then tc:RegisterFlagEffect(51102034,RESET_CHAIN,0,1,i) end
+		end
+	end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
+	local sg=g:Select(tp,1,1,nil)
+	Duel.SetTargetCard(sg)
+	local i=sg:GetFirst():GetFlagEffectLabel(51102034)
+	local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
+	Duel.SetOperationInfo(0,CATEGORY_DISABLE,sg,1,0,0)
+	if sg:GetFirst():IsRelateToEffect(te) then
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,1,0,0)
 	end
 end
 function c511002034.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local rc=re:GetHandler()
-	if not rc or not rc:IsRelateToEffect(e) then return end
-	Duel.NegateRelatedChain(rc,RESET_TURN_SET)
+	local tc=Duel.GetFirstTarget()
+	if not tc or not tc:IsRelateToEffect(e) then return end
+	Duel.NegateRelatedChain(tc,RESET_TURN_SET)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
@@ -63,16 +95,18 @@ function c511002034.operation(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetValue(RESET_TURN_SET)
 	e2:SetReset(RESET_EVENT+0x1fe0000)
 	local e3=nil
-	if rc:IsType(TYPE_TRAPMONSTER) then
+	if tc:IsType(TYPE_TRAPMONSTER) then
 		e3=Effect.CreateEffect(c)
 		e3:SetType(EFFECT_TYPE_SINGLE)
 		e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e3:SetCode(EFFECT_DISABLE_TRAPMONSTER)
 		e3:SetReset(RESET_EVENT+0x1fe0000)
 	end
-	if rc:RegisterEffect(e1) and rc:RegisterEffect(e2) and (e3==nil or rc:RegisterEffect(e3)) and rc:IsRelateToEffect(re) and Duel.Destroy(rc,REASON_EFFECT)>0 then
+	local i=tc:GetFlagEffectLabel(51102034)
+	local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
+	if tc:RegisterEffect(e1) and tc:RegisterEffect(e2) and (e3==nil or tc:RegisterEffect(e3)) and tc:IsRelateToEffect(te) and Duel.Destroy(tc,REASON_EFFECT)>0 then
 		if c:IsRelateToEffect(e) and c:IsFaceup() then
-			local atk=rc:GetTextAttack()
+			local atk=tc:GetTextAttack()
 			if atk<=0 then return end
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
