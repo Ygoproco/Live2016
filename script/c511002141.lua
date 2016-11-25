@@ -8,6 +8,7 @@ function c511002141.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetCondition(c511002141.condition)
 	e1:SetCost(c511002141.cost)
+	e1:SetTarget(c511002141.target)
 	e1:SetOperation(c511002141.operation)
 	c:RegisterEffect(e1)
 end
@@ -22,11 +23,19 @@ function c511002141.cfilter(c,atk)
 	return c:IsAbleToGraveAsCost() and c:GetAttack()>atk
 end
 function c511002141.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c511002141.cfilter,tp,LOCATION_DECK,0,1,nil,Duel.GetAttacker():GetAttack()) end
+	e:SetLabel(1)
+	if chk==0 then return true end
+end
+function c511002141.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then
+		if e:GetLabel()~=1 then return false end
+		e:SetLabel(0)
+		return Duel.IsExistingMatchingCard(c511002141.cfilter,tp,LOCATION_DECK,0,1,nil,Duel.GetAttacker():GetAttack()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local sg=Duel.SelectMatchingCard(tp,c511002141.cfilter,tp,LOCATION_DECK,0,1,1,nil,Duel.GetAttacker():GetAttack())
-	e:SetLabel(sg:GetFirst():GetAttack())
+	local atk=sg:GetFirst():GetAttack()
 	Duel.SendtoGrave(sg,REASON_COST)
+	Duel.SetTargetParam(atk)
 end
 function c511002141.operation(e,tp,eg,ep,ev,re,r,rp)
 	local d=Duel.GetAttackTarget()
@@ -44,7 +53,7 @@ function c511002141.operation(e,tp,eg,ep,ev,re,r,rp)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e3:SetCode(EVENT_BATTLED)
 	e3:SetOperation(c511002141.damop)
-	e3:SetLabel(e:GetLabel())
+	e3:SetLabel(Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM))
 	e3:SetReset(RESET_PHASE+PHASE_DAMAGE)
 	Duel.RegisterEffect(e3,tp)
 end

@@ -19,7 +19,7 @@ function c511001555.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return chkc==tg end
 	if chk==0 then return tg:IsOnField() and tg:IsCanBeEffectTarget(e) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,511001555,0,0x11,tg:GetAttack(),tg:GetDefense(),
-		tg:GetLevel(),tg:GetRace(),tg:GetAttribute()) end
+		tg:GetLevel(),tg:GetRace(),tg:GetAttribute()) and e:IsHasType(EFFECT_TYPE_ACTIVATE) end
 	Duel.SetTargetCard(tg)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end

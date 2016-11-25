@@ -28,14 +28,15 @@ end
 function c511002474.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local dam=Duel.GetBattleDamage(tp)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c511002474.filter(chkc,dam) end
-	if chk==0 then return Duel.IsExistingTarget(c511002474.filter,tp,LOCATION_MZONE,0,1,nil,dam) end
+	if chk==0 then return e:IsHasType(EFFECT_TYPE_ACTIVATE) 
+		and Duel.IsExistingTarget(c511002474.filter,tp,LOCATION_MZONE,0,1,nil,dam) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,c511002474.filter,tp,LOCATION_MZONE,0,1,1,nil,dam)
 end
 function c511002474.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
@@ -70,7 +71,8 @@ end
 function c511002474.target2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local cid=e:GetLabel()
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c511002474.filter(chkc,cid) end
-	if chk==0 then return Duel.IsExistingTarget(c511002474.filter,tp,LOCATION_MZONE,0,1,nil,cid) end
+	if chk==0 then return e:IsHasType(EFFECT_TYPE_ACTIVATE) 
+		and Duel.IsExistingTarget(c511002474.filter,tp,LOCATION_MZONE,0,1,nil,cid) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,c511002474.filter,tp,LOCATION_MZONE,0,1,1,nil,cid)
 end
@@ -78,7 +80,7 @@ function c511002474.operation(e,tp,eg,ep,ev,re,r,rp)
 	local cid=e:GetLabel()
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)

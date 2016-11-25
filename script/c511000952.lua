@@ -18,20 +18,23 @@ function c511000952.filter(c,tp,eg,ep,ev,re,r,rp)
 		and (not target or target(te,tp,eg,ep,ev,re,r,rp,0))
 end
 function c511000952.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemoveAsCost,tp,LOCATION_MZONE,0,1,nil)
-		and Duel.IsExistingMatchingCard(c511000952.filter,tp,LOCATION_GRAVE,0,1,nil,tp,eg,ep,ev,re,r,rp) end
+	e:SetLabel(1)
+	if chk==0 then return true end
+end
+function c511000952.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then
+		if e:GetLabel()~=1 then return false end
+		e:SetLabel(0)
+		return Duel.IsExistingMatchingCard(Card.IsAbleToRemoveAsCost,tp,LOCATION_MZONE,0,1,nil)
+			and Duel.IsExistingMatchingCard(c511000952.filter,tp,LOCATION_GRAVE,0,1,nil,tp,eg,ep,ev,re,r,rp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g1=Duel.SelectMatchingCard(tp,Card.IsAbleToRemoveAsCost,tp,LOCATION_MZONE,0,1,1,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g2=Duel.SelectMatchingCard(tp,c511000952.filter,tp,LOCATION_GRAVE,0,1,1,nil)
 	g1:Merge(g2)
 	Duel.Remove(g1,POS_FACEUP,REASON_COST)
-	e:SetLabelObject(g2:GetFirst())
-end
-function c511000952.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return true end
-	local tc=e:GetLabelObject()
+	local tc=g2:GetFirst()
 	local tpe=tc:GetType()
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -47,7 +50,7 @@ function c511000952.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.MoveSequence(c,5)
 	end
 	local te=tc:GetActivateEffect()
-	e:SetLabelObject(te)
+	c511000952[Duel.GetCurrentChain()]=te
 	Duel.ClearTargetCard()
 	local tg=te:GetTarget()
 	e:SetCategory(te:GetCategory())
@@ -56,7 +59,8 @@ function c511000952.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511000952.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local te=e:GetLabelObject()
+	local te=c511000952[Duel.GetCurrentChain()]
+	if not te then return end
 	local tpe=te:GetHandler():GetType()
 	if bit.band(tpe,TYPE_EQUIP+TYPE_CONTINUOUS+TYPE_FIELD)==0 then
 		c:CancelToGrave(false)
@@ -65,7 +69,6 @@ function c511000952.activate(e,tp,eg,ep,ev,re,r,rp)
 		local code=te:GetHandler():GetOriginalCode()
 		c:CopyEffect(code,RESET_EVENT+0x1fc0000,1)
 	end
-	if not te then return end
 	local op=te:GetOperation()
 	if op then op(e,tp,eg,ep,ev,re,r,rp) end
 end

@@ -12,21 +12,24 @@ function c511002890.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511002890.cfilter(c,tp)
-	return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,0,1,c)
+	return c:GetAttack()>0 and Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,0,1,c)
 end
 function c511002890.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,c511002890.cfilter,1,nil) end
+	e:SetLabel(1)
+	if chk==0 then return true end
+end
+function c511002890.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and chkc:IsFaceup() end
+	if chk==0 then
+		if e:GetLabel()~=1 then return false end
+		e:SetLabel(0)
+		return Duel.CheckReleaseGroup(tp,c511002890.cfilter,1,nil) end
 	local g=Duel.SelectReleaseGroup(tp,c511002890.cfilter,1,1,nil)
 	local atk=g:GetFirst():GetAttack()
 	Duel.Release(g,REASON_COST)
-	e:SetLabel(atk)
-end
-function c511002890.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and chkc:IsFaceup() end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,0,1,1,nil)
-	Duel.SetTargetParam(e:GetLabel())
+	Duel.SetTargetParam(atk)
 end
 function c511002890.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()

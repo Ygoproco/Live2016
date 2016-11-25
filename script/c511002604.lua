@@ -155,15 +155,15 @@ function c511002604.op(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetReset(RESET_EVENT+0x1fc0000)
+		e1:SetCondition(c511002604.con)
 		e1:SetValue(c511002604.val)
 		tc:RegisterEffect(e1)
 		Duel.RaiseEvent(tc,47408488,e,0,tp,0,0)
 	end
 end
+function c511002604.con(e)
+	return e:GetHandler():IsLocation(LOCATION_SZONE)
+end
 function c511002604.val(e,c)
-	if c:IsLocation(LOCATION_SZONE) then
-		return TYPE_SPELL+TYPE_CONTINUOUS
-	else
-		return 0
-	end
+	return TYPE_SPELL+TYPE_CONTINUOUS
 end

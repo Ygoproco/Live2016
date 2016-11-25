@@ -17,8 +17,18 @@ function c511002922.cfilter(c)
 	return c:GetLevel()>0 and c:IsAbleToGraveAsCost()
 end
 function c511002922.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	e:SetLabel(1)
+	if chk==0 then return true end
+end
+function c511002922.spfilter(c,lv,e,tp)
+	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and lv==c:GetLevel()
+end
+function c511002922.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local rg=Duel.GetMatchingGroup(c511002922.cfilter,tp,LOCATION_MZONE,0,nil)
-	if chk==0 then return Duel.IsExistingMatchingCard(c511002922.filter,tp,LOCATION_HAND,0,1,nil,rg,e,tp) end
+	if chk==0 then
+		if e:GetLabel()~=1 then return false end
+		e:SetLabel(0)
+		return Duel.IsExistingMatchingCard(c511002922.filter,tp,LOCATION_HAND,0,1,nil,rg,e,tp) and Duel.GetLocationCount(tp,LOCATION_MZONE)>-2 end
 	local g=Group.CreateGroup()
 	local lv=0
 	repeat
@@ -26,16 +36,8 @@ function c511002922.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 		g=Duel.SelectMatchingCard(tp,c511002922.cfilter,tp,LOCATION_MZONE,0,2,99,nil)
 		lv=g:GetSum(Card.GetLevel)
 	until Duel.IsExistingMatchingCard(c511002922.spfilter,tp,LOCATION_HAND,0,1,nil,lv,e,tp)
-	e:SetLabel(lv)
 	Duel.SendtoGrave(g,REASON_COST)
-end
-function c511002922.spfilter(c,lv,e,tp)
-	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and lv==c:GetLevel()
-end
-function c511002922.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-2 end
-	Duel.SetTargetParam(e:GetLabel())
-	e:SetLabel(0)
+	Duel.SetTargetParam(lv)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
 end 
 function c511002922.activate(e,tp,eg,ep,ev,re,r,rp)

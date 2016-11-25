@@ -15,7 +15,7 @@ function c511001530.costfilter(c)
 	return c:IsCode(511001530) and c:IsAbleToRemoveAsCost()
 end
 function c511001530.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost()
+	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() and e:IsHasType(EFFECT_TYPE_ACTIVATE) 
 		and Duel.IsExistingMatchingCard(c511001530.costfilter,tp,LOCATION_GRAVE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local rg=Duel.SelectMatchingCard(tp,c511001530.costfilter,tp,LOCATION_GRAVE,0,1,1,nil)
@@ -27,6 +27,7 @@ function c511001530.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetTargetPlayer(tp)
 	Duel.SetTargetParam(2)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,2)
+	e:GetHandler():CancelToGrave()
 end
 function c511001530.activate(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():CancelToGrave()
