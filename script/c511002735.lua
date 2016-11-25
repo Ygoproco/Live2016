@@ -14,8 +14,16 @@ function c511002735.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE
 end
 function c511002735.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	e:SetLabel(1)
+	if chk==0 then return true end
+end
+function c511002735.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct=Duel.GetMatchingGroupCount(Card.IsAbleToRemove,tp,0,LOCATION_MZONE,nil)
-	if chk==0 then return Duel.CheckRemoveOverlayCard(tp,1,0,1,REASON_COST) and ct>0 end
+	if chk==0 then
+		if e:GetLabel()~=1 then return false end
+		e:SetLabel(0)
+		return Duel.CheckRemoveOverlayCard(tp,1,0,1,REASON_COST) and ct>0 
+			and Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_MZONE,1,nil) end
 	if ct>1 then
 		local t={}
 		for i=1,ct do 
@@ -25,12 +33,6 @@ function c511002735.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 		ct=Duel.AnnounceNumber(tp,table.unpack(t))
 	end
 	Duel.RemoveOverlayCard(tp,1,0,ct,ct,REASON_COST)
-	e:SetLabel(ct)
-end
-function c511002735.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_MZONE,1,nil) end
-	local ct=e:GetLabel()
-	e:SetLabel(0)
 	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_MZONE,nil)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 	Duel.SetTargetParam(ct)

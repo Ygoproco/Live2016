@@ -11,8 +11,8 @@ function c511000475.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511000475.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and 
-		Duel.IsPlayerCanSpecialSummonMonster(tp,511000475,0,0x21,2100,1000,4,RACE_INSECT,ATTRIBUTE_EARTH) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and e:IsHasType(EFFECT_TYPE_ACTIVATE) 
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,511000475,0,0x21,2100,1000,4,RACE_INSECT,ATTRIBUTE_EARTH) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c511000475.activate(e,tp,eg,ep,ev,re,r,rp)

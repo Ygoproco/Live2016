@@ -26,27 +26,29 @@ function c100100121.condition(e,tp,eg,ep,ev,re,r,rp)
 		return true
 	else return false end
 end
-function c100100121.filter(c,id,e,tp)
-	return c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
-end
 function c100100121.costfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
 end
 function c100100121.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c100100121.costfilter,tp,LOCATION_DECK,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,c100100121.costfilter,tp,LOCATION_DECK,0,1,1,nil)
-	Duel.SendtoGrave(g,REASON_COST)
-	e:SetLabel(g:GetFirst():GetTextAttack())
+	e:SetLabel(1)
+	if chk==0 then return true end
 end
 function c100100121.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=e:GetLabelObject()
-	if chk==0 then return true end
+	if chk==0 then
+		if e:GetLabel()~=1 then return false end
+		e:SetLabel(0)
+		return Duel.IsExistingMatchingCard(c100100121.costfilter,tp,LOCATION_DECK,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local g=Duel.SelectMatchingCard(tp,c100100121.costfilter,tp,LOCATION_DECK,0,1,1,nil)
+	local atk=g:GetFirst():GetAttack()
+	Duel.SendtoGrave(g,REASON_COST)
 	Duel.SetTargetCard(tc)
+	Duel.SetTargetParam(atk)
 end
 function c100100121.operation(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=Duel.GetFirstTarget()
-	local atk=e:GetLabel()
+	local atk=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
 	if atk<0 then atk=0 end
 	if tc and tc:IsFaceup() then
 		local e1=Effect.CreateEffect(e:GetHandler())

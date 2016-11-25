@@ -20,9 +20,16 @@ function c511000657.filter2(c,lv,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetLevel()==lv
 end
 function c511000657.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local lv=Duel.GetMatchingGroupCount(c511000657.cfilter,tp,LOCATION_GRAVE,0,nil)
 	e:SetLabel(1)
-	if chk==0 then return Duel.IsExistingMatchingCard(c511000657.filter,tp,LOCATION_HAND,0,1,nil,lv,e,tp) end
+	if chk==0 then return true end
+end
+function c511000657.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	local lv=Duel.GetMatchingGroupCount(c511000657.cfilter,tp,LOCATION_GRAVE,0,nil)
+	if chk==0 then
+		if e:GetLabel()~=1 then return false end
+		e:SetLabel(0)
+		return Duel.IsExistingMatchingCard(c511000657.filter,tp,LOCATION_HAND,0,1,nil,lv,e,tp) 
+			and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
 	local sp=Duel.GetMatchingGroup(c511000657.filter,tp,LOCATION_HAND,0,nil,lv,e,tp)
 	local tgmax=sp:GetMaxGroup(Card.GetLevel)
 	local tgmin=sp:GetMinGroup(Card.GetLevel)
@@ -39,15 +46,12 @@ function c511000657.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 		ct=ct+g2:GetCount()
 		g:Merge(g2)
 	end
-	e:SetLabel(ct)
+	Duel.SetTargetParam(ct)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
-end
-function c511000657.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and e:GetLabel()>0 end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
 end
 function c511000657.activate(e,tp,eg,ep,ev,re,r,rp)
-	local lv=e:GetLabel()
+	local lv=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 or lv<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c511000657.filter2,tp,LOCATION_HAND,0,1,1,nil,lv,e,tp)

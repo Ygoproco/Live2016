@@ -4,8 +4,12 @@ function c511000486.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)	
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetTarget(c511000486.target)
 	e1:SetOperation(c511000486.activate)
 	c:RegisterEffect(e1)
+end
+function c511000486.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:IsHasType(EFFECT_TYPE_ACTIVATE) end
 end
 function c511000486.activate(e,tp,eg,ep,ev,re,r,rp)
 	local e1=Effect.CreateEffect(e:GetHandler())

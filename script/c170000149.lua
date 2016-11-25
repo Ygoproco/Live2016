@@ -16,16 +16,17 @@ function c170000149.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 function c170000149.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() end
-	if chk==0 then return Duel.IsExistingTarget(c170000149.filter,tp,LOCATION_MZONE,0,1,nil) end
+	if chk==0 then return e:IsHasType(EFFECT_TYPE_ACTIVATE) 
+		and Duel.IsExistingTarget(c170000149.filter,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-	local g=Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,0,1,1,nil)
+	Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,0,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,e:GetHandler(),1,0,0)
 end
 function c170000149.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsLocation(LOCATION_SZONE) then return end
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) then
+	if c:IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) then
 		Duel.Equip(tp,c,tc)
 		c:CancelToGrave()
 		--Equip limit

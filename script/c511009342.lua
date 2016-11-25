@@ -7,6 +7,7 @@ function c511009342.initial_effect(c)
 	e1:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e1:SetCondition(c511009342.condition)
 	e1:SetCost(c511009342.cost)
+	e1:SetTarget(c511009342.target)
 	e1:SetOperation(c511009342.activate)
 	c:RegisterEffect(e1)
 end
@@ -14,14 +15,14 @@ function c511009342.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()~=tp
 end
 function c511009342.costfilter(c)
-	return Duel.IsExistingMatchingCard(c511009342.filter,tp,LOCATION_GRAVE,0,1,nil,c:GetCode()) and c:IsDiscardable()
-end
-function c511009342.filter(c,code)
-	return c:IsCode(code)
+	return Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_GRAVE,0,1,nil,c:GetCode()) and c:IsDiscardable()
 end
 function c511009342.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c511009342.costfilter,tp,LOCATION_HAND,0,1,nil) end
 	Duel.DiscardHand(tp,c511009342.costfilter,1,1,REASON_COST+REASON_DISCARD)
+end
+function c511009342.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:IsHasType(EFFECT_TYPE_ACTIVATE) end
 end
 function c511009342.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.NegateAttack() then return end
@@ -31,6 +32,7 @@ function c511009342.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not c:IsRelateToEffect(e)
 		or not Duel.IsPlayerCanSpecialSummonMonster(tp,511009342,0x10db,0x21,1,0,0,RACE_WARRIOR,ATTRIBUTE_DARK)
 	then return end
+	Duel.BreakEffect()
 	c:AddMonsterAttribute(TYPE_EFFECT)
 	Duel.SpecialSummonStep(c,1,tp,tp,true,false,POS_FACEUP_ATTACK)
 	c:AddMonsterAttributeComplete()

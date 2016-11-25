@@ -12,69 +12,36 @@ function c511009362.initial_effect(c)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetTargetRange(1,0)
 	e2:SetTarget(c511009362.sumlimit)
-	c:RegisterEffect(e2)
-	
+	c:RegisterEffect(e2)	
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e3:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
 	e3:SetRange(LOCATION_SZONE)
 	e3:SetTargetRange(0,1)
-	e3:SetCondition(c511009362.fcondition)
-	e3:SetTarget(c511009362.fsumlimit)
+	e3:SetLabel(TYPE_FUSION)
+	e3:SetCondition(c511009362.con)
+	e3:SetTarget(c511009362.splimit)
 	c:RegisterEffect(e3)
 	local e4=e3:Clone()
-	e4:SetCondition(c511009362.scondition)
-	e4:SetTarget(c511009362.ssumlimit)
+	e4:SetLabel(TYPE_SYNCHRO)
 	c:RegisterEffect(e4)
 	local e5=e3:Clone()
-	e5:SetCondition(c511009362.xcondition)
-	e5:SetTarget(c511009362.xsumlimit)
+	e5:SetLabel(TYPE_XYZ)
 	c:RegisterEffect(e5)
 	local e6=e3:Clone()
-	e6:SetCondition(c511009362.pcondition)
-	e6:SetTarget(c511009362.psumlimit)
+	e6:SetLabel(TYPE_PENDULUM)
 	c:RegisterEffect(e6)
 end
 function c511009362.sumlimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return c:IsLocation(LOCATION_EXTRA)
 end
-function c511009362.fsumlimit(e,c,sump,sumtype,sumpos,targetp,se)
+function c511009362.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return c:IsLocation(LOCATION_EXTRA) and c:IsType(TYPE_FUSION)
 end
-function c511002016.fusfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_FUSION)
+function c511009362.filter(c,tpe)
+	return c:IsFaceup() and c:IsType(tpe)
 end
-function c511002016.fcondition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c511002016.fusfilter,tp,LOCATION_MZONE,0,1,nil)
-end
-
-function c511009362.ssumlimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return c:IsLocation(LOCATION_EXTRA) and c:IsType(TYPE_SYNCHRO)
-end
-function c511002016.synfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_SYNCHRO)
-end
-function c511002016.scondition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c511002016.synfilter,tp,LOCATION_MZONE,0,1,nil)
-end
-
-function c511009362.Xsumlimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return c:IsLocation(LOCATION_EXTRA) and c:IsType(TYPE_XYZ)
-end
-function c511002016.xyzfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_XYZ)
-end
-function c511002016.xcondition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c511002016.xyzfilter,tp,LOCATION_MZONE,0,1,nil)
-end
-
-function c511009362.psumlimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return c:IsLocation(LOCATION_EXTRA) and c:IsType(TYPE_PENDULUM)
-end
-function c511002016.penfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_PENDULUM)
-end
-function c511002016.pcondition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c511002016.penfilter,tp,LOCATION_MZONE,0,1,nil)
+function c511009362.con(e)
+	return Duel.IsExistingMatchingCard(c511009362.filter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil,e:GetLabel())
 end

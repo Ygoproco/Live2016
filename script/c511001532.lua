@@ -15,21 +15,24 @@ function c511001532.condition(e,tp,eg,ep,ev,re,r,rp)
 	local at=Duel.GetAttackTarget()
 	return at and at:IsFaceup() and at:IsControler(tp) and at:IsType(TYPE_XYZ)
 end
-function c511001532.cfilter(c)
-	return c:IsReleasable() and c:IsType(TYPE_XYZ)
-end
 function c511001532.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local sg=Duel.GetMatchingGroup(c511001532.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	if chk==0 then return sg:GetCount()>0 end
-	local ct=Duel.Release(sg,REASON_COST)
-	e:SetLabel(ct+1)
+	e:SetLabel(1)
+	if chk==0 then return true end
+	
+	if chk==0 then return  end
 end
 function c511001532.filter(c,e,tp)
 	return c:IsType(TYPE_XYZ) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetFlagEffect(511001531)>0
 end
 function c511001532.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c511001532.filter,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,nil,e,tp)  end
+	local sg=Duel.GetMatchingGroup(Card.IsType,tp,LOCATION_MZONE,LOCATION_MZONE,nil,TYPE_XYZ)
+	if chk==0 then
+		if e:GetLabel()~=1 then return false end
+		e:SetLabel(0)
+		return sg:GetCount()>0 and sg:FilterCount(Card.IsReleasable,nil)==sg:GetCount() and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+			and Duel.IsExistingMatchingCard(c511001532.filter,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,nil,e,tp)  end
+	local ct=Duel.Release(sg,REASON_COST)
+	Duel.SetTargetParam(ct+1)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_REMOVED)
 end
 function c511001532.atfilter(c)
@@ -40,6 +43,7 @@ function c511001532.atfilter(c)
 	return no and no>=101 and no<=107 and c:IsFaceup() and c:IsSetCard(0x1048)
 end
 function c511001532.activate(e,tp,eg,ep,ev,re,r,rp)
+	local ct=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c511001532.filter,tp,LOCATION_REMOVED,LOCATION_REMOVED,1,1,nil,e,tp)
@@ -48,9 +52,9 @@ function c511001532.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 		local g=Duel.GetMatchingGroup(c511001532.atfilter,tp,LOCATION_REMOVED,0,nil)
 		if g:GetCount()>0 then
-			if g:GetCount()>e:GetLabel() then
+			if g:GetCount()>ct then
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-				g=g:Select(tp,e:GetLabel(),e:GetLabel(),nil)
+				g=g:Select(tp,ct,ct,nil)
 			end
 			Duel.Overlay(tc,g)
 			local e1=Effect.CreateEffect(e:GetHandler())
