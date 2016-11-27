@@ -45,12 +45,12 @@ function c100912105.initial_effect(c)
 		c100912105.counter=true
 		c100912105[0]=0
 		c100912105[1]=0
-		local ge1=Effect.GlobalEffect()
+		local ge1=Effect.CreateEffect(c)
 		ge1:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
 		ge1:SetCode(EVENT_TO_GRAVE)
 		ge1:SetOperation(c100912105.checkop)
 		Duel.RegisterEffect(ge1,0)
-		local ge2=Effect.GlobalEffect()
+		local ge2=Effect.CreateEffect(c)
 		ge2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
 		ge2:SetCode(EVENT_PHASE_START+PHASE_DRAW)
 		ge2:SetOperation(c100912105.clearop)
@@ -59,20 +59,24 @@ function c100912105.initial_effect(c)
 end
 function c100912105.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
-	local typ=0
 	while tc do
-		if tc:IsSetCard(0x1f8) or tc:IsCode(30539496,34079868,82321037,87765315,96746083) then
-			typ=bit.bor(typ,bit.band(tc:GetOriginalType(),0x7))
+		if tc:IsPreviousLocation(LOCATION_ONFIELD) and (tc:IsSetCard(0x1f8) or tc:IsCode(30539496,34079868,82321037,87765315,96746083)) then
+			local p=tc:GetReasonPlayer()
+			local typ=bit.band(tc:GetOriginalType(),0x7)
+			if (typ==TYPE_MONSTER and Duel.GetFlagEffect(p,100912105)==0)
+				or (typ==TYPE_SPELL and Duel.GetFlagEffect(p,100912205)==0)
+				or (typ==TYPE_TRAP and Duel.GetFlagEffect(p,100912305)==0) then
+				c100912105[p]=c100912105[p]+1
+				if typ==TYPE_MONSTER then
+					Duel.RegisterFlagEffect(tp,100912105,RESET_PHASE+PHASE_END,0,1)
+				elseif typ==TYPE_SPELL then
+					Duel.RegisterFlagEffect(tp,100912205,RESET_PHASE+PHASE_END,0,1)
+				else
+					Duel.RegisterFlagEffect(tp,100912305,RESET_PHASE+PHASE_END,0,1)
+				end
+			end
 		end
 		tc=eg:GetNext()
-	end
-	if typ==0 then return end
-	local d=bit.bxor(c100912105[0],typ)
-	if d~=0 then
-		c100912105[0]=bit.bor(c100912105[0],typ)
-		if bit.band(d,0x1)==0x1 then c100912105[1]=c100912105[1]+1 end
-		if bit.band(d,0x2)==0x2 then c100912105[1]=c100912105[1]+1 end
-		if bit.band(d,0x4)==0x4 then c100912105[1]=c100912105[1]+1 end
 	end
 end
 function c100912105.clearop(e,tp,eg,ep,ev,re,r,rp)
@@ -80,15 +84,15 @@ function c100912105.clearop(e,tp,eg,ep,ev,re,r,rp)
 	c100912105[1]=0
 end
 function c100912105.drcon(e,tp,eg,ep,ev,re,r,rp)
-	return c100912105[1]>0
+	return c100912105[tp]>0
 end
 function c100912105.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsPlayerCanDraw(tp,c100912105[1]) end
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,c100912105[1])
+	if chk==0 then return Duel.IsPlayerCanDraw(tp,c100912105[tp]) end
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,c100912105[tp])
 end
 function c100912105.drop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
-	Duel.Draw(tp,c100912105[1],REASON_EFFECT)
+	Duel.Draw(tp,c100912105[tp],REASON_EFFECT)
 end
 function c100912105.sumfilter(c)
 	return (c:IsSetCard(0x1f8) or c:IsCode(30539496,34079868,82321037,87765315,96746083)) and c:IsSummonable(true,nil,1)

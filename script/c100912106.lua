@@ -6,6 +6,7 @@ function c100912106.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetHintTiming(0,TIMING_END_PHASE)
 	e1:SetTarget(c100912106.target)
 	c:RegisterEffect(e1)
 	--special summon
@@ -58,7 +59,7 @@ function c100912106.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		local op=0
 		if b1 and b2 then op=Duel.SelectOption(tp,aux.Stringid(100912106,0),aux.Stringid(100912106,1))
 		elseif b1 then op=Duel.SelectOption(tp,aux.Stringid(100912106,0))
-		elseif b2 then op=Duel.SelectOption(tp,aux.Stringid(100912106,1)) end
+		else op=Duel.SelectOption(tp,aux.Stringid(100912106,1))+1 end
 		if op==0 then
 			e:SetCategory(CATEGORY_SPECIAL_SUMMON)
 			e:SetProperty(EFFECT_FLAG_CARD_TARGET)
