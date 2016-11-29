@@ -29,7 +29,7 @@ function c511009315.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e4:SetCategory(CATEGORY_DAMAGE)
 	e4:SetRange(LOCATION_SZONE)
-	e4:SetCode(EVENT_REMOVE_COUNTER+0x104)
+	e4:SetCode(EVENT_REMOVE_COUNTER+0x1104)
 	e4:SetOperation(c511009315.damop1)
 	c:RegisterEffect(e4)
 	--Self Damage 2 (when monster with Thorn counter leave the field)
@@ -44,7 +44,7 @@ end
 function c511009315.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local p=Duel.GetTurnPlayer()
-	local ct=Duel.GetCounter(p,LOCATION_ONFIELD,0,0x104)
+	local ct=Duel.GetCounter(p,LOCATION_ONFIELD,0,0x1104)
 	Duel.SetTargetPlayer(p)
 	Duel.SetTargetParam(ct*400)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,p,ct*400)
@@ -54,7 +54,7 @@ function c511009315.damop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Damage(p,d,REASON_EFFECT)
 end
 function c511009315.descon(e)
-	return Duel.GetCounter(0,1,0,0x104)==0
+	return Duel.GetCounter(0,1,0,0x1104)==0
 end
 function c511009315.damop1(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Damage(tp,ev*100,REASON_EFFECT)
@@ -64,7 +64,7 @@ function c511009315.damop2(e,tp,eg,ep,ev,re,r,rp)
 	local c=eg:GetFirst()
 	while c~=nil do
 		if c:IsPreviousLocation(LOCATION_ONFIELD) then
-			count=count+c:GetCounter(0x104)
+			count=count+c:GetCounter(0x1104)
 		end
 		c=eg:GetNext()
 	end
