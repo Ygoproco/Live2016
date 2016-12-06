@@ -114,11 +114,7 @@ function c511001998.ctop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.PayLPCost(1-tp,math.floor(Duel.GetLP(1-tp)/2))
 			Duel.Destroy(tc,REASON_EFFECT)
 		end
-		if not Duel.GetControl(tc,tp) then
-			if not tc:IsImmuneToEffect(e) and tc:IsAbleToChangeControler() then
-				Duel.Destroy(tc,REASON_EFFECT)
-			end
-		end
+		Duel.GetControl(tc,tp)
 	end
 end
 function c511001998.numchk(e,tp,eg,ep,ev,re,r,rp)

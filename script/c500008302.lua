@@ -14,7 +14,7 @@ function c500008302.filter(c)
 end
 function c500008302.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c500008302.filter(chkc) end
-	if chk==0 then return not e:GetHandler():IsLocation(LOCATION_GRAVE)
+	if chk==0 then return e:IsHasType(EFFECT_TYPE_ACTIVATE) 
 		and Duel.IsExistingTarget(c500008302.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	Duel.SelectTarget(tp,c500008302.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
@@ -22,7 +22,7 @@ end
 function c500008302.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() and c:IsRelateToEffect(e) then
+	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() and c:IsRelateToEffect(e) then
 		c:CancelToGrave()
 		Duel.Overlay(tc,Group.FromCards(c))
 	end

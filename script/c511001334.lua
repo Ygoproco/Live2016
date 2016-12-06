@@ -2,7 +2,7 @@
 function c511001334.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCost(c511001334.cost)
@@ -95,7 +95,7 @@ function c511001334.activate(e,tp,eg,ep,ev,re,r,rp)
 			res=Duel.IsExistingMatchingCard(c511001334.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg2,mf,tchkf)
 		end
 	end
-	if res and Duel.SelectYesNo(tp,aux.Stringid(33550694,0)) then
+	if res and not Duel.IsPlayerAffectedByEffect(tp,59822133) and Duel.SelectYesNo(tp,aux.Stringid(33550694,0)) then
 		local chkf=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and PLAYER_NONE or tp
 		local mg1=Duel.GetMatchingGroup(c511001334.filter1,tp,LOCATION_HAND+LOCATION_MZONE,0,nil,e)
 		local sg1=Duel.GetMatchingGroup(c511001334.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,chkf)

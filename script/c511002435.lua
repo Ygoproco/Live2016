@@ -47,11 +47,7 @@ function c511002435.op(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if tc then
 		Duel.HintSelection(g)
-		if not Duel.GetControl(tc,tp) then
-			if not tc:IsImmuneToEffect(e) and tc:IsAbleToChangeControler() then
-				Duel.Destroy(tc,REASON_EFFECT)
-			end
-		else
+		if Duel.GetControl(tc,tp) then
 			c:SetCardTarget(tc)
 		end
 	end

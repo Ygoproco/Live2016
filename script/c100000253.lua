@@ -10,7 +10,6 @@ function c100000253.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c100000253.filter(c,code)
-	local code=c:GetCode()
 	return c:IsFaceup() and c:IsCode(code)
 end
 function c100000253.spfilter(c,e,tp)

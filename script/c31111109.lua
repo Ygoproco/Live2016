@@ -27,7 +27,7 @@ function c31111109.initial_effect(c)
 	e3:SetValue(aux.fuslimit)
 	c:RegisterEffect(e3)
 end
-
+c31111109.material_setcode=0x8
 function c31111109.ffilter1(c)
 	return c:IsFusionSetCard(0x9) and not c:IsHasEffect(6205579)
 end

@@ -19,20 +19,28 @@ function c511001359.spfilter(c,slv,e,tp)
 	return c:GetLevel()==slv and c:IsAttribute(ATTRIBUTE_WATER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511001359.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,c511001359.cfilter,1,nil,e,tp) end
-	local g=Duel.SelectReleaseGroup(tp,c511001359.cfilter,1,1,nil,e,tp)
-	e:SetLabel(g:GetFirst():GetLevel()/3)
-	Duel.Release(g,REASON_COST)
+	e:SetLabel(1)
+	if chk==0 then return true end
 end
 function c511001359.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>1 and not Duel.IsPlayerAffectedByEffect(tp,59822133) end
+	if chk==0 then
+		if e:GetLabel()~=1 then return false end
+		e:SetLabel(0)
+		return Duel.CheckReleaseGroup(tp,c511001359.cfilter,1,nil,e,tp) 
+			and Duel.GetLocationCount(tp,LOCATION_MZONE)>1 and not Duel.IsPlayerAffectedByEffect(tp,59822133) end
+	local g=Duel.SelectReleaseGroup(tp,c511001359.cfilter,1,1,nil,e,tp)
+	local lv=g:GetFirst():GetLevel()/3
+	Duel.Release(g,REASON_COST)
+	Duel.SetTargetParam(lv)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,3,0,0)
 end
 function c511001359.operation(e,tp,eg,ep,ev,re,r,rp)
+	local lv=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=2 or Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c511001359.spfilter,tp,LOCATION_DECK,0,3,3,nil,e:GetLabel(),e,tp)
+	local g=Duel.GetMatchingGroup(c511001359.spfilter,tp,LOCATION_DECK,0,nil,lv,e,tp)
 	if g:GetCount()>2 then
-		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local sg=g:Select(tp,3,3,nil)
+		Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
 	end
 end

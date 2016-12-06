@@ -11,7 +11,7 @@ function c511001561.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511001561.cfilter(c,tp)
-	return c:GetSummonPlayer()==tp
+	return c:GetSummonPlayer()~=tp
 end
 function c511001561.filter(c,tp)
 	return c:IsFaceup() and c:GetLevel()>0 and c:IsCode(76812113) 

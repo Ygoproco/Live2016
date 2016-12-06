@@ -75,7 +75,7 @@ function c511001145.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 		Duel.Hint(HINT_CARD,0,tc:GetOriginalCode())
 		tc:CreateEffectRelation(te)
-		if bit.band(tpe,TYPE_EQUIP+TYPE_CONTINUOUS+TYPE_FIELD)==0 then
+		if bit.band(tpe,TYPE_EQUIP+TYPE_CONTINUOUS+TYPE_FIELD)==0 and not tc:IsHasEffect(EFFECT_REMAIN_FIELD) then
 			tc:CancelToGrave(false)
 		end
 		if co then co(te,tp,eg,ep,ev,re,r,rp,1) end

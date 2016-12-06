@@ -74,7 +74,7 @@ function c511010107.check(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c511010107.filter1(c)
-	local cn=c:GetFlagEffectLabel(511010107)
+	local cfn=c:GetFlagEffectLabel(511010107)
 	   local cxm=c:GetEffectCount(EFFECT_EXTRA_ATTACK_MONSTER)
     local cxa=c:GetEffectCount(EFFECT_EXTRA_ATTACK)
     if (cfn and cfn~=0) and (cxa and cxa>0) and (cxm and cxm>0) then

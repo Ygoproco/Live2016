@@ -38,16 +38,35 @@ end
 function c91588074.spfil(c)
 	return c:IsAbleToDeckOrExtraAsCost()
 end
+function c91588074.spfil2(c,tc,tp)
+	if not c:IsAbleToDeckOrExtraAsCost() then return false end
+	local g=Duel.GetMatchingGroup(c91588074.spfil,tp,LOCATION_HAND+LOCATION_ONFIELD,0,tc)
+	g:Remove(Card.IsCode,nil,c:GetCode())
+	return g:GetClassCount(Card.GetCode)>=9
+end
 function c91588074.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	local g=Duel.GetMatchingGroup(c91588074.spfil,tp,LOCATION_HAND+LOCATION_ONFIELD,0,c)
-	return g:GetClassCount(Card.GetCode)>=10
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
+		local g=Duel.GetMatchingGroup(c91588074.spfil,tp,LOCATION_HAND+LOCATION_ONFIELD,0,c)
+		return g:GetClassCount(Card.GetCode)>=10
+	else
+		return Duel.IsExistingMatchingCard(c91588074.spfil2,tp,LOCATION_MZONE,0,1,nil,c,tp)
+	end
 end
 function c91588074.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local mg=Duel.GetMatchingGroup(c91588074.spfil,tp,LOCATION_HAND+LOCATION_ONFIELD,0,c)
 	local g=Group.CreateGroup()
-	for i=1,10 do
+	local n=10
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<1 then
+		n=9
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+		local sg=mg:FilterSelect(tp,Card.IsLocation,1,1,nil,LOCATION_MZONE)
+		local cd=sg:GetFirst():GetCode()
+		g:Merge(sg)
+		mg:Remove(Card.IsCode,nil,cd)
+	end
+	for i=1,n do
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 		local sg=mg:Select(tp,1,1,nil)
 		local cd=sg:GetFirst():GetCode()

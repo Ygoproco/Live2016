@@ -1,5 +1,7 @@
 --Number 100: Numeron Dragon
 --By Edo9300
+--atkup fixed by eclair
+--forced trigger fixed by MLD
 function c511000369.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,nil,1,2)
@@ -78,9 +80,7 @@ function c511000369.spcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511000369.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then
-		return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-	end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
 function c511000369.spop(e,tp,eg,ep,ev,re,r,rp)
@@ -104,35 +104,39 @@ function c511000369.retfilter(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:GetFlagEffect(511000369)>0
 end
 function c511000369.retfilter2(c)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:GetFlagEffect(511000369)>0 and not Duel.IsExistingMatchingCard(function(c,seq)return c:GetSequence()==seq end,tp,LOCATION_SZONE,0,1,c,c:GetFlagEffectLabel(511000369+1))
+	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:GetFlagEffect(511000369)>0 
+		and not Duel.IsExistingMatchingCard(function(c,seq)return c:GetSequence()==seq end,tp,LOCATION_SZONE,0,1,c,c:GetFlagEffectLabel(511000370))
 end
 function c511000369.destg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDestructable,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) 
-	or Duel.IsExistingMatchingCard(c511000369.retfilter,tp,0x33,0x33,1,nil) end
-	local sg1=Duel.GetMatchingGroup(Card.IsDestructable,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	if chk==0 then return true end
+	local sg1=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg1,sg1:GetCount(),0,0)
-	local sg2=Duel.GetMatchingGroup(c511000369.retfilter,tp,0x33,0x33,nil)
+	local sg2=Duel.GetMatchingGroup(c511000369.retfilter,tp,0x32,0x32,nil)
 	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,sg2,sg2:GetCount(),0,0)
 end
 function c511000369.fil(c,seq,p)
-	return c:GetFlagEffectLabel(511000369+1)==seq and c:GetFlagEffectLabel(511000369+2)==p
+	return c:GetFlagEffectLabel(511000370)==seq and c:GetFlagEffectLabel(511000371)==p
 end
 function c511000369.fil2(c,seq,p)
 	return c:IsFaceup() and not (c:IsType(TYPE_FIELD+TYPE_CONTINUOUS) or c:IsHasEffect(EFFECT_REMAIN_FIELD))
 end
+function c511000369.transchk(c)
+	return c:GetFlagEffectLabel(511000368)==0
+end
 function c511000369.desop(e,tp,eg,ep,ev,re,r,rp)
-	local sg1=Duel.GetMatchingGroup(Card.IsDestructable,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	local sg1=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	Duel.Destroy(sg1,REASON_EFFECT)
-	local sg2=Duel.GetMatchingGroup(c511000369.retfilter2,tp,0x33,0x33,nil)
+	local sg2=Duel.GetMatchingGroup(c511000369.retfilter2,tp,0x32,0x32,nil)
+	--if sg2:IsExists(c511000369.transchk,1,nil) then return end
 	local tc=sg2:GetFirst()
 	while tc do
-		local sgf=sg2:Filter(c511000369.fil,nil,tc:GetFlagEffectLabel(511000369+1),tc:GetFlagEffectLabel(511000369+2))
+		local sgf=sg2:Filter(c511000369.fil,nil,tc:GetFlagEffectLabel(511000370),tc:GetFlagEffectLabel(511000371))
 		if sgf:GetCount()>1 then
-			tc=sgf:Select(tc:GetFlagEffectLabel(511000369+2),1,1,nil):GetFirst()
-			sg2:Remove(c511000369.fil,nil,tc:GetFlagEffectLabel(511000369+1),tc:GetFlagEffectLabel(511000369+2))
+			tc=sgf:Select(tc:GetFlagEffectLabel(511000371),1,1,nil):GetFirst()
+			sg2:Remove(c511000369.fil,nil,tc:GetFlagEffectLabel(511000370),tc:GetFlagEffectLabel(511000371))
 		end
-		Duel.MoveToField(tc,tp,tc:GetFlagEffectLabel(511000369+2),LOCATION_SZONE,tc:GetFlagEffectLabel(511000369),true)
-		Duel.MoveSequence(tc,tc:GetFlagEffectLabel(511000369+1))
+		Duel.MoveToField(tc,tp,tc:GetFlagEffectLabel(511000371),LOCATION_SZONE,tc:GetFlagEffectLabel(511000369),true)
+		Duel.MoveSequence(tc,tc:GetFlagEffectLabel(511000370))
 		tc=sg2:GetNext()
 	end
 	Duel.SendtoGrave(sg2:Filter(c511000369.fil2,nil),REASON_RULE)
@@ -143,18 +147,16 @@ function c511000369.regcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511000369.regop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(EVENT_PHASE+PHASE_BATTLE_START)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetCountLimit(1)
-	e1:SetCondition(c511000369.atkupcon)
-	e1:SetOperation(c511000369.atkupop)
-	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-	c:RegisterEffect(e1)
-end
-function c511000369.atkupcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()==tp and Duel.GetCurrentPhase()>=0x08 and ph<=0x80
+	if c:IsRelateToEffect(e) then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetCode(EVENT_PHASE+PHASE_BATTLE_START)
+		e1:SetRange(LOCATION_MZONE)
+		e1:SetCountLimit(1)
+		e1:SetOperation(c511000369.atkupop)
+		e1:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
+		c:RegisterEffect(e1)
+	end
 end
 function c511000369.atkupop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -171,14 +173,13 @@ function c511000369.indes(e,c)
 	return not c:IsSetCard(0x48)
 end
 function c511000369.stcheck(e,tp,eg,ep,ev,re,r,rp)
-	if chk==0 then return eg:IsExists(Card.IsType,1,nil,TYPE_SPELL+TYPE_TRAP) end
 	local g=eg:Filter(Card.IsType,nil,TYPE_SPELL+TYPE_TRAP)
 	if g:GetCount()>0 then
 		local tc=g:GetFirst()
 		while tc do
 			tc:RegisterFlagEffect(511000369,RESET_PHASE+PHASE_END,0,1,tc:GetPreviousPosition())
-			tc:RegisterFlagEffect(511000369+1,RESET_PHASE+PHASE_END,0,1,tc:GetPreviousSequence())
-			tc:RegisterFlagEffect(511000369+2,RESET_PHASE+PHASE_END,0,1,tc:GetPreviousControler())
+			tc:RegisterFlagEffect(511000370,RESET_PHASE+PHASE_END,0,1,tc:GetPreviousSequence())
+			tc:RegisterFlagEffect(511000371,RESET_PHASE+PHASE_END,0,1,tc:GetPreviousControler())
 			tc=g:GetNext()
 		end
 	end

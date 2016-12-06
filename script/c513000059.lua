@@ -6,11 +6,10 @@ function c513000059.initial_effect(c)
 	--Rank Up Check
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetCondition(c513000059.rankupregcon)
 	e1:SetOperation(c513000059.rankupregop)
-	c:RegisterEffect(e1)
+	c:RegisterEffect(e1)	
 	--material
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(12744567,0))
@@ -91,7 +90,7 @@ function c513000059.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Recover(p,d,REASON_EFFECT)
 	end
 end
-function c511010207.rumfilter(c)
+function c513000059.rumfilter(c)
 	return c:IsCode(48739166) and not c:IsPreviousLocation(LOCATION_OVERLAY)
 end
 function c513000059.rankupregcon(e,tp,eg,ep,ev,re,r,rp)
@@ -100,17 +99,17 @@ function c513000059.rankupregcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c513000059.rankupregop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-		--sp summon 101
-	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e1:SetDescription(aux.Stringid(102380,0))
-	e1:SetType(EFFECT_TYPE_IGNITION)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetCost(c513000059.spcost2)
-	e1:SetTarget(c513000059.sptg2)
-	e1:SetOperation(c513000059.spop2)
-	e1:SetReset(RESET_EVENT+0x1fe0000)
-	c:RegisterEffect(e1)
+	--sp summon 101
+	local e5=Effect.CreateEffect(c)
+	e5:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e5:SetDescription(aux.Stringid(102380,0))
+	e5:SetType(EFFECT_TYPE_IGNITION)
+	e5:SetRange(LOCATION_MZONE)
+	e5:SetCost(c513000059.spcost2)
+	e5:SetTarget(c513000059.sptg2)
+	e5:SetOperation(c513000059.spop2)
+	e5:SetReset(RESET_EVENT+0x1fe0000)
+	c:RegisterEffect(e5)
 end
 function c513000059.spcost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end

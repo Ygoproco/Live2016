@@ -17,7 +17,7 @@ function c511001254.initial_effect(c)
 		local ge1=Effect.CreateEffect(c)
 		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		ge1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-		ge1:SetCode(EVENT_DESTROY)
+		ge1:SetCode(EVENT_DESTROYED)
 		ge1:SetOperation(c511001254.regop)
 		Duel.RegisterEffect(ge1,0)
 		local ge2=Effect.CreateEffect(c)
@@ -32,6 +32,7 @@ function c511001254.filter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x9f) and c:IsPreviousLocation(LOCATION_MZONE)
 end
 function c511001254.regop(e,tp,eg,ep,ev,re,r,rp)
+	if not eg then return end
 	local ct=eg:FilterCount(c511001254.filter,nil)
 	c511001254[0]=c511001254[0]+ct
 end
@@ -51,7 +52,7 @@ end
 function c511001254.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
@@ -81,12 +82,12 @@ function c511001254.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	local c=e:GetHandler()
 	while tc do
-		local e1=Effect.CreateEffect(c)
+		local e1=Effect.CreateEffect(e:GetOwner())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_DISABLE)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e1)
-		local e2=Effect.CreateEffect(c)
+		local e2=Effect.CreateEffect(e:GetOwner())
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_DISABLE_EFFECT)
 		e2:SetReset(RESET_EVENT+0x1fe0000)

@@ -18,7 +18,7 @@ function c100000039.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c100000039.cfilter,tp,LOCATION_MZONE,0,1,nil) and rp~=tp 
 end
 function c100000039.costfilter1(c)
-	return  c:IsRace(RACE_MACHINE) and c:IsFaceup() and c:IsAbleToRemoveAsCost()
+	return c:IsRace(RACE_MACHINE) and c:IsFaceup() and c:IsAbleToRemoveAsCost()
 end
 function c100000039.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000039.costfilter1,tp,LOCATION_GRAVE,0,1,nil) end
@@ -37,7 +37,7 @@ function c100000039.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Destroy(eg,REASON_EFFECT)
 	end
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and c:IsCanTurnSet() then
+	if c:IsRelateToEffect(e) and c:IsCanTurnSet() and e:IsHasType(EFFECT_TYPE_ACTIVATE) then
 		Duel.BreakEffect()
 		c:CancelToGrave()
 		Duel.ChangePosition(c,POS_FACEDOWN)

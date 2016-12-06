@@ -10,7 +10,7 @@ function c511009195.initial_effect(c)
     c:RegisterEffect(e1)
 end
 function c511009195.condition(e,tp,eg,ep,ev,re,r,rp)
-    return ep~=tp and eg:GetFirst():GetControler()==tp and eg:GetFirst():IsSetCard(0x411)
+    return ep~=tp and eg:GetFirst():GetControler()==tp and eg:GetFirst():IsSetCard(0x1f7)
 end
 function c511009195.filter(c,e,tp)
     return c:GetLevel()==1 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

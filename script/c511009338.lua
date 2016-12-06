@@ -31,7 +31,7 @@ function c511009338.checkop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RegisterFlagEffect(1-tp,62765383,0,0,1)
 	end
 end
-function c511009338.filter(c)
+function c511009338.cfilter(c)
 	return c:IsFaceup() and (c511009338.collection[c:GetCode()] or c:IsSetCard(0x410))
 end
 function c511009338.condition(e,tp,eg,ep,ev,re,r,rp)

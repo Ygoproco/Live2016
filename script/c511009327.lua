@@ -21,7 +21,7 @@ function c511009327.filter2(c,e,tp,mc,rk,code)
 end
 function c511009327.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and c511009327.filter1(chkc,e,tp) end
-	if chk==0 then return Duel.IsPlayerCanSpecialSummonCount(tp,2)
+	if chk==0 then return e:IsHasType(EFFECT_TYPE_ACTIVATE) and Duel.IsPlayerCanSpecialSummonCount(tp,2)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingTarget(c511009327.filter1,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
@@ -30,6 +30,7 @@ function c511009327.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c511009327.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if not tc:IsRelateToEffect(e) or tc:IsImmuneToEffect(e) then return end
 	if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)==0 then return end
@@ -42,7 +43,9 @@ function c511009327.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Overlay(sc,Group.FromCards(tc))
 		Duel.SpecialSummon(sc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)
 		sc:CompleteProcedure()
-		e:GetHandler():CancelToGrave()
-		Duel.Overlay(sc,Group.FromCards(e:GetHandler()))
+		if c:IsRelateToEffect(e) then
+			c:CancelToGrave()
+			Duel.Overlay(sc,Group.FromCards(c))
+		end
 	end
 end

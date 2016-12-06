@@ -2,36 +2,38 @@
 function c511000221.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOKEN)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_DESTROYED)
+	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetCondition(c511000221.condition)
 	e1:SetTarget(c511000221.target)
 	e1:SetOperation(c511000221.operation)
 	c:RegisterEffect(e1)
-	local e2=e1:Clone()
-	e2:SetCode(EVENT_BATTLE_DESTROYED)
-	c:RegisterEffect(e2)
 end
 function c511000221.cfilter(c,tp)
-	return c:IsReason(REASON_DESTROY) and c:GetPreviousControler()==tp and c:GetPreviousLocation()==LOCATION_MZONE 
-	and bit.band(c:GetPreviousPosition(),POS_FACEUP)~=0 and c:IsType(TYPE_SPIRIT) and c:IsLocation(LOCATION_GRAVE)
+	return c:GetPreviousControler()==tp and c:GetPreviousLocation()==LOCATION_MZONE 
+		and bit.band(c:GetPreviousPosition(),POS_FACEUP)~=0 and c:IsType(TYPE_SPIRIT) and c:IsLocation(LOCATION_GRAVE)
 end
 function c511000221.condition(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c511000221.cfilter,1,nil,tp)
+	local g=eg:Filter(c511000221.cfilter,nil,tp)
+	local tc=g:GetFirst()
+	return g:GetCount()==1
 end
 function c511000221.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local ec=eg:GetFirst()
+	local g=eg:Filter(c511000221.cfilter,nil,tp)
+	local ec=g:GetFirst()
 	if chk==0 then return eg:IsExists(c511000221.cfilter,1,nil,tp) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
-	and Duel.IsPlayerCanSpecialSummonMonster(tp,511000222,0,0x4011,ec:GetBaseAttack(),ec:GetBaseDefense(),
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,511000222,0,0x4011,ec:GetBaseAttack(),ec:GetBaseDefense(),
 			ec:GetOriginalLevel(),ec:GetOriginalRace(),ec:GetOriginalAttribute()) end
 	ec:CreateEffectRelation(e)
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
 end
 function c511000221.operation(e,tp,eg,ep,ev,re,r,rp)
-	local ec=eg:GetFirst()
-	if not ec:IsRelateToEffect(e) then return end
+	local g=eg:Filter(c511000221.cfilter,nil,tp)
+	local ec=g:GetFirst()
+	if not ec or not ec:IsRelateToEffect(e) then return end
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
 		or not Duel.IsPlayerCanSpecialSummonMonster(tp,511000222,0,0x4011,ec:GetBaseAttack(),ec:GetBaseDefense(),
 			ec:GetOriginalLevel(),ec:GetOriginalRace(),ec:GetOriginalAttribute()) then return end

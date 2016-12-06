@@ -35,7 +35,7 @@ end
 function c100000068.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000068.costfilter,tp,LOCATION_GRAVE,0,1,nil,100000055)
  		and Duel.IsExistingMatchingCard(c100000068.costfilter,tp,LOCATION_GRAVE,0,1,nil,100000066)
-			and Duel.IsExistingMatchingCard(c100000068.costfilter,tp,LOCATION_GRAVE,0,1,nil,100000067) end
+		and Duel.IsExistingMatchingCard(c100000068.costfilter,tp,LOCATION_GRAVE,0,1,nil,100000067) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOREMOVE)
 	local g1=Duel.SelectMatchingCard(tp,c100000068.costfilter,tp,LOCATION_GRAVE,0,1,1,nil,100000055)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
@@ -46,17 +46,17 @@ function c100000068.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	g1:Merge(g3)
 	Duel.Remove(g1,POS_FACEUP,REASON_COST)
 end
-function c100000068.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(c100000068.filter,tp,0x13,0,1,nil,e,tp) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,c100000068.filter,tp,0x13,0,1,1,nil,e,tp)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+function c100000068.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:IsHasType(EFFECT_TYPE_ACTIVATE) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(c100000068.filter,tp,0x13,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,0x13)
 end
 function c100000068.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) then
+	if c:IsRelateToEffect(e) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local tc=Duel.SelectMatchingCard(tp,c100000068.filter,tp,0x13,0,1,1,nil,e,tp):GetFirst()
 		if Duel.SpecialSummon(tc,0,tp,tp,true,false,POS_FACEUP)==0 then return end
 		Duel.Equip(tp,c,tc)
 		c:CancelToGrave()
