@@ -173,15 +173,15 @@ function c51570882.desop(e,tp,eg,ep,ev,re,r,rp)
 	local dg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	Duel.Destroy(dg,REASON_EFFECT)
 	local c=e:GetHandler()
-	if c:IsLocation(LOCATION_GRAVE) then
-		local g=Duel.GetMatchingGroup(c51570882.cfil,tp,LOCATION_GRAVE,0,c)
-		if g:GetCount()>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-			and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.SelectYesNo(tp,aux.Stringid(51570882,2)) then
-			Duel.BreakEffect()
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-			local rg=g:Select(tp,1,1,nil)
-			Duel.Remove(rg,POS_FACEUP,REASON_EFFECT)
-			Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
+	local g=Duel.GetMatchingGroup(c51570882.cfil,tp,LOCATION_GRAVE,0,c)
+	if g:GetCount()>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.SelectYesNo(tp,aux.Stringid(51570882,2)) then
+		Duel.BreakEffect()
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local rg=g:Select(tp,1,1,nil)
+		Duel.Remove(rg,POS_FACEUP,REASON_EFFECT)
+		if c:IsLocation(LOCATION_GRAVE) then
+		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
 end
