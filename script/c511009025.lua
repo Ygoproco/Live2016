@@ -118,7 +118,7 @@ function c511009025.descon(e,tp,eg,ep,ev,re,r,rp)
   return c:IsPreviousLocation(LOCATION_MZONE)
 end
 function c511009025.desfil(c)
-  return c:IsDestructable() and c:IsSummonType(SUMMON_TYPE_SPECIAL)
+  return c:IsSummonType(SUMMON_TYPE_SPECIAL)
 end
 function c511009025.destg(e,tp,eg,ep,ev,re,r,rp,chk)
  if chk==0 then return Duel.IsExistingMatchingCard(c511009025.desfil,tp,0,LOCATION_MZONE,1,nil) end
@@ -128,16 +128,16 @@ function c511009025.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511009025.desop(e,tp,eg,ep,ev,re,r,rp)
  local g=Duel.GetMatchingGroup(c511009025.desfil,tp,0,LOCATION_MZONE,nil)
-	local tc=g:GetFirst()
-	
-	local dam=0
-	while tc do
-		local atk=tc:GetAttack()
-		if atk<0 then atk=0 end
-		dam=dam+atk
-		tc=g:GetNext()
+	if Duel.Destroy(sg,REASON_EFFECT)>0 then
+		local dg=Duel.GetOperatedGroup()
+		local atk=0
+		local tc=dg:GetFirst()
+		while tc do
+			if tc:IsPreviousPosition(POS_FACEUP) then
+				atk=atk+tc:GetPreviousAttackOnField()
+			end
+			tc=dg:GetNext()
+		end
+		Duel.Damage(1-tp,atk,REASON_EFFECT)
 	end
-	
-	Duel.Destroy(g,REASON_EFFECT)
-	Duel.Damage(1-tp,dam,REASON_EFFECT)
 end
