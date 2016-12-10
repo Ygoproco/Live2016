@@ -1,6 +1,6 @@
 --召喚獣エリュシオン
 --Elysion the Eidolon Beast
---Scripted by Eerie Code
+--Scripted by Eerie Code; fixed by senpaizuri
 function c11270236.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0xf4),c11270236.mat_fil,false)
@@ -35,7 +35,7 @@ function c11270236.initial_effect(c)
 end
 
 function c11270236.mat_fil(c)
-	return c:GetPreviousLocation()==LOCATION_EXTRA and c:IsLocation(LOCATION_MZONE)
+	return c:GetSummonLocation()==LOCATION_EXTRA and c:IsLocation(LOCATION_MZONE)
 end
 function c11270236.splimit(e,se,sp,st)
 	return not e:GetHandler():IsLocation(LOCATION_EXTRA) or aux.fuslimit(e,se,sp,st)
