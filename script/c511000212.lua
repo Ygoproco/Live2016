@@ -11,8 +11,8 @@ function c511000212.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511000212.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and 
-		Duel.IsPlayerCanSpecialSummonMonster(tp,511000212,0,0x21,1800,500,4,RACE_ZOMBIE,ATTRIBUTE_DARK) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and e:IsHasType(EFFECT_TYPE_ACTIVATE) 
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,511000212,0,0x21,1800,500,4,RACE_ZOMBIE,ATTRIBUTE_DARK) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c511000212.activate(e,tp,eg,ep,ev,re,r,rp)

@@ -16,22 +16,23 @@ function c100000291.costfilter(c)
 	return c:IsAbleToGraveAsCost() and c:IsRace(RACE_PYRO)
 end
 function c100000291.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c100000291.costfilter,tp,LOCATION_HAND,0,1,e:GetHandler()) end
-	local rt=Duel.GetTargetCount(c100000291.filter,tp,0,LOCATION_ONFIELD,nil)
+	e:SetLabel(1)
+	if chk==0 then return true end
+end
+function c100000291.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and chkc:IsType(TYPE_SPELL+TYPE_TRAP) end
+	if chk==0 then
+		if e:GetLabel()~=1 then return false end
+		e:SetLabel(0)
+		return Duel.IsExistingMatchingCard(c100000291.costfilter,tp,LOCATION_HAND,0,1,e:GetHandler()) 
+			and Duel.IsExistingTarget(Card.IsType,tp,0,LOCATION_ONFIELD,1,nil,TYPE_SPELL+TYPE_TRAP) end
+	local rt=Duel.GetTargetCount(Card.IsType,tp,0,LOCATION_ONFIELD,nil,TYPE_SPELL+TYPE_TRAP)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(tp,c100000291.costfilter,tp,LOCATION_HAND,0,1,rt,e:GetHandler())
 	Duel.SendtoGrave(g,REASON_COST)
-	e:SetLabel(g:GetCount())
-end
-function c100000291.filter(c)
-	return c:IsDestructable() and c:IsType(TYPE_SPELL+TYPE_TRAP)
-end
-function c100000291.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and c100000291.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c100000291.filter,tp,0,LOCATION_ONFIELD,1,nil) end
-	local ct=e:GetLabel()
+	local ct=g:GetCount()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,c100000291.filter,tp,0,LOCATION_ONFIELD,ct,ct,nil)
+	local g=Duel.SelectTarget(tp,Card.IsType,tp,0,LOCATION_ONFIELD,ct,ct,nil,TYPE_SPELL+TYPE_TRAP)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 function c100000291.operation(e,tp,eg,ep,ev,re,r,rp,chk)

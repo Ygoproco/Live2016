@@ -32,7 +32,7 @@ end
 function c100912102.otcon(e,c)
 	if c==nil then return true end
 	return c:GetLevel()>4 and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c100912102.otfilter,c:GetControler(),,LOCATION_ONFIELD,0,1,nil)
+		and Duel.IsExistingMatchingCard(c100912102.otfilter,c:GetControler(),LOCATION_ONFIELD,0,1,nil)
 end
 function c100912102.otop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
@@ -46,7 +46,7 @@ function c100912102.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(c:GetSummonType(),SUMMON_TYPE_ADVANCE)==SUMMON_TYPE_ADVANCE and rp~=tp and Duel.IsChainNegatable(ev)
 end
 function c100912102.thfilter(c)
-	return c:IsSetCard(0x1f8) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x1f9) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c100912102.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100912102.thfilter,tp,LOCATION_DECK,0,1,nil) end

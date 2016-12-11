@@ -63,6 +63,8 @@ function c100000475.activate(e,tp,eg,ep,ev,re,r,rp)
 			fop(ce,e,tp,tc,mat2)
 		end
 		tc:CompleteProcedure()
+	end
+	if e:IsHasType(EFFECT_TYPE_ACTIVATE) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetCategory(CATEGORY_TOHAND)
 		e1:SetType(EFFECT_TYPE_IGNITION)

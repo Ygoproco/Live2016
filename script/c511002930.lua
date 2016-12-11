@@ -14,16 +14,18 @@ function c511002930.cfilter(c,tp)
 	return c:GetAttack()>0 and Duel.IsExistingMatchingCard(Card.IsFaceup,tp,LOCATION_MZONE,0,1,c)
 end
 function c511002930.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,c511002930.cfilter,1,nil,tp) end
-	local tc=Duel.SelectReleaseGroup(tp,c511002930.cfilter,1,1,nil,tp):GetFirst()
-	Duel.Release(tc,REASON_COST)
-	local atk=tc:GetAttack()
-	e:SetLabel(atk)
+	e:SetLabel(1)
+	if chk==0 then return true end
 end
 function c511002930.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetTargetParam(e:GetLabel())
-	e:SetLabel(0)
+	if chk==0 then
+		if e:GetLabel()~=1 then return false end
+		e:SetLabel(0)
+		return Duel.CheckReleaseGroup(tp,c511002930.cfilter,1,nil,tp) end
+	local tc=Duel.SelectReleaseGroup(tp,c511002930.cfilter,1,1,nil,tp):GetFirst()
+	local atk=tc:GetAttack()
+	Duel.Release(tc,REASON_COST)
+	Duel.SetTargetParam(atk)
 end
 function c511002930.activate(e,tp,eg,ep,ev,re,r,rp)
 	local atk=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)

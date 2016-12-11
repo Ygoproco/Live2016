@@ -1,6 +1,6 @@
 --グリーディー・ヴェノム・フュージョン・ドラゴン
 --Greedy Venom Fusion Dragon
---Scripted by Eerie Code
+--Scripted by Eerie Code - Edited by senpaizuri3
 function c51570882.initial_effect(c)
 	--
 	--aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0x10f3),c51570882.mat_fil,true)
@@ -180,6 +180,8 @@ function c51570882.desop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 		local rg=g:Select(tp,1,1,nil)
 		Duel.Remove(rg,POS_FACEUP,REASON_EFFECT)
+		if c:IsLocation(LOCATION_GRAVE) then
 		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
+		end
 	end
 end

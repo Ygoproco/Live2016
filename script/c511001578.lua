@@ -27,12 +27,12 @@ function c511001578.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(tp,c511001578.tgfilter,tp,LOCATION_DECK,0,1,4,nil)
 	Duel.SendtoGrave(g,REASON_COST)
-	e:SetLabel(g:GetCount())
+	Duel.SetTargetParam(g:GetCount())
 end
 function c511001578.activate(e,tp,eg,ep,ev,re,r,rp)
-	local ct=e:GetLabel()
+	local ct=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() and ct>0 then
+	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() and ct>0 then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)

@@ -11,24 +11,32 @@ function c171000111.initial_effect(c)
 	e1:SetOperation(c171000111.activate)
 	c:RegisterEffect(e1)
 end
-function c171000111.filter(c)
-	return c:IsFaceup() and bit.band(c:GetType(),0x800000)==0x800000 and c:IsAbleToGraveAsCost()
+function c171000111.cfilter(c,tp)
+	local ct=c:GetOverlayCount()
+	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsAbleToGraveAsCost() 
+		and Duel.IsPlayerCanDraw(tp,ct+1)
 end
 function c171000111.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c171000111.filter,tp,LOCATION_MZONE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,c171000111.filter,tp,LOCATION_MZONE,0,1,1,nil)
-	e:SetLabel(g:GetFirst():GetOverlayCount())
-	Duel.SendtoGrave(g,REASON_COST)
+	e:SetLabel(1)
+	return true
 end
 function c171000111.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local drw=e:GetLabel()+1
-	if chk==0 then return Duel.IsPlayerCanDraw(tp,drw) end
+	if chk==0 then
+		if e:GetLabel()~=1 then return false end
+		e:SetLabel(0)
+		return Duel.CheckReleaseGroup(tp,c171000111.cfilter,1,nil,tp) end
+	local g=Duel.SelectReleaseGroup(tp,c171000111.cfilter,1,1,nil,tp)
+	local ct=g:GetFirst():GetOverlayCount()
+	Duel.Release(g,REASON_COST)
 	Duel.SetTargetPlayer(tp)
-	Duel.SetTargetParam(drw)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,drw)
+	Duel.SetTargetParam(ct)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function c171000111.activate(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	Duel.Draw(p,d,REASON_EFFECT)
+	Duel.Draw(p,1,REASON_EFFECT)
+	if d>1 then
+		Duel.BreakEffect()
+		Duel.Draw(tp,d-1,REASON_EFFECT)
+	end
 end

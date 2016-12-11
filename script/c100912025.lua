@@ -1,5 +1,5 @@
 --真竜機兵ダースメタトロン
---True Draco Da’at Metatron, the Mechsoldier
+--True Draco Da'at Metatron, the Mechsoldier
 --Script by nekrozar
 function c100912025.initial_effect(c)
 	--summon with 3 tribute
@@ -11,8 +11,10 @@ function c100912025.initial_effect(c)
 	e1:SetOperation(c100912025.ttop)
 	e1:SetValue(SUMMON_TYPE_ADVANCE)
 	c:RegisterEffect(e1)
-	local e2=e1:Clone()
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_LIMIT_SET_PROC)
+	e2:SetCondition(c100912025.setcon)
 	c:RegisterEffect(e2)
 	--tribute check
 	local e3=Effect.CreateEffect(c)
@@ -42,7 +44,7 @@ function c100912025.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function c100912025.otfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_CONTINUOUS) and c:IsReleasable()
+	return c:IsFaceup() and c:IsType(TYPE_CONTINUOUS) and not c:IsType(TYPE_MONSTER) and c:IsReleasable()
 end
 function c100912025.ttcon(e,c)
 	if c==nil then return true end
@@ -80,6 +82,10 @@ function c100912025.ttop(e,tp,eg,ep,ev,re,r,rp,c)
 	c:SetMaterial(g)
 	Duel.Release(g,REASON_SUMMON+REASON_MATERIAL)
 end
+function c100912025.setcon(e,c)
+	if not c then return true end
+	return false
+end
 function c100912025.valcheck(e,c)
 	local g=c:GetMaterial()
 	local typ=0
@@ -91,7 +97,8 @@ function c100912025.valcheck(e,c)
 	e:SetLabel(typ)
 end
 function c100912025.efilter(e,te)
-	return te:IsActiveType(e:GetLabelObject():GetLabel()) and te:GetOwner()~=e:GetOwner()
+	return bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_ADVANCE)==SUMMON_TYPE_ADVANCE
+		and te:IsActiveType(e:GetLabelObject():GetLabel()) and te:GetOwner()~=e:GetOwner()
 end
 function c100912025.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

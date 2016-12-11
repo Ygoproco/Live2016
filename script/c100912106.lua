@@ -6,6 +6,7 @@ function c100912106.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetHintTiming(0,TIMING_END_PHASE)
 	e1:SetTarget(c100912106.target)
 	c:RegisterEffect(e1)
 	--special summon
@@ -15,6 +16,7 @@ function c100912106.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetHintTiming(0,TIMING_END_PHASE)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCountLimit(1,100912106)
 	e2:SetCost(c100912106.cost)
@@ -27,6 +29,7 @@ function c100912106.initial_effect(c)
 	e3:SetCategory(CATEGORY_SUMMON)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
+	e3:SetHintTiming(0,TIMING_MAIN_END)
 	e3:SetRange(LOCATION_SZONE)
 	e3:SetCountLimit(1,100912206)
 	e3:SetCondition(c100912106.sumcon)
@@ -53,7 +56,6 @@ function c100912106.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local b1=c100912106.sptg(e,tp,eg,ep,ev,re,r,rp,0)
 	local b2=c100912106.sumcon(e,tp,eg,ep,ev,re,r,rp) and c100912106.sumtg(e,tp,eg,ep,ev,re,r,rp,0)
 	if (b1 or b2) and Duel.SelectYesNo(tp,94) then
-		e:GetHandler():RegisterFlagEffect(100912106,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
 		local op=0
 		if b1 and b2 then op=Duel.SelectOption(tp,aux.Stringid(100912106,0),aux.Stringid(100912106,1))
 		elseif b1 then op=Duel.SelectOption(tp,aux.Stringid(100912106,0))
@@ -76,18 +78,17 @@ function c100912106.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	end
 end
 function c100912106.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():GetFlagEffect(100912106)==0 end
-	e:GetHandler():RegisterFlagEffect(100912106,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
+	if chk==0 then return not e:GetHandler():IsStatus(STATUS_CHAINING) end
 end
 function c100912106.spfilter(c,e,tp)
-	return c:IsSetCard(0x1f8) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
+	return (c:IsSetCard(0x1f9) or c:IsCode(30539496,34079868,82321037,87765315,96746083)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
 end
 function c100912106.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c100912106.spfilter(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingTarget(c100912106.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp)
-		and Duel.GetFlagEffect(tp,100912206)==0 end
-	Duel.RegisterFlagEffect(tp,100912206,RESET_PHASE+PHASE_END,0,1)
+		and Duel.GetFlagEffect(tp,100912106)==0 end
+	Duel.RegisterFlagEffect(tp,100912106,RESET_PHASE+PHASE_END,0,1)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectTarget(tp,c100912106.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
@@ -111,12 +112,12 @@ function c100912106.sumcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()~=tp and (ph==PHASE_MAIN1 or ph==PHASE_MAIN2)
 end
 function c100912106.sumfilter(c)
-	return c:IsSetCard(0x1f8) and c:IsSummonable(true,nil,1)
+	return (c:IsSetCard(0x1f9) or c:IsCode(30539496,34079868,82321037,87765315,96746083)) and c:IsSummonable(true,nil,1)
 end
 function c100912106.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100912106.sumfilter,tp,LOCATION_HAND,0,1,nil)
-		and Duel.GetFlagEffect(tp,100912306)==0 end
-	Duel.RegisterFlagEffect(tp,100912306,RESET_PHASE+PHASE_END,0,1)
+		and Duel.GetFlagEffect(tp,100912206)==0 end
+	Duel.RegisterFlagEffect(tp,100912206,RESET_PHASE+PHASE_END,0,1)
 	Duel.SetOperationInfo(0,CATEGORY_SUMMON,nil,1,0,0)
 end
 function c100912106.sumop(e,tp,eg,ep,ev,re,r,rp)
