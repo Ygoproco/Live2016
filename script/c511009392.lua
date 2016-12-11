@@ -39,14 +39,14 @@ function c511009392.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 -- REGEN LP
-function c511001241.damcon(e,tp,eg,ep,ev,re,r,rp)
+function c511009392.damcon(e,tp,eg,ep,ev,re,r,rp)
 	if tp~=Duel.GetTurnPlayer() then return false end
 	local ex,cg,ct,cp,cv=Duel.GetOperationInfo(ev,CATEGORY_DAMAGE)
 	if ex and (cp==tp or cp==PLAYER_ALL) then return true end
 	ex,cg,ct,cp,cv=Duel.GetOperationInfo(ev,CATEGORY_RECOVER)
 	return re:IsSetCard(0xae) and ex and (cp==tp or cp==PLAYER_ALL) and Duel.IsPlayerAffectedByEffect(tp,EFFECT_REVERSE_RECOVER)
 end
-function c511001241.damop(e,tp,eg,ep,ev,re,r,rp)
+function c511009392.damop(e,tp,eg,ep,ev,re,r,rp)
 	local cid=Duel.GetChainInfo(ev,CHAININFO_CHAIN_ID)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -54,11 +54,11 @@ function c511001241.damop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetTargetRange(1,0)
 	e1:SetLabel(cid)
-	e1:SetValue(c511001241.refcon)
+	e1:SetValue(c511009392.refcon)
 	e1:SetReset(RESET_CHAIN)
 	Duel.RegisterEffect(e1,tp)
 end
-function c511001241.refcon(e,re,r,rp,rc)
+function .rec511009392fcon(e,re,r,rp,rc)
 	local cc=Duel.GetCurrentChain()
 	if cc==0 or bit.band(r,REASON_EFFECT)==0 then return end
 	local cid=Duel.GetChainInfo(0,CHAININFO_CHAIN_ID)

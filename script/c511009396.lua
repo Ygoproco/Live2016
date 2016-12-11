@@ -4,10 +4,7 @@ function c511009396.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_ATKCHANGE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetHintTiming(TIMING_DAMAGE_STEP)
-	e1:SetCondition(c511009396.condition)
 	e1:SetTarget(c511009396.target)
 	e1:SetOperation(c511009396.activate)
 	c:RegisterEffect(e1)
@@ -21,14 +18,12 @@ function c511009396.initial_effect(c)
 	e1:SetOperation(c511009396.atkop)
 	c:RegisterEffect(e1)
 end
-function c511009396.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated()
-end
+
 function c511009396.filter(c)
 	return c:IsFaceup() and not c:IsAttribute(ATTRIBUTE_DARK)
 end
 function c511009396.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.IsExistingMatchingCard(c511009396.filter,tp,0,LOCATION_MZONE,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,LOCATION_MZONE,0,1,nil) end
 end
 function c511009396.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end

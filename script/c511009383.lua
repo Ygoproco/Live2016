@@ -60,15 +60,15 @@ end
 function c511009383.sccon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(511009383+1)~=0
 end
-function c1474910.cfilter(c)
+function c511009383.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xaf)
 end
 function c511009383.filter(c)
 	return (c:GetSequence()==6 or c:GetSequence()==7)
 end
 function c511009383.sccost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsReleasable() and Duel.CheckReleaseGroup(tp,c1474910.cfilter,1,nil) end
-	local g=Duel.SelectReleaseGroup(tp,c1474910.cfilter,1,1,nil)
+	if chk==0 then return e:GetHandler():IsReleasable() and Duel.CheckReleaseGroup(tp,c511009383.cfilter,1,nil) end
+	local g=Duel.SelectReleaseGroup(tp,c511009383.cfilter,1,1,nil)
 	g:AddCard(e:GetHandler())
 	Duel.Release(g,REASON_COST)
 end
