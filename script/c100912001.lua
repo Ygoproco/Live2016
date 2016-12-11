@@ -54,8 +54,9 @@ function c100912001.atkcon(e,tp,eg,ep,ev,re,r,rp)
 		and rp==tp and e:GetHandler():GetFlagEffect(1)>0
 end
 function c100912001.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():GetFlagEffect(100912001)==0 end
-	e:GetHandler():RegisterFlagEffect(100912001,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
+	local c=e:GetHandler()
+	if chk==0 then return c:GetFlagEffect(100912001)==0 and not c:IsStatus(STATUS_CHAINING) end
+	c:RegisterFlagEffect(100912001,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
 end
 function c100912001.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
