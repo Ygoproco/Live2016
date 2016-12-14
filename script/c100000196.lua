@@ -27,7 +27,7 @@ function c100000196.initial_effect(c)
 	e3:SetValue(1)
 	c:RegisterEffect(e3)
 end
-function c100000196.target(e,tp,eg,ep,ev,re,r,rp,chk)	
+function c100000196.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() end
 	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
@@ -40,21 +40,19 @@ function c100000196.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c100000196.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if e:GetHandler():IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if e:GetHandler():IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		Duel.Equip(tp,e:GetHandler(),tc)
 	end
 end
 function c100000196.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local q=e:GetLabel()
-	local c=e:GetHandler():GetEquipTarget()
-	local tc=Duel.GetAttacker()
-	if tc==c then tc=Duel.GetAttackTarget() end
-	if chk==0 then return tc and tc:IsFaceup() and tc:IsAttribute(q) end
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,tc,1,0,0)
+	local ec=e:GetHandler():GetEquipTarget()
+	local bc=ec:GetBattleTarget()
+	if chk==0 then return ec and bc and bc:IsFaceup() and bc:IsAttribute(q) end
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,bc,1,0,0)
 end
 function c100000196.desop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler():GetEquipTarget()
-	local tc=Duel.GetAttacker()
-	if tc==c then tc=Duel.GetAttackTarget() end
-	if tc:IsRelateToBattle() then Duel.Destroy(tc,REASON_EFFECT) end
+	local ec=e:GetHandler():GetEquipTarget()
+	local bc=ec:GetBattleTarget()
+	if ec and bc and bc:IsRelateToBattle() then Duel.Destroy(bc,REASON_EFFECT) end
 end

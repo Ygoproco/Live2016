@@ -105,6 +105,9 @@ function c511001122.operation(e,tp,eg,ep,ev,re,r,rp)
 				end
 			end
 			Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+			if tc:IsType(TYPE_FIELD) and tc:GetSequence()~=5 then
+				Duel.MoveSequence(tc,5)
+			end
 			Duel.Hint(HINT_CARD,0,tc:GetOriginalCode())
 			tc:CreateEffectRelation(te)
 			if bit.band(tpe,TYPE_EQUIP+TYPE_CONTINUOUS+TYPE_FIELD)==0 then

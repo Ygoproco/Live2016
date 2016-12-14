@@ -2,7 +2,7 @@
 --fixed by MLD
 function c511009193.initial_effect(c)
 	--xyz summon
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x1f7),1,2,nil,nil,63)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x1f8),1,2,nil,nil,63)
 	c:EnableReviveLimit()
 	--atk
 	local e1=Effect.CreateEffect(c)

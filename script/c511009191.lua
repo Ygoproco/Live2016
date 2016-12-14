@@ -12,10 +12,10 @@ function c511009191.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511009191.spfilter(c,e,tp)
-	return c:GetLevel()==1 and c:IsSetCard(0x1f7) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:GetLevel()==1 and c:IsSetCard(0x1f8) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511009191.filter(c,e,tp)
-	return c:IsFaceup() and c:IsSetCard(0x1f7) and c:GetCode()~=511009191
+	return c:IsFaceup() and c:IsSetCard(0x1f8) and c:GetCode()~=511009191
 end
 function c511009191.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>1
