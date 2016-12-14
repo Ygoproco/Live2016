@@ -6,7 +6,7 @@ function c511002034.initial_effect(c)
 	--negate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(82044279,0))
-	e1:SetCategory(CATEGORY_DISABLE+CATEGORY_DESTROY)
+	e1:SetCategory(CATEGORY_DISABLE+CATEGORY_DESTROY+CATEGORY_ATKCHANGE)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_CHAINING)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL+EFFECT_FLAG_CARD_TARGET)
@@ -31,7 +31,7 @@ function c511002034.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 			if tc and tc:IsCanBeEffectTarget(e) and te:IsActiveType(TYPE_MONSTER) then
 				local loc=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_LOCATION)
 				if tc:IsLevelAbove(5) and loc==LOCATION_MZONE then g:AddCard(tc) end
-				if re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then
+				if te:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then
 					local tg=Duel.GetChainInfo(i,CHAININFO_TARGET_CARDS)
 					if tg and tg:IsExists(c511002034.cfilter,1,nil) then g:AddCard(tc) end
 				end
@@ -46,7 +46,7 @@ function c511002034.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 			if tc and tc:IsCanBeEffectTarget(e) and te:IsActiveType(TYPE_MONSTER) then
 				local loc=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_LOCATION)
 				if tc:IsLevelAbove(5) and loc==LOCATION_MZONE then g:AddCard(tc) end
-				if re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then
+				if te:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then
 					local tg=Duel.GetChainInfo(i,CHAININFO_TARGET_CARDS)
 					if tg and tg:IsExists(c511002034.cfilter,1,nil) then g:AddCard(tc) end
 				end
@@ -61,7 +61,7 @@ function c511002034.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 			local loc=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_LOCATION)
 			local check=false
 			if tc:IsLevelAbove(5) and loc==LOCATION_MZONE then g:AddCard(tc) end
-			if re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then
+			if te:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then
 				local tg=Duel.GetChainInfo(i,CHAININFO_TARGET_CARDS)
 				if tg and tg:IsExists(c511002034.cfilter,1,nil) then g:AddCard(tc) end
 			end

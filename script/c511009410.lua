@@ -1,4 +1,5 @@
 --Ivy Bind Castle
+--fixed by MLD
 function c511009410.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -30,7 +31,7 @@ function c511009410.initial_effect(c)
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(30757396,0))
 	e5:SetCategory(CATEGORY_DAMAGE)
-	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e5:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e5:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e5:SetRange(LOCATION_SZONE)
@@ -39,11 +40,10 @@ function c511009410.initial_effect(c)
 	e5:SetTarget(c511009410.damtg)
 	e5:SetOperation(c511009410.damop)
 	c:RegisterEffect(e5)
-	
-	--earth
+	--tribute
 	local e7=Effect.CreateEffect(c)
 	e7:SetDescription(aux.Stringid(33900648,1))
-	e7:SetCategory(CATEGORY_DESTROY)
+	e7:SetCategory(CATEGORY_RELEASE+CATEGORY_DESTROY)
 	e7:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e7:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e7:SetRange(LOCATION_SZONE)
@@ -54,15 +54,12 @@ function c511009410.initial_effect(c)
 	e7:SetOperation(c511009410.desop)
 	c:RegisterEffect(e7)
 end
-
-
 function c511009410.disop(e,tp,eg,ep,ev,re,r,rp)
 	local tl=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
 	if rp~=tp and (tl==LOCATION_MZONE or tl==LOCATION_SZONE) then
 		Duel.NegateEffect(ev)
 	end
 end
-
 function c511009410.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return tp~=Duel.GetTurnPlayer()
 end
@@ -77,28 +74,26 @@ function c511009410.damop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)
 	Duel.Damage(p,ct*800,REASON_EFFECT)
 end
-
 function c511009410.descon(e,tp,eg,ep,ev,re,r,rp)
 	return tp==Duel.GetTurnPlayer()
 end
-function c511009410.desfilter(c)
-	return c:IsSetCard(0x10f3)
+function c511009410.filter(c)
+	return c:IsSetCard(0x10f3) and c:IsReleasableByEffect()
 end
 function c511009410.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and c511009410.desfilter(chkc) end
+	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and c511009410.filter(chkc) end
 	if chk==0 then return true end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,c511009410.desfilter,tp,LOCATION_MZONE,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
+	local g=Duel.SelectTarget(tp,c511009410.filter,tp,LOCATION_MZONE,0,1,1,nil)
+	if g:GetCount()==0 then
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 	end
 end
 function c511009410.desop(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
+	local c=e:GetHandler()
+	if c:IsFacedown() or not c:IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToEffect(e) then
-		if Duel.Release(tc,REASON_EFFECT)==0 then 
-			Duel.Destroy(e:GetHandler(), REASON_EFFECT)
-		end
+	if not tc or not tc:IsRelateToEffect(e) or Duel.Release(tc,REASON_EFFECT)==0 then
+		Duel.Destroy(e:GetHandler(), REASON_EFFECT)
 	end
 end

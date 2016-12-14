@@ -23,7 +23,7 @@ function c511000422.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		if e:GetLabel()~=1 then return false end
 		e:SetLabel(0)
 		return Duel.CheckReleaseGroup(tp,c511000422.cfilter,1,nil,tp) end
-	local g=Duel.SelectReleaseGroup(tp,c511000579.cfilter,1,1,nil,tp)
+	local g=Duel.SelectReleaseGroup(tp,c511000422.cfilter,1,1,nil,tp)
 	local def=g:GetFirst():GetDefense()
 	Duel.Release(g,REASON_COST)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
