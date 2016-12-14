@@ -92,20 +92,19 @@ function c511000234.chainlimit(e,rp,tp)
 end
 function c511000234.trapdesop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsFacedown() and tc:IsRelateToEffect(e) then
-	Duel.Destroy(tc,REASON_EFFECT)
+	if tc and tc:IsFacedown() and tc:IsRelateToEffect(e) then
+		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
 function c511000234.spr(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local ph=Duel.GetCurrentPhase()
-	if bit.band(r,0x41)~=0x41 then return end
+	if not c:IsReason(REASON_BATTLE+REASON_EFFECT) then return end
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(511000234,1))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_GRAVE)
-	e1:SetCountLimit(1)
 	if Duel.GetTurnPlayer()==tp and ph==PHASE_MAIN1 then
 		e1:SetLabel(Duel.GetTurnCount())
 		e1:SetCondition(c511000234.risecon2)
