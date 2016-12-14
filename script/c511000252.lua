@@ -1,18 +1,18 @@
 --Earthbound God Wiraqocha Rasca
 function c511000252.initial_effect(c)
-	c:SetUniqueOnField(1,1,10000000)
-	--Cannot be Set
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_LIMIT_SET_PROC)
-	e1:SetCondition(c511000252.setcon)
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_FIELD)
+	e0:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e0:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e0:SetRange(LOCATION_MZONE)
+	e0:SetTargetRange(1,0)
+	e0:SetTarget(c511000252.sumlimit)
+	c:RegisterEffect(e0)
+	local e1=e0:Clone()
+	e1:SetCode(EFFECT_CANNOT_SUMMON)
 	c:RegisterEffect(e1)
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetCode(EFFECT_CANNOT_TURN_SET)
-	e2:SetValue(1)
+	local e2=e0:Clone()
+	e2:SetCode(EFFECT_CANNOT_FLIP_SUMMON)
 	c:RegisterEffect(e2)
 	--Can Attack Directly
 	local e3=Effect.CreateEffect(c)
@@ -67,15 +67,14 @@ function c511000252.initial_effect(c)
 	e10:SetTarget(c511000252.dirtg)
 	c:RegisterEffect(e10)
 end
+function c511000252.sumlimit(e,c,sump,sumtype,sumpos,targetp,se)
+	return c:IsSetCard(0x21)
+end
 function c511000252.dirfilter(c,card)
 	return card~=c
 end
 function c511000252.dirtg(e,c)
 	return not Duel.IsExistingMatchingCard(c511000252.dirfilter,c:GetControler(),0,LOCATION_MZONE,1,nil,e:GetHandler())
-end
-function c511000252.setcon(e,c)
-	if not c then return true end
-	return false
 end
 function c511000252.havefieldfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_FIELD)

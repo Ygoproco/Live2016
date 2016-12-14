@@ -1,4 +1,5 @@
 --Raidraptor Retrofit Lanius
+--fixed by MLD
 function c511018508.initial_effect(c)
 	c511018508.xyzlimit2=function(mc) return mc:IsSetCard(0xba) end
 	function aux.AddXyzProcedure(c,f,lv,ct,alterf,desc,maxct,op)
@@ -38,7 +39,6 @@ function c511018508.initial_effect(c)
 		c:RegisterEffect(e1)
 	end
 	
-	--
 	--lvchange
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(66457407,0))
@@ -69,29 +69,30 @@ function c511018508.xyzchk(e,tp,eg,ep,ev,re,r,rp)
 	Duel.CreateToken(tp,419)
 	Duel.CreateToken(1-tp,419)
 end
-function c511018508.lvfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0xba) and c:GetLevel()>0
+function c511018508.lvfilter(c,code,lv)
+	return c:IsFaceup() and c:IsSetCard(0xba) and c:GetLevel()>0 and (c:GetCode()~=code or c:GetLevel()~=lv)
 end
 function c511018508.lvtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c511018508.lvfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c511018508.lvfilter,tp,LOCATION_MZONE,0,1,e:GetHandler()) end
+	local c=e:GetHandler()
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c511018508.lvfilter(chkc,c:GetCode(),c:GetLevel()) and chkc~=c end
+	if chk==0 then return Duel.IsExistingTarget(c511018508.lvfilter,tp,LOCATION_MZONE,0,1,c,c:GetCode(),c:GetLevel()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	Duel.SelectTarget(tp,c511018508.lvfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler())
+	Duel.SelectTarget(tp,c511018508.lvfilter,tp,LOCATION_MZONE,0,1,1,c,c:GetCode(),c:GetLevel())
 end
 function c511018508.lvop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsFaceup() and c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if c:IsRelateToEffect(e) and (c:IsFaceup() or c:IsLocation(LOCATION_HAND)) and tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CHANGE_LEVEL)
 		e1:SetValue(tc:GetLevel())
-		e1:SetReset(RESET_PHASE+PHASE_END)
+		e1:SetReset(RESET_EVENT+0xfe0000+RESET_PHASE+PHASE_END)
 		c:RegisterEffect(e1)
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_CHANGE_CODE)
-		e2:SetReset(RESET_PHASE+PHASE_END)
+		e2:SetReset(RESET_EVENT+0xfe0000+RESET_PHASE+PHASE_END)
 		e2:SetValue(tc:GetCode())
 		c:RegisterEffect(e2)
 	end
