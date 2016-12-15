@@ -39,7 +39,7 @@ function c23689697.otcon(e,c)
 	local oppo=0
 	if Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0 then oppo=LOCATION_MZONE end
 	local mg=Duel.GetMatchingGroup(c23689697.otfilter,c:GetControler(),LOCATION_MZONE,oppo,nil)
-	return c:GetLevel()>6 Duel.GetTributeCount(c,mg)>0
+	return c:GetLevel()>6 and Duel.GetTributeCount(c,mg)>0
 end
 function c23689697.otop(e,tp,eg,ep,ev,re,r,rp,c)
 	local mg=Duel.GetMatchingGroup(c23689697.otfilter,0,LOCATION_MZONE,LOCATION_MZONE,nil)
