@@ -55,7 +55,7 @@ end
 function c100912017.thcon(e,tp,eg,ep,ev,re,r,rp)
 	local seq=e:GetHandler():GetSequence()
 	local pc=Duel.GetFieldCard(tp,LOCATION_SZONE,13-seq)
-	return pc and pc:IsCode(100912017)
+	return pc and pc:IsCode(100912018)
 end
 function c100912017.thfilter(c)
 	return c:IsType(TYPE_SPELL) and c:IsSetCard(0x46) and c:IsAbleToHand()
@@ -134,7 +134,7 @@ function c100912017.spop(e,tp,eg,ep,ev,re,r,rp)
 			sc:RegisterEffect(e5,true)
 			local e6=e5:Clone()
 			e6:SetCode(EFFECT_CANNOT_BE_XYZ_MATERIAL)
-			sc:RegisterEffect(e6,true)			  
+			sc:RegisterEffect(e6,true)			
 		end
 	end
 end
