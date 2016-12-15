@@ -35,7 +35,7 @@ function c100100008.filter1(c,e)
 end
 function c100100008.filter2(c,e,tp,m,f,chkf)
     return c:IsType(TYPE_FUSION) and c.miracle_synchro_fusion and (not f or f(c))
-    and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and m:IsExists(c100100008.filter3,1,nil,c,m,chkf)
+        and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and m:IsExists(c100100008.filter3,1,nil,c,m,chkf)
 end
 function c100100008.filter3(c,fusc,m,chkf)
     return c:IsType(TYPE_SYNCHRO) and fusc:CheckFusionMaterial(m,c,chkf)
