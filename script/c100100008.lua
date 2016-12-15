@@ -23,7 +23,7 @@ function c100100008.initial_effect(c)
 end
 function c100100008.cost(e,tp,eg,ep,ev,re,r,rp,chk)
     local tc=Duel.GetFieldCard(tp,LOCATION_SZONE,5)
-    if chk==0 then return tc and tc:IsCanRemoveCounter(tp,0x91,2,REASON_COST) end    
+    if chk==0 then return tc and tc:IsCanRemoveCounter(tp,0x91,2,REASON_COST) end
     Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
     tc:RemoveCounter(tp,0x91,2,REASON_COST) 
 end
@@ -35,7 +35,7 @@ function c100100008.filter1(c,e)
 end
 function c100100008.filter2(c,e,tp,m,f,chkf)
     return c:IsType(TYPE_FUSION) and c.miracle_synchro_fusion and (not f or f(c))
-        and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and m:IsExists(c100100008.filter3,1,nil,c,m,chkf)
+    and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and m:IsExists(c100100008.filter3,1,nil,c,m,chkf)
 end
 function c100100008.filter3(c,fusc,m,chkf)
     return c:IsType(TYPE_SYNCHRO) and fusc:CheckFusionMaterial(m,c,chkf)
@@ -74,33 +74,33 @@ function c100100008.activate(e,tp,eg,ep,ev,re,r,rp)
     if sg1:GetCount()>0 or (sg2~=nil and sg2:GetCount()>0) then
         local sg=sg1:Clone()
         if sg2 then sg:Merge(sg2) end
-        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-        local tg=sg:Select(tp,1,1,nil)
-        local tc=tg:GetFirst()
-        if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or not Duel.SelectYesNo(tp,ce:GetDescription())) then
-            Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-            local gc=mg1:FilterSelect(tp,c100100008.filter3,1,1,nil,tc,mg1,chkf):GetFirst()
-            local mat1=Duel.SelectFusionMaterial(tp,tc,mg1,gc,chkf)
-            mat1:AddCard(gc)
-            tc:SetMaterial(mat1)
-            Duel.Remove(mat1,POS_FACEUP,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
-            Duel.BreakEffect()
-            Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
-        else
-            Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-            local gc=mg2:FilterSelect(tp,c100100008.filter3,1,1,nil,tc,mg2,chkf):GetFirst()
-            local mat2=Duel.SelectFusionMaterial(tp,tc,mg2,gc,chkf)
-            mat2:AddCard(gc)
-            local fop=ce:GetOperation()
-            fop(ce,e,tp,tc,mat2)
+            Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+            local tg=sg:Select(tp,1,1,nil)
+            local tc=tg:GetFirst()
+            if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or not Duel.SelectYesNo(tp,ce:GetDescription())) then
+                Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
+                local gc=mg1:FilterSelect(tp,c100100008.filter3,1,1,nil,tc,mg1,chkf):GetFirst()
+                local mat1=Duel.SelectFusionMaterial(tp,tc,mg1,gc,chkf)
+                mat1:AddCard(gc)
+                tc:SetMaterial(mat1)
+                Duel.Remove(mat1,POS_FACEUP,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
+                Duel.BreakEffect()
+                Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
+            else
+                Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
+                local gc=mg2:FilterSelect(tp,c100100008.filter3,1,1,nil,tc,mg2,chkf):GetFirst()
+                local mat2=Duel.SelectFusionMaterial(tp,tc,mg2,gc,chkf)
+                mat2:AddCard(gc)
+                local fop=ce:GetOperation()
+                fop(ce,e,tp,tc,mat2)
+            end
+            tc:CompleteProcedure()
         end
-        tc:CompleteProcedure()
     end
-end
 function c100100008.drcon(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
     return bit.band(r,0x41)==0x41 and rp~=tp and c:GetPreviousControler()==tp
-        and c:IsPreviousLocation(LOCATION_ONFIELD) and c:IsPreviousPosition(POS_FACEDOWN)
+    and c:IsPreviousLocation(LOCATION_ONFIELD) and c:IsPreviousPosition(POS_FACEDOWN)
 end
 function c100100008.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return true end
