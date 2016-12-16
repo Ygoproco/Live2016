@@ -23,28 +23,35 @@ function c100100008.initial_effect(c)
 end
 function c100100008.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local tc=Duel.GetFieldCard(tp,LOCATION_SZONE,5)
-	if chk==0 then return tc and tc:IsCanRemoveCounter(tp,0x91,2,REASON_COST) end	 
+	if chk==0 then return tc and tc:IsCanRemoveCounter(tp,0x91,2,REASON_COST) end	
 	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
-	tc:RemoveCounter(tp,0x91,2,REASON_COST)	
+	tc:RemoveCounter(tp,0x91,2,REASON_COST) 
+end
+function c100100008.filter0(c)
+	return c:IsCanBeFusionMaterial() and c:IsAbleToRemove()
 end
 function c100100008.filter1(c,e)
 	return c:IsCanBeFusionMaterial() and c:IsAbleToRemove() and not c:IsImmuneToEffect(e)
 end
-function c100100008.filter2(c,e,tp,m,chkf)
-	return c:IsType(TYPE_FUSION) and c:IsSetCard(0x101) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false)
-		and c:CheckFusionMaterial(m,nil,chkf)
+function c100100008.filter2(c,e,tp,m,f,chkf)
+	return c:IsType(TYPE_FUSION) and c.miracle_synchro_fusion and (not f or f(c))
+		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and m:IsExists(c100100008.filter3,1,nil,c,m,chkf)
+end
+function c100100008.filter3(c,fusc,m,chkf)
+	return c:IsType(TYPE_SYNCHRO) and fusc:CheckFusionMaterial(m,c,chkf)
 end
 function c100100008.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local chkf=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and PLAYER_NONE or tp
-		local mg1=Duel.GetMatchingGroup(c100100008.filter1,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,e)
-		local res=Duel.IsExistingMatchingCard(c100100008.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,chkf)
+		local mg1=Duel.GetMatchingGroup(c100100008.filter0,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil)
+		local res=Duel.IsExistingMatchingCard(c100100008.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
 		if not res then
 			local ce=Duel.GetChainMaterial(tp)
 			if ce~=nil then
 				local fgroup=ce:GetTarget()
 				local mg2=fgroup(ce,e,tp)
-				res=Duel.IsExistingMatchingCard(c100100008.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg2,chkf)
+				local mf=ce:GetValue()
+				res=Duel.IsExistingMatchingCard(c100100008.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg2,mf,chkf)
 			end
 		end
 		return res
@@ -54,14 +61,15 @@ end
 function c100100008.activate(e,tp,eg,ep,ev,re,r,rp)
 	local chkf=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and PLAYER_NONE or tp
 	local mg1=Duel.GetMatchingGroup(c100100008.filter1,tp,LOCATION_GRAVE+LOCATION_MZONE,0,nil,e)
-	local sg1=Duel.GetMatchingGroup(c100100008.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,chkf)
+	local sg1=Duel.GetMatchingGroup(c100100008.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,chkf)
 	local mg2=nil
 	local sg2=nil
 	local ce=Duel.GetChainMaterial(tp)
 	if ce~=nil then
 		local fgroup=ce:GetTarget()
 		mg2=fgroup(ce,e,tp)
-		sg2=Duel.GetMatchingGroup(c100100008.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg2,chkf)
+		local mf=ce:GetValue()
+		sg2=Duel.GetMatchingGroup(c100100008.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg2,mf,chkf)
 	end
 	if sg1:GetCount()>0 or (sg2~=nil and sg2:GetCount()>0) then
 		local sg=sg1:Clone()
@@ -70,13 +78,19 @@ function c100100008.activate(e,tp,eg,ep,ev,re,r,rp)
 		local tg=sg:Select(tp,1,1,nil)
 		local tc=tg:GetFirst()
 		if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or not Duel.SelectYesNo(tp,ce:GetDescription())) then
-			local mat1=Duel.SelectFusionMaterial(tp,tc,mg1,nil,chkf)
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
+			local gc=mg1:FilterSelect(tp,c100100008.filter3,1,1,nil,tc,mg1,chkf):GetFirst()
+			local mat1=Duel.SelectFusionMaterial(tp,tc,mg1,gc,chkf)
+			mat1:AddCard(gc)
 			tc:SetMaterial(mat1)
 			Duel.Remove(mat1,POS_FACEUP,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
 			Duel.BreakEffect()
 			Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,false,POS_FACEUP)
 		else
-			local mat2=Duel.SelectFusionMaterial(tp,tc,mg2,nil,chkf)
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
+			local gc=mg2:FilterSelect(tp,c100100008.filter3,1,1,nil,tc,mg2,chkf):GetFirst()
+			local mat2=Duel.SelectFusionMaterial(tp,tc,mg2,gc,chkf)
+			mat2:AddCard(gc)
 			local fop=ce:GetOperation()
 			fop(ce,e,tp,tc,mat2)
 		end
@@ -98,3 +112,4 @@ function c100100008.drop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(p,d,REASON_EFFECT)
 end
+
