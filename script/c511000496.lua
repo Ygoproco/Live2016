@@ -20,7 +20,7 @@ function c511000496.initial_effect(c)
 	c:RegisterEffect(e1)
 	e0:SetLabelObject(e1)
 end
-function c511000496.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function c511000496.regtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	e:GetLabelObject():SetLabel(3)
 end
@@ -28,7 +28,8 @@ function c511000496.filter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and c:IsAbleToGrave()
 end
 function c511000496.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c511000496.filter,tp,LOCATION_DECK,0,3,nil) and Duel.IsExistingMatchingCard(c511000496.filter,tp,0,LOCATION_DECK,3,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c511000496.filter,tp,LOCATION_DECK,0,3,nil) 
+		and Duel.IsExistingMatchingCard(c511000496.filter,tp,0,LOCATION_DECK,3,nil) end
 end
 function c511000496.operation(e,tp,eg,ep,ev,re,r,rp)
 	if not Duel.IsExistingMatchingCard(c511000496.filter,tp,LOCATION_DECK,0,3,nil) or not Duel.IsExistingMatchingCard(c511000496.filter,tp,0,LOCATION_DECK,3,nil) then return end

@@ -1,6 +1,19 @@
 --Earthbound God Chacu Challhua
 function c511000262.initial_effect(c)
-	c:SetUniqueOnField(1,1,10000000)
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_FIELD)
+	e0:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e0:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e0:SetRange(LOCATION_MZONE)
+	e0:SetTargetRange(1,0)
+	e0:SetTarget(c511000262.sumlimit)
+	c:RegisterEffect(e0)
+	local e1=e0:Clone()
+	e1:SetCode(EFFECT_CANNOT_SUMMON)
+	c:RegisterEffect(e1)
+	local e2=e0:Clone()
+	e2:SetCode(EFFECT_CANNOT_FLIP_SUMMON)
+	c:RegisterEffect(e2)
 	--Can Attack Directly
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
@@ -65,6 +78,9 @@ function c511000262.initial_effect(c)
 	e10:SetCondition(c511000262.havefieldcon)
 	e10:SetTarget(c511000262.dirtg)
 	c:RegisterEffect(e10)
+end
+function c511000262.sumlimit(e,c,sump,sumtype,sumpos,targetp,se)
+	return c:IsSetCard(0x21)
 end
 function c511000262.dirfilter(c,card)
 	return card~=c

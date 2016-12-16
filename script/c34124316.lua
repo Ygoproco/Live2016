@@ -13,38 +13,48 @@ function c34124316.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
+function c34124316.spchk(c,e,tp)
+	return (c:IsCanBeSpecialSummoned(e,0,c:GetControler(),false,false,POS_FACEUP_ATTACK) 
+		or c:IsCanBeSpecialSummoned(e,0,c:GetControler(),false,false,POS_FACEDOWN_DEFENSE))
+		and c:GetControler()==tp
+end
 function c34124316.operation(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	Duel.Destroy(g,REASON_EFFECT)
-	local g1=Duel.GetDecktopGroup(tp,5)
-	local g2=Duel.GetDecktopGroup(1-tp,5)
+	local p=Duel.GetTurnPlayer()
+	local g1=Duel.GetDecktopGroup(p,5)
+	local g2=Duel.GetDecktopGroup(1-p,5)
+	local spg=g1:Clone()
+	spg:Merge(g2)
+	if (spg:IsExists(c34124316.spchk,2,nil,e,tp) and Duel.IsPlayerAffectedByEffect(tp,59822133)) 
+		or (spg:IsExists(c34124316.spchk,2,nil,e,1-tp) and Duel.IsPlayerAffectedByEffect(1-tp,59822133)) then return end
 	local hg=Group.CreateGroup()
 	local gg=Group.CreateGroup()
-	Duel.ConfirmDecktop(tp,5)
+	Duel.ConfirmDecktop(p,5)
 	local tc=g1:GetFirst()
 	while tc do
 		local lv=tc:GetLevel()
 		local pos=0
-		if tc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_ATTACK) then pos=pos+POS_FACEUP_ATTACK end
-		if tc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEDOWN_DEFENSE) then pos=pos+POS_FACEDOWN_DEFENSE end
+		if tc:IsCanBeSpecialSummoned(e,0,p,false,false,POS_FACEUP_ATTACK) then pos=pos+POS_FACEUP_ATTACK end
+		if tc:IsCanBeSpecialSummoned(e,0,p,false,false,POS_FACEDOWN_DEFENSE) then pos=pos+POS_FACEDOWN_DEFENSE end
 		if lv>0 and lv<=4 and pos~=0 then
 			Duel.DisableShuffleCheck()
-			Duel.SpecialSummonStep(tc,0,tp,tp,false,false,pos)
+			Duel.SpecialSummonStep(tc,0,p,p,false,false,pos)
 		elseif tc:IsAbleToHand() then
 			hg:AddCard(tc)
 		else gg:AddCard(tc) end
 		tc=g1:GetNext()
 	end
-	Duel.ConfirmDecktop(1-tp,5)
+	Duel.ConfirmDecktop(1-p,5)
 	tc=g2:GetFirst()
 	while tc do
 		local lv=tc:GetLevel()
 		local pos=0
-		if tc:IsCanBeSpecialSummoned(e,0,1-tp,false,false,POS_FACEUP_ATTACK) then pos=pos+POS_FACEUP_ATTACK end
-		if tc:IsCanBeSpecialSummoned(e,0,1-tp,false,false,POS_FACEDOWN_DEFENSE) then pos=pos+POS_FACEDOWN_DEFENSE end
+		if tc:IsCanBeSpecialSummoned(e,0,1-p,false,false,POS_FACEUP_ATTACK) then pos=pos+POS_FACEUP_ATTACK end
+		if tc:IsCanBeSpecialSummoned(e,0,1-p,false,false,POS_FACEDOWN_DEFENSE) then pos=pos+POS_FACEDOWN_DEFENSE end
 		if lv>0 and lv<=4 and pos~=0 then
 			Duel.DisableShuffleCheck()
-			Duel.SpecialSummonStep(tc,0,1-tp,1-tp,false,false,pos)
+			Duel.SpecialSummonStep(tc,0,1-p,1-p,false,false,pos)
 		elseif tc:IsAbleToHand() then
 			hg:AddCard(tc)
 		else gg:AddCard(tc) end

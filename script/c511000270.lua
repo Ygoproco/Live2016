@@ -17,7 +17,11 @@ function c511000270.thfilter(c,tp,eg,ep,ev,re,r,rp)
 	local cost=te:GetCost()
 	local target=te:GetTarget()
 	return c:IsType(TYPE_SPELL) and (not condition or condition(te,1-tp,eg,ep,ev,re,r,rp)) and (not cost or cost(te,1-tp,eg,ep,ev,re,r,rp,0))
-		and (not target or target(te,1-tp,eg,ep,ev,re,r,rp,0)) and c:IsCode(511000271)
+		and (not target or target(te,1-tp,eg,ep,ev,re,r,rp,0)) and c:IsCode(511000271) 
+		and Duel.IsExistingMatchingCard(c511000270.filter,tp,0,LOCATION_MZONE,1,nil,te)
+end
+function c511000270.filter(c,e)
+	return c:IsFaceup() and c:IsCanBeEffectTarget(e)
 end
 function c511000270.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c511000270.thfilter,tp,LOCATION_DECK,0,1,nil,tp,eg,ep,ev,re,r,rp) and Duel.IsPlayerCanDraw(tp,6) 
@@ -55,6 +59,18 @@ function c511000270.activate(e,tp,eg,ep,ev,re,r,rp)
 				tc:CancelToGrave(false)
 			end
 			if co then co(te,1-tp,eg,ep,ev,re,r,rp,1) end
+			local sg=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_MZONE,0,nil)
+			local sc=sg:GetFirst()
+			while sc do
+				local e2=Effect.CreateEffect(e:GetHandler())
+				e2:SetType(EFFECT_TYPE_SINGLE)
+				e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+				e2:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+				e2:SetValue(1)
+				e2:SetReset(RESET_CHAIN)
+				sc:RegisterEffect(e2)
+				sc=sg:GetNext()
+			end
 			if tg then tg(te,1-tp,eg,ep,ev,re,r,rp,1) end
 			local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 			if g then
