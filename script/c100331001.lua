@@ -91,7 +91,8 @@ function c100331001.resetop(e,tp,eg,ep,ev,re,r,rp)
 	c100331001.desgroup:Clear()
 end
 function c100331001.spcfilter(c,tp)
-	return c:IsReason(REASON_BATTLE+REASON_EFFECT) and c:GetPreviousControler()==tp
+	return c:IsReason(REASON_BATTLE+REASON_EFFECT)
+		and c:GetPreviousControler()==tp and c:IsPreviousLocation(LOCATION_ONFIELD)
 end
 function c100331001.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg and eg:IsExists(c100331001.spcfilter,1,nil,tp)
@@ -125,7 +126,11 @@ function c100331001.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c100331001.hncfilter(c,sc)
-	return c:IsSetCard(sc) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
+	return (c:IsSetCard(sc)
+		or (sc==0x1046 and c:IsCode(41209827,51570882))
+		or (sc==0x1f6 and c:IsCode(50954680,82044279))
+		or (sc==0x2073 and c:IsCode(16195942,1621413))
+	) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
 function c100331001.hncost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
