@@ -214,7 +214,7 @@ function c100912039.fuscon(e,g,gc,chkfnf)
 	end
 	if chkf~=PLAYER_NONE then
 		if not fs then return false end
-		local gr2=Auxiliary.CloneTable(groups)
+		local gr2=c100912039.CloneTable(groups)
 		return gr2[1]:IsExists(c100912039.FConditionFilterMulti2,1,nil,gr2)
 	end
 end
@@ -275,7 +275,7 @@ function c100912039.check_fusion_material_48144509(g,chkf)
 	end
 	if chkf~=PLAYER_NONE then
 		if not fs then return false end
-		local gr2=Auxiliary.CloneTable(groups)
+		local gr2=c100912039.CloneTable(groups)
 		return gr2[1]:IsExists(c100912039.FConditionFilterMulti2,1,nil,gr2)
 	end 
 end
