@@ -3,7 +3,7 @@
 --Scripted by Eerie Code
 function c100912039.initial_effect(c)
 	c:EnableReviveLimit()
-	--aux.AddFusionProcFunMulti(c,false,c100912039.filters)
+	--aux.AddFusionProcFunMulti(c,true,c100912039.filters)
 	aux.EnablePendulumAttribute(c,false)
 	--fusion procedure
 	local e0=Effect.CreateEffect(c)
@@ -209,7 +209,7 @@ function c100912039.FConditionFilterMultiClean(vals)
 end
 function c100912039.fuscon(e,g,gc,chkfnf)
 	local c=e:GetHandler()
-	if g==nil then return insf end
+	if g==nil then return true end
 	if not c:IsFacedown() then return false end
 	local chkf=bit.band(chkfnf,0xff)
 	local funs=c100912039.filters
