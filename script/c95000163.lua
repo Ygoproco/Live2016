@@ -27,7 +27,15 @@ function c95000163.initial_effect(c)
 	e6:SetCode(EFFECT_IMMUNE_EFFECT)
 	e6:SetValue(c95000163.ctcon2)
 	c:RegisterEffect(e6)
-	
+	--cannot set
+	local e7=Effect.CreateEffect(c)
+	e7:SetType(EFFECT_TYPE_FIELD)
+	e7:SetCode(EFFECT_CANNOT_SSET)
+	e7:SetRange(LOCATION_SZONE)
+	e7:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e7:SetTargetRange(1,0)
+	e7:SetTarget(c95000166.sfilter)
+	c:RegisterEffect(e7)
 	-- Add Action Card
 	local e8=Effect.CreateEffect(c)
 	e8:SetDescription(aux.Stringid(95000163,0))
@@ -38,7 +46,24 @@ function c95000163.initial_effect(c)
 	e8:SetTarget(c95000163.Acttarget)
 	e8:SetOperation(c95000163.operation)
 	c:RegisterEffect(e8)
-	
+	--Activate
+	local e9=Effect.CreateEffect(c)
+	e9:SetType(EFFECT_TYPE_ACTIVATE)
+	e9:SetCode(EVENT_FREE_CHAIN)
+	e9:SetValue(SUMMON_TYPE_NORMAL)
+	c:RegisterEffect(e9)
+	--summon
+	local e10=Effect.CreateEffect(c)
+	e10:SetDescription(aux.Stringid(80921533,0))
+	e10:SetProperty(EFFECT_FLAG_BOTH_SIDE)
+	e10:SetCategory(CATEGORY_SUMMON)
+	e10:SetType(EFFECT_TYPE_IGNITION)
+	e10:SetRange(LOCATION_SZONE)
+	e10:SetTarget(c95000163.target)
+	e10:SetCondition(c95000163.IRLcondition)
+	e10:SetOperation(c95000163.operation)
+	e10:SetLabelObject(e9)
+	c:RegisterEffect(e10)
 	--
 	local eb=Effect.CreateEffect(c)
 	eb:SetType(EFFECT_TYPE_FIELD)
@@ -57,18 +82,6 @@ function c95000163.initial_effect(c)
 	ee:SetCode(EFFECT_CANNOT_REMOVE)
 	c:RegisterEffect(ee)
 	
-	--summon
-	local e6=Effect.CreateEffect(c)
-	e6:SetDescription(aux.Stringid(80921533,0))
-	e6:SetProperty(EFFECT_FLAG_BOTH_SIDE)
-	e6:SetCategory(CATEGORY_SUMMON)
-	e6:SetType(EFFECT_TYPE_IGNITION)
-	e6:SetRange(LOCATION_SZONE)
-	e6:SetTarget(c95000163.target)
-	e6:SetCondition(c95000163.IRLcondition)
-	e6:SetOperation(c95000163.operation)
-	e6:SetLabelObject(e1)
-	c:RegisterEffect(e6)
 	
 end
 function c95000163.ctcon2(e,re)
@@ -153,7 +166,6 @@ ac=math.random(1,#tableAction)
 e:SetLabel(tableAction[ac])
 end
 function c95000163.operation(e,tp,eg,ep,ev,re,r,rp)
-if Duel.SelectYesNo(1-tp,aux.Stringid(95000163,0)) then
 local dc=Duel.TossDice(tp,1)
 if dc==2 or dc==4 or dc==6 then
 
@@ -175,7 +187,6 @@ if dc==5 or dc==6 then
 end
 
 end
-end
 function c95000163.condition(e,tp,eg,ep,ev,re,r,rp)
 	return not Duel.IsExistingMatchingCard(c95000163.cfilter,tp,LOCATION_SZONE+LOCATION_HAND,0,1,nil)
 	and Duel.GetFlagEffect(e:GetHandlerPlayer(),95000163)==0
@@ -190,13 +201,8 @@ tableAction = {
 95000046,
 95000143
 } 
-tableAction = {
-95000044,
-95000045,
-95000046,
-95000143
-} 
-function c95000166.repop(e)
+
+function c95000163.repop(e)
 	local c=e:GetHandler()
 		if c:GetFlagEffect(900000007)==0 then
 		local e1=Effect.CreateEffect(c)
@@ -204,13 +210,13 @@ function c95000166.repop(e)
 		e1:SetCode(EVENT_CHAIN_END)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetLabelObject(c)
-		e1:SetOperation(c95000166.returnop)
+		e1:SetOperation(c95000163.returnop)
 		Duel.RegisterEffect(e1,0)
 		c:RegisterFlagEffect(900000007,0,0,1)
 	end
 	Duel.SendtoDeck(c,nil,-2,REASON_RULE)
 end
-function c95000166.returnop(e)
+function c95000163.returnop(e)
 	local c=e:GetLabelObject()
 	local tp=c:GetControler()
 	local fc=Duel.GetFieldCard(tp,LOCATION_SZONE,5)
@@ -225,11 +231,21 @@ function c95000166.returnop(e)
 	e1:SetRange(LOCATION_SZONE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e1:SetCondition(c95000166.condition)
-	e1:SetTarget(c95000166.Acttarget)
-	e1:SetOperation(c95000166.operation)
+	e1:SetCondition(c95000163.condition)
+	e1:SetTarget(c95000163.Acttarget)
+	e1:SetOperation(c95000163.operation)
 	e1:SetReset(RESET_EVENT+0x1fe0000)
 	fc:RegisterEffect(e1)
+	--cannot set
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_CANNOT_SSET)
+	e4:SetRange(LOCATION_SZONE)
+	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e4:SetTargetRange(1,0)
+	e4:SetReset(RESET_EVENT+0x1fe0000)
+	e4:SetTarget(c95000166.sfilter)
+	fc:RegisterEffect(e4)
 	fc:RegisterFlagEffect(195000166,RESET_EVENT+0x1fe0000,0,1)
 	end
 end
@@ -288,7 +304,7 @@ function c95000163.operation(e,tp,eg,ep,ev,re,r,rp)
 	if tc then
 		local s1=tc:IsSummonable(false,se)
 		local s2=tc:IsMSetable(false,se)
-		if (s1 and s2 and Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)==POS_FACEUP_ATTACK) or not s2 then
+		if (s1 and s2 and Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENCE)==POS_FACEUP_ATTACK) or not s2 then
 			Duel.Summon(tp,tc,false,se)
 		else
 			Duel.MSet(tp,tc,false,se)

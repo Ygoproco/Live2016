@@ -28,6 +28,7 @@ function c511000804.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c511000804.operation(e,tp,eg,ep,ev,re,r,rp)
 	local ec=eg:GetFirst()
-	Duel.Damage(1-tp,ec:GetAttack()/2,REASON_EFFECT)
-	Duel.Damage(tp,ec:GetAttack()/2,REASON_EFFECT)
+	Duel.Damage(1-tp,ec:GetAttack()/2,REASON_EFFECT,true)
+	Duel.Damage(tp,ec:GetAttack()/2,REASON_EFFECT,true)
+	Duel.RDComplete()
 end

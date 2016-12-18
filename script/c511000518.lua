@@ -41,8 +41,9 @@ function c511000518.activate1(e,tp,eg,ep,ev,re,r,rp)
 	if tc and tc:IsRelateToEffect(e) then
 		Duel.ChangeAttackTarget(tc)
 		local dam=tc:GetAttack()
-		Duel.Damage(1-tp,dam,REASON_EFFECT)
-		Duel.Damage(tp,dam,REASON_EFFECT)
+		Duel.Damage(1-tp,dam,REASON_EFFECT,true)
+		Duel.Damage(tp,dam,REASON_EFFECT,true)
+		Duel.RDComplete()
 	end
 end
 function c511000518.condition2(e,tp,eg,ep,ev,re,r,rp)
@@ -69,7 +70,8 @@ function c511000518.activate2(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 and g:GetFirst():IsRelateToEffect(e) then
 		Duel.ChangeTargetCard(ev,g)
 		local dam=g:GetFirst():GetAttack()
-		Duel.Damage(1-tp,dam,REASON_EFFECT)
-		Duel.Damage(tp,dam,REASON_EFFECT)
+		Duel.Damage(1-tp,dam,REASON_EFFECT,true)
+		Duel.Damage(tp,dam,REASON_EFFECT,true)
+		Duel.RDComplete()
 	end
 end

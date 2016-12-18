@@ -12,7 +12,7 @@ function c419.initial_effect(c)
 		if not maxct then
 			mt.maxxyzct=ct
 		else
-			if maxct==5 then
+			if maxct==5 and code~=14306092 and code~=63504681 and code~=23776077 then
 				mt.maxxyzct=99
 			else
 				mt.maxxyzct=maxct
@@ -84,9 +84,8 @@ function c419.op1(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetValue(SUMMON_TYPE_SYNCHRO)
 			e1:SetCondition(c419.syncon)
 			e1:SetOperation(c419.synop)
-			e1:SetReset(RESET_EVENT+EVENT_ADJUST,1)
 			tc:RegisterEffect(e1)
-			tc:RegisterFlagEffect(2081,RESET_EVENT+EVENT_ADJUST,0,1) 	
+			tc:RegisterFlagEffect(2081,nil,0,1) 	
 		end
 		tc=g:GetNext()
 	end
@@ -175,39 +174,37 @@ function c419.synop(e,tp,eg,ep,ev,re,r,rp,c,smat,mg)
 	Duel.SendtoGrave(mat1,REASON_MATERIAL+REASON_SYNCHRO)
 end
 function c419.filterxyz(c)
-	return c:IsType(TYPE_XYZ) and c.minxyzct and c.minxyzct>0
+	return c:IsType(TYPE_XYZ) and c.minxyzct and c.minxyzct>0 and c:GetFlagEffect(419)==0
 end
 function c419.op2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(c419.filterxyz,c:GetControler(),LOCATION_EXTRA,LOCATION_EXTRA,nil)
+	if g:GetCount()<=0 then return end
+	local xg=Group.CreateGroup()
+	for i=1,15 do
+		local tck=Duel.CreateToken(tp,419)
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_XYZ_LEVEL)
+		e1:SetValue(i)
+		tck:RegisterEffect(e1)
+		xg:AddCard(tck)
+	end
+	xg:KeepAlive()
 	local tc=g:GetFirst()
 	while tc do
-		local xg=Group.CreateGroup()
-		for i=1,15 do
-			local tck=Duel.CreateToken(tp,419)
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_XYZ_LEVEL)
-			e1:SetValue(i)
-			tck:RegisterEffect(e1)
-			xg:AddCard(tck)
-		end
-		xg:KeepAlive()
-		if tc:GetFlagEffect(419)==0 then
-			local e1=Effect.CreateEffect(tc)
-			e1:SetType(EFFECT_TYPE_FIELD)
-			e1:SetDescription(aux.Stringid(64382841,0))
-			e1:SetCode(EFFECT_SPSUMMON_PROC)
-			e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-			e1:SetRange(LOCATION_EXTRA)
-			e1:SetValue(SUMMON_TYPE_XYZ)
-			e1:SetCondition(c419.xyzcon)
-			e1:SetOperation(c419.xyzop)
-			e1:SetLabelObject(xg)
-			e1:SetReset(RESET_EVENT+EVENT_ADJUST,1)
-			tc:RegisterEffect(e1)
-			tc:RegisterFlagEffect(419,RESET_EVENT+EVENT_ADJUST,0,1) 	
-		end
+		local e1=Effect.CreateEffect(tc)
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetDescription(aux.Stringid(64382841,0))
+		e1:SetCode(EFFECT_SPSUMMON_PROC)
+		e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+		e1:SetRange(LOCATION_EXTRA)
+		e1:SetValue(SUMMON_TYPE_XYZ)
+		e1:SetCondition(c419.xyzcon)
+		e1:SetOperation(c419.xyzop)
+		e1:SetLabelObject(xg)
+		tc:RegisterEffect(e1)
+		tc:RegisterFlagEffect(419,nil,0,1)
 		tc=g:GetNext()
 	end
 end
@@ -339,9 +336,8 @@ function c419.op3(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetValue(SUMMON_TYPE_SYNCHRO)
 			e1:SetCondition(c419.syncon2)
 			e1:SetOperation(c419.synop2)
-			e1:SetReset(RESET_EVENT+EVENT_ADJUST,1)
 			tc:RegisterEffect(e1)
-			tc:RegisterFlagEffect(538,RESET_EVENT+EVENT_ADJUST,0,1) 	
+			tc:RegisterFlagEffect(538,nil,0,1) 	
 		end
 		tc=g:GetNext()
 	end
@@ -455,7 +451,7 @@ function c419.synop2(e,tp,eg,ep,ev,re,r,rp,c,tuner,mg)
 	c:SetMaterial(g)
 	Duel.SendtoGrave(g,REASON_MATERIAL+REASON_SYNCHRO)
 end
-function c419.op3(e,tp,eg,ep,ev,re,r,rp)
+function c419.op4(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(Card.IsSetCard,0,0x13,0x13,nil,0xe6)
 	local tc=g:GetFirst()
 	while tc do
@@ -619,7 +615,7 @@ function c419.op3(e,tp,eg,ep,ev,re,r,rp)
 					end
 				end
 			end
-			tc:RegisterFlagEffect(227,RESET_EVENT+EVENT_ADJUST,0,1) 	
+			tc:RegisterFlagEffect(227,nil,0,1) 	
 		end
 		tc=g:GetNext()
 	end

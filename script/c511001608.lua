@@ -1,4 +1,4 @@
---Number 93: Utopia Kaiser
+--No.93 希望皇ホープ・カイザー
 function c511001608.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,nil,12,2)
@@ -64,6 +64,12 @@ function c511001608.initial_effect(c)
 	e7:SetTarget(c511001608.cttg)
 	e7:SetOperation(c511001608.ctop)
 	c:RegisterEffect(e7)
+	--battle indestructable
+	local e8=Effect.CreateEffect(c)
+	e8:SetType(EFFECT_TYPE_SINGLE)
+	e8:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e8:SetValue(c511001608.indes)
+	c:RegisterEffect(e8)
 	if not c511001608.global_check then
 		c511001608.global_check=true
 		c511001608[0]=0
@@ -87,22 +93,6 @@ function c511001608.initial_effect(c)
 		ge3:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
 		ge3:SetOperation(c511001608.numchk)
 		Duel.RegisterEffect(ge3,0)
-	end
-	--battle indestructable
-	local e8=Effect.CreateEffect(c)
-	e8:SetType(EFFECT_TYPE_SINGLE)
-	e8:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-	e8:SetValue(c511001608.indes)
-	c:RegisterEffect(e8)
-	if not c511001608.global_check then
-		c511001608.global_check=true
-		local ge4=Effect.CreateEffect(c)
-		ge4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge4:SetCode(EVENT_ADJUST)
-		ge4:SetCountLimit(1)
-		ge4:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge4:SetOperation(c511001608.numchk)
-		Duel.RegisterEffect(ge4,0)
 	end
 end
 c511001608.xyz_number=93
@@ -161,7 +151,7 @@ function c511001608.indcon(e)
 	return Duel.IsExistingMatchingCard(c511001608.cfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,e:GetHandler())
 end
 function c511001608.efilter(e,re)
-	return e:GetHandlerPlayer()~=re:GetHandlerPlayer()
+	return e:GetOwnerPlayer()~=re:GetOwnerPlayer()
 end
 function c511001608.damval(e,re,val,r,rp,rc)
 	return 0
@@ -199,10 +189,8 @@ function c511001608.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511001608.ctop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToEffect(e) and not Duel.GetControl(tc,tp) then
-		if not tc:IsImmuneToEffect(e) and tc:IsAbleToChangeControler() then
-			Duel.Destroy(tc,REASON_EFFECT)
-		end
+	if tc and tc:IsRelateToEffect(e) then
+		Duel.GetControl(tc,tp)
 	end
 end
 function c511001608.numchk(e,tp,eg,ep,ev,re,r,rp)

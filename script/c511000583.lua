@@ -46,10 +46,6 @@ function c511000583.operation(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetOperation(c511000583.damop)
 		e2:SetReset(RESET_EVENT+0x47e0000)
 		tc:RegisterEffect(e2,true)
-	else
-		local d=Duel.GetFieldGroup(tp,0,LOCATION_DECK)
-		Duel.ConfirmCards(tp,d)
-		Duel.ShuffleDeck(1-tp)
 	end
 end
 function c511000583.damop(e,tp,eg,ep,ev,re,r,rp)

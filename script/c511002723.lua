@@ -16,21 +16,25 @@ function c511002723.cfilter(c)
 	return c:IsAbleToGraveAsCost() and c:IsType(TYPE_MONSTER)
 end
 function c511002723.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c511002723.cfilter,tp,LOCATION_HAND,0,2,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c511002723.cfilter,tp,LOCATION_HAND,0,2,2,nil)
-	local sum=g:GetSum(Card.GetAttack)
-	e:SetLabel(sum)
-	Duel.SendtoGrave(g,REASON_COST)
+	e:SetLabel(1)
+	if chk==0 then return true end
 end
 function c511002723.filter(c)
 	return c:IsFaceup() and c:GetFlagEffect(70899775)==0
 end
 function c511002723.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c511002723.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c511002723.filter,tp,LOCATION_MZONE,0,1,nil) end
+	if chk==0 then
+		if e:GetLabel()~=1 then return false end
+		e:SetLabel(0)
+		return Duel.IsExistingMatchingCard(c511002723.cfilter,tp,LOCATION_HAND,0,2,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,c511002723.cfilter,tp,LOCATION_HAND,0,2,2,nil)
+	local sum=g:GetSum(Card.GetAttack)
+	Duel.SendtoGrave(g,REASON_COST)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	Duel.SelectTarget(tp,c511002723.filter,tp,LOCATION_MZONE,0,1,1,nil)
+	Duel.SetTargetParam(sum)
 end
 function c511002723.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
@@ -41,7 +45,7 @@ function c511002723.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 		e1:SetTargetRange(1,0)
 		e1:SetValue(c511002723.damval)
-		e1:SetLabel(e:GetLabel())
+		e1:SetLabel(Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM))
 		e1:SetReset(RESET_PHASE+PHASE_END)
 		Duel.RegisterEffect(e1,tp)
 		local e2=Effect.CreateEffect(e:GetHandler())

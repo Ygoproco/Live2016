@@ -110,6 +110,7 @@ end
 function c511001273.spop(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft<=0 then return end
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c511001273.spfilter,tp,LOCATION_GRAVE,0,ft,ft,nil,e,tp,Duel.GetTurnCount())
 	if g:GetCount()>0 then
@@ -154,4 +155,8 @@ function c511001273.numspop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511001273.indes(e,c)
 	return not c:IsSetCard(0x48)
+end
+function c511001273.numchk(e,tp,eg,ep,ev,re,r,rp)
+	Duel.CreateToken(tp,37279508)
+	Duel.CreateToken(1-tp,37279508)
 end

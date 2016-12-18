@@ -27,9 +27,5 @@ function c511000836.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	if tc then
 		Duel.Damage(1-tp,tc:GetAttack()/2,REASON_EFFECT)
-	else
-		local dg=Duel.GetFieldGroup(tp,0,LOCATION_DECK+LOCATION_EXTRA)
-		Duel.ConfirmCards(tp,dg)
-		Duel.ShuffleDeck(1-tp)
 	end
 end

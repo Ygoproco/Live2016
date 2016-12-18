@@ -54,7 +54,7 @@ end
 function c95000113.damcon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
 	local bc=tc:GetBattleTarget()
-	return eg:IsContains(tc) and tc:GetFlagEffect(95000113)~=0
+	return eg:IsContains(tc) and tc:GetFlagEffect(95000113)~=0 and bit.band(bc:GetBattlePosition(),POS_DEFENSE)~=0
 		and bc:IsReason(REASON_BATTLE)
 end
 function c95000113.damtg(e,tp,eg,ep,ev,re,r,rp,chk)

@@ -22,7 +22,9 @@ function c511000672.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c511000672.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c511000672.filter,tp,0x73,0x73,nil,e,tp,Duel.GetTurnCount())
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=g:GetCount()-1 then return end
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
+	if ft<=g:GetCount()-1 then return end
 	if g:GetCount()>0 then
 		local tc=g:GetFirst()
 		while tc do

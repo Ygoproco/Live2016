@@ -3,6 +3,40 @@ function c511001781.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,nil,7,3)
 	c:EnableReviveLimit()
+	--Rank Up Check
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetCondition(c511001781.rankupregcon)
+	e1:SetOperation(c511001781.rankupregop)
+	c:RegisterEffect(e1)
+	--battle indestructable
+	local e7=Effect.CreateEffect(c)
+	e7:SetType(EFFECT_TYPE_SINGLE)
+	e7:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e7:SetValue(c511001781.indes)
+	c:RegisterEffect(e7)
+	if not c511001781.global_check then
+		c511001781.global_check=true
+		local ge2=Effect.CreateEffect(c)
+		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge2:SetCode(EVENT_ADJUST)
+		ge2:SetCountLimit(1)
+		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
+		ge2:SetOperation(c511001781.numchk)
+		Duel.RegisterEffect(ge2,0)
+	end
+end
+c511001781.xyz_number=6
+function c511001781.rumfilter(c)
+	return c:IsCode(9161357) and not c:IsPreviousLocation(LOCATION_OVERLAY)
+end
+function c511001781.rankupregcon(e,tp,eg,ep,ev,re,r,rp)
+		local rc=re:GetHandler()
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ) and (rc:IsSetCard(0x95) or rc:IsCode(100000581) or rc:IsCode(111011002) or rc:IsCode(511000580) or rc:IsCode(511002068) or rc:IsCode(511002164) or rc:IsCode(93238626)) and e:GetHandler():GetMaterial():IsExists(c511001781.rumfilter,1,nil)
+end
+function c511001781.rankupregop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	--equip
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(876330,0))
@@ -11,9 +45,9 @@ function c511001781.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1)
-	e1:SetCondition(c511001781.eqcon)
 	e1:SetTarget(c511001781.eqtg)
 	e1:SetOperation(c511001781.eqop)
+	e1:SetReset(RESET_EVENT+0x1fe0000)
 	c:RegisterEffect(e1)
 	--equip 2
 	local e2=Effect.CreateEffect(c)
@@ -21,9 +55,9 @@ function c511001781.initial_effect(c)
 	e2:SetCategory(CATEGORY_EQUIP)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_BATTLED)
-	e2:SetCondition(c511001781.eqcon)
 	e2:SetTarget(c511001781.eqtg2)
 	e2:SetOperation(c511001781.eqop)
+	e2:SetReset(RESET_EVENT+0x1fe0000)
 	c:RegisterEffect(e2)
 	--atkup
 	local e3=Effect.CreateEffect(c)
@@ -31,8 +65,8 @@ function c511001781.initial_effect(c)
 	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e3:SetCode(EFFECT_UPDATE_ATTACK)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCondition(c511001781.eqcon)
 	e3:SetValue(c511001781.val)
+	e3:SetReset(RESET_EVENT+0x1fe0000)
 	c:RegisterEffect(e3)
 	--
 	local e4=Effect.CreateEffect(c)
@@ -46,6 +80,7 @@ function c511001781.initial_effect(c)
 	e4:SetCost(c511001781.discost)
 	e4:SetTarget(c511001781.distg)
 	e4:SetOperation(c511001781.disop)
+	e4:SetReset(RESET_EVENT+0x1fe0000)
 	c:RegisterEffect(e4)
 	--lp 1
 	local e5=Effect.CreateEffect(c)
@@ -58,6 +93,7 @@ function c511001781.initial_effect(c)
 	e5:SetCost(c511001781.lpcost)
 	e5:SetTarget(c511001781.lptg)
 	e5:SetOperation(c511001781.lpop)
+	e5:SetReset(RESET_EVENT+0x1fe0000)
 	c:RegisterEffect(e5)
 	--spsummon
 	local e6=Effect.CreateEffect(c)
@@ -69,37 +105,8 @@ function c511001781.initial_effect(c)
 	e6:SetCondition(c511001781.spcon)
 	e6:SetTarget(c511001781.sptg)
 	e6:SetOperation(c511001781.spop)
+	e6:SetReset(RESET_EVENT+0x1fe0000)
 	c:RegisterEffect(e6)
-	if not c511001781.global_check then
-		c511001781.global_check=true
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_ADJUST)
-		ge2:SetCountLimit(1)
-		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge2:SetOperation(c511001781.numchk)
-		Duel.RegisterEffect(ge2,0)
-	end
-	--battle indestructable
-	local e7=Effect.CreateEffect(c)
-	e7:SetType(EFFECT_TYPE_SINGLE)
-	e7:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-	e7:SetValue(c511001781.indes)
-	c:RegisterEffect(e7)
-	if not c511001781.global_check then
-		c511001781.global_check=true
-		local ge3=Effect.CreateEffect(c)
-		ge3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge3:SetCode(EVENT_ADJUST)
-		ge3:SetCountLimit(1)
-		ge3:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
-		ge3:SetOperation(c511001781.numchk)
-		Duel.RegisterEffect(ge3,0)
-	end
-end
-c511001781.xyz_number=6
-function c511001781.eqcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetOverlayGroup():IsExists(Card.IsCode,1,nil,9161357)
 end
 function c511001781.eqfilter(c,tp)
 	return c:IsSetCard(0x7f) and (c:IsAbleToChangeControler() or c:IsControler(tp))
@@ -190,9 +197,6 @@ function c511001781.lpcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVEXYZ)
 	local sg=ov:Select(tp,3,3,nil)
 	Duel.SendtoGrave(sg,REASON_COST)
-	if sg:IsExists(Card.IsCode,1,nil,9161357) then
-		c:RegisterFlagEffect(511001780,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,0,0)
-	end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
@@ -206,7 +210,7 @@ function c511001781.lpop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c511001781.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return tp==Duel.GetTurnPlayer() and c:GetFlagEffect(511001780)>0 and c:GetOverlayCount()==0
+	return tp==Duel.GetTurnPlayer() and c:GetOverlayCount()==0
 end
 function c511001781.spfilter(c,e,tp,mc)
 	return c:IsCode(9161357) and mc:IsCanBeXyzMaterial(c) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,true)
@@ -214,8 +218,7 @@ end
 function c511001781.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1 
-		and Duel.IsExistingMatchingCard(c511001781.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,c)end
-	c:ResetFlagEffect(511001780)
+		and Duel.IsExistingMatchingCard(c511001781.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,c) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
 end
 function c511001781.spop(e,tp,eg,ep,ev,re,r,rp)

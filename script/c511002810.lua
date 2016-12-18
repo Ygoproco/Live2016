@@ -24,7 +24,7 @@ function c511002810.filter(c,e,tp)
 end
 function c511002810.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c511002810.filter(chkc,e,tp) end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and e:IsHasType(EFFECT_TYPE_ACTIVATE) 
 		and Duel.IsExistingTarget(c511002810.filter,tp,LOCATION_MZONE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATTACK)
 	local g=Duel.SelectTarget(tp,c511002810.filter,tp,LOCATION_MZONE,0,1,1,nil,e,tp)
@@ -35,7 +35,7 @@ function c511002810.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local tc=Duel.GetFirstTarget()
 	local c=e:GetHandler()
-	if not tc or tc:IsFacedown() or not tc:IsRelateToEffect(e) then return end
+	if not c:IsRelateToEffect(e) or not tc or tc:IsFacedown() or not tc:IsRelateToEffect(e) then return end
 	if not Duel.IsPlayerCanSpecialSummonMonster(tp,tc:GetCode(),0,0x21,0,0,1,tc:GetRace(),tc:GetAttribute()) then return end
 	c:AddMonsterAttribute(TYPE_EFFECT+TYPE_SPELL+TYPE_TRAP)
 	Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP)

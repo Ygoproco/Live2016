@@ -11,9 +11,9 @@ function c500000149.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
-	e2:SetCountLimit(1)
-	e2:SetTarget(c500000149.target)
-	e2:SetOperation(c500000149.activate)
+	e2:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
+	e2:SetTarget(c500000149.tg)
+	e2:SetOperation(c500000149.op)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
@@ -22,22 +22,22 @@ function c500000149.initial_effect(c)
 	e4:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
 	c:RegisterEffect(e4)
 end
-function c500000149.filter(c)
-	local lp=Duel.GetLP(c:GetControler())
-	return c:IsFaceup() and c:IsDestructable() and c:GetAttack()<=lp
+function c500000149.filter(c,e,tp)
+	local lp=Duel.GetLP(tp)
+	return c:IsFaceup() and c:IsDestructable() and c:GetAttack()<=lp and (not e or c:IsRelateToEffect(e))
 end
-function c500000149.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFlagEffect(tp,500000149)==0 and eg:IsExists(c500000149.filter,1,nil) end
-	local g=eg:Filter(c500000149.filter,nil,tp)
+function c500000149.tg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return eg:IsExists(c500000149.filter,1,nil,nil,tp) end
+	local g=eg:Filter(c500000149.filter,nil,nil,tp)
 	Duel.SetTargetCard(eg)
-	Duel.RegisterFlagEffect(tp,500000149,RESET_PHASE+PHASE_END,0,1)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,PLAYER_ALL,0)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,PLAYER_ALL,800)
 end
-function c500000149.activate(e,tp,eg,ep,ev,re,r,rp)
-	local g=eg:Filter(c500000149.filter,nil)
+function c500000149.op(e,tp,eg,ep,ev,re,r,rp)
+	local g=eg:Filter(c500000149.filter,nil,e,tp)
 	if g:GetCount()>0 and Duel.Destroy(g,REASON_EFFECT)>0 then
-		Duel.Damage(1-tp,800,REASON_EFFECT)
-		Duel.Damage(tp,800,REASON_EFFECT)
+		Duel.Damage(1-tp,800,REASON_EFFECT,true)
+		Duel.Damage(tp,800,REASON_EFFECT,true)
+		Duel.RDComplete()
 	end
 end

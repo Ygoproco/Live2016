@@ -12,7 +12,7 @@ function c511001058.initial_effect(c)
 		if not maxct then
 			mt.maxxyzct=ct
 		else
-			if maxct==5 then
+			if maxct==5 and code~=14306092 and code~=63504681 and code~=23776077 then
 				mt.maxxyzct=99
 			else
 				mt.maxxyzct=maxct

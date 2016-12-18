@@ -49,19 +49,24 @@ function c511004003.activate(e,tp,eg,ep,ev,re,r,rp)
 			elseif loc==64 then
 				Duel.SendtoDeck(tc,tc:GetFlagEffectLabel(511004003-1),2,REASON_EFFECT)
 			elseif loc==100 then
-				Duel.PSendtoExtra(tc,tc:GetFlagEffectLabel(511004003-1),REASON_EFFECT)
+				Duel.SendtoExtraP(tc,tc:GetFlagEffectLabel(511004003-1),REASON_EFFECT)
 			end
+			if tc:GetSequence()~=tc:GetFlagEffectLabel(511004003) then
+					Duel.MoveSequence(tc,tc:GetFlagEffectLabel(511004003))
+				end
 			tc=g:GetNext()
 		end
 	end
 	local g=Duel.GetMatchingGroup(c511004003.fil,tp,0xff,0xff,nil)
 	local g1=Duel.GetMatchingGroup(nil,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	if g:GetCount()>0 and g1:GetCount()>0 then
+	if g:GetCount()>0 then
+		if g1:GetCount()>0 then
 		local tc=g1:GetFirst()
-		while tc do
-			local seq=tc:GetSequence()
-			g=g:Filter(c511004003.fil3,nil,seq)
-			tc=g1:GetNext()
+			while tc do
+				local seq=tc:GetSequence()
+				g=g:Filter(c511004003.fil3,nil,seq)
+				tc=g1:GetNext()
+			end
 		end
 		if g:GetCount()>0 then
 			local tc1=g:GetFirst()
@@ -77,7 +82,7 @@ function c511004003.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c511004003.fil(c)
-	return c:GetFlagEffectLabel(511004003-3)==4 and not c:IsLocation(LOCATION_MZONE)
+	return c:GetFlagEffectLabel(511004003-3)==LOCATION_MZONE and not c:IsLocation(LOCATION_MZONE)
 end
 function c511004003.fil2(c)
 	return c:GetFlagEffectLabel(511004003-3)~=c:GetLocation() or c:GetFlagEffectLabel(511004003-2)~=c:GetPosition() or c:GetFlagEffectLabel(511004003-1)~=c:GetControler()
@@ -85,7 +90,6 @@ end
 function c511004003.fil3(c,seq)
 	return c:GetFlagEffectLabel(511004003)~=seq
 end
-
 function c511004003.chkop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(nil,tp,0xff,0xff,nil)
 	local tc=g:GetFirst()
@@ -93,6 +97,7 @@ function c511004003.chkop(e,tp,eg,ep,ev,re,r,rp)
 		tc:ResetFlagEffect(511004003-3)
 		tc:ResetFlagEffect(511004003-2)
 		tc:ResetFlagEffect(511004003-1)
+		tc:ResetFlagEffect(511004003)
 		if tc:IsLocation(LOCATION_EXTRA) and tc:IsFaceup() and tc:IsType(TYPE_PENDULUM) then
 			tc:RegisterFlagEffect(511004003-3,0,0,1,100)
 		else

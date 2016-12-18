@@ -62,7 +62,7 @@ function c59843383.repfil2(c)
 	return c:IsSetCard(0xd9) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemove()
 end
 function c59843383.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c59843383.repfil2,tp,LOCATION_GRAVE,0,1,nil) end
+	if chk==0 then return eg:IsExists(c59843383.repfilter,1,nil,tp) and Duel.IsExistingMatchingCard(c59843383.repfil2,tp,LOCATION_GRAVE,0,1,nil) end
 	if Duel.SelectYesNo(tp,aux.Stringid(59843383,2)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 		local g=Duel.SelectMatchingCard(tp,c59843383.repfil2,tp,LOCATION_GRAVE,0,1,1,nil)

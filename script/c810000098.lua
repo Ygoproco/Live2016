@@ -1,5 +1,6 @@
 --Frightfur Factory(Continuous Spell)
 --scripted by: UnknownGuest
+--fixed by MLD
 function c810000098.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -9,7 +10,7 @@ function c810000098.initial_effect(c)
 	--spsummon
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(810000098,0))
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCost(c810000098.cost)

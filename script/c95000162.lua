@@ -27,7 +27,15 @@ function c95000162.initial_effect(c)
 	e6:SetCode(EFFECT_IMMUNE_EFFECT)
 	e6:SetValue(c95000162.ctcon2)
 	c:RegisterEffect(e6)
-	
+	--cannot set
+	local e7=Effect.CreateEffect(c)
+	e7:SetType(EFFECT_TYPE_FIELD)
+	e7:SetCode(EFFECT_CANNOT_SSET)
+	e7:SetRange(LOCATION_SZONE)
+	e7:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e7:SetTargetRange(1,0)
+	e7:SetTarget(c95000166.sfilter)
+	c:RegisterEffect(e7)
 	-- Add Action Card
 	local e8=Effect.CreateEffect(c)
 	e8:SetDescription(aux.Stringid(95000162,0))
@@ -38,7 +46,27 @@ function c95000162.initial_effect(c)
 	e8:SetTarget(c95000162.Acttarget)
 	e8:SetOperation(c95000162.operation)
 	c:RegisterEffect(e8)
-	
+		--decrease tribute
+	local e9=Effect.CreateEffect(c)
+	e9:SetType(EFFECT_TYPE_FIELD)
+	e9:SetCode(EFFECT_DECREASE_TRIBUTE)
+	e9:SetRange(LOCATION_SZONE)
+	e9:SetTargetRange(LOCATION_HAND,LOCATION_HAND)
+	e9:SetCondition(c95000162.IRLcondition)
+	e9:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x7))
+	e9:SetValue(0x1)
+	c:RegisterEffect(e9)
+	--special summon
+	local e10=Effect.CreateEffect(c)
+	e10:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e10:SetDescription(aux.Stringid(37694547,0))
+	e10:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e10:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
+	e10:SetCode(EVENT_TO_GRAVE)
+	e10:SetCondition(c95000162.spcon)
+	e10:SetTarget(c95000162.sptg)
+	e10:SetOperation(c95000162.spop)
+	c:RegisterEffect(e10)
 	--
 	local eb=Effect.CreateEffect(c)
 	eb:SetType(EFFECT_TYPE_FIELD)
@@ -58,27 +86,7 @@ function c95000162.initial_effect(c)
 	c:RegisterEffect(ee)
 	
 
-	--decrease tribute
-	local e6=Effect.CreateEffect(c)
-	e6:SetType(EFFECT_TYPE_FIELD)
-	e6:SetCode(EFFECT_DECREASE_TRIBUTE)
-	e6:SetRange(LOCATION_SZONE)
-	e6:SetTargetRange(LOCATION_HAND,LOCATION_HAND)
-	e6:SetCondition(c95000162.IRLcondition)
-	e6:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x7))
-	e6:SetValue(0x1)
-	c:RegisterEffect(e6)
-	--special summon
-	local e7=Effect.CreateEffect(c)
-	e7:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e7:SetDescription(aux.Stringid(37694547,0))
-	e7:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e7:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
-	e7:SetCode(EVENT_TO_GRAVE)
-	e7:SetCondition(c95000162.spcon)
-	e7:SetTarget(c95000162.sptg)
-	e7:SetOperation(c95000162.spop)
-	c:RegisterEffect(e7)
+
 
 end
 function c95000162.ctcon2(e,re)
@@ -135,11 +143,8 @@ end
 function c95000162.aclimit(e,re)
 	return re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_SPELL) and re:GetHandler():IsType(TYPE_FIELD)
 end
-function c95000162.aclimit2(e,c)
-	return c:IsType(TYPE_FIELD)
-end
-function c95000162.tgn(e,c)
-	return c==e:GetHandler()
+function c95000166.sfilter(e,c,tp)
+	return c:IsType(TYPE_FIELD) 
 end
 
 
@@ -163,7 +168,6 @@ ac=math.random(1,#tableAction)
 e:SetLabel(tableAction[ac])
 end
 function c95000162.operation(e,tp,eg,ep,ev,re,r,rp)
-if Duel.SelectYesNo(1-tp,aux.Stringid(95000162,0)) then
 local dc=Duel.TossDice(tp,1)
 if dc==2 or dc==4 or dc==6 then
 
@@ -184,7 +188,6 @@ if dc==5 or dc==6 then
 
 end
 
-end
 end
 function c95000162.condition(e,tp,eg,ep,ev,re,r,rp)
 	return not Duel.IsExistingMatchingCard(c95000162.cfilter,tp,LOCATION_SZONE+LOCATION_HAND,0,1,nil)
@@ -240,6 +243,16 @@ function c95000162.returnop(e)
 	e1:SetOperation(c95000162.operation)
 	e1:SetReset(RESET_EVENT+0x1fe0000)
 	fc:RegisterEffect(e1)
+	--cannot set
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_CANNOT_SSET)
+	e4:SetRange(LOCATION_SZONE)
+	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e4:SetTargetRange(1,0)
+	e4:SetReset(RESET_EVENT+0x1fe0000)
+	e4:SetTarget(c95000166.sfilter)
+	fc:RegisterEffect(e4)
 	fc:RegisterFlagEffect(195000162,RESET_EVENT+0x1fe0000,0,1)
 	end
 end

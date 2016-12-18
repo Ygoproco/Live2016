@@ -21,6 +21,12 @@ function c511000513.initial_effect(c)
 	e2:SetCode(EFFECT_SEND_REPLACE)
 	e2:SetTarget(c511000513.reptg)
 	c:RegisterEffect(e2)
+	--battle indestructable
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_SINGLE)
+	e5:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e5:SetValue(c511000513.indes)
+	c:RegisterEffect(e5)
 	if not c511000513.global_check then
 		c511000513.global_check=true
 		local ge2=Effect.CreateEffect(c)
@@ -31,17 +37,8 @@ function c511000513.initial_effect(c)
 		ge2:SetOperation(c511000513.numchk)
 		Duel.RegisterEffect(ge2,0)
 	end
-	--number generic effect
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
-	e3:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-	e3:SetValue(c511000513.indes)
-	c:RegisterEffect(e3)
 end
 c511000513.xyz_number=77
-function c511000513.indes(e,c)
-	return not c:IsSetCard(0x48)
-end
 function c511000513.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
@@ -74,4 +71,7 @@ end
 function c511000513.numchk(e,tp,eg,ep,ev,re,r,rp)
 	Duel.CreateToken(tp,62541668)
 	Duel.CreateToken(1-tp,62541668)
+end
+function c511000513.indes(e,c)
+	return not c:IsSetCard(0x48)
 end

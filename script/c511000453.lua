@@ -86,6 +86,7 @@ end
 function c511000453.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=c:GetFirstCardTarget()
+	if not tc then return end
 	if e:GetLabelObject():GetLabel()~=tc:GetAttack() then
 		if e:GetLabelObject():GetLabel()<tc:GetAttack() then
 			Duel.Destroy(e:GetHandler(),REASON_EFFECT)

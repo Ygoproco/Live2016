@@ -2,7 +2,7 @@
 function c511001540.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcCodeRep(c,511001539,2,true,true)
+	aux.AddFusionProcCodeRep(c,42878636,2,true,true)
 	--actlimit
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)

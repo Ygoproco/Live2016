@@ -14,7 +14,7 @@ function c511001179.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetBattleDamage(tp)>0 and Duel.GetAttackTarget()==nil
 end
 function c511001179.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and e:IsHasType(EFFECT_TYPE_ACTIVATE) 
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,511001179,0,0x21,-2,-2,5,RACE_FISH,ATTRIBUTE_WATER) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end

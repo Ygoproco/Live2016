@@ -3,7 +3,7 @@ function c511001544.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
 	c511001544.material_count=2
-	c511001544.material={511001539,511001540}
+	c511001544.material={42878636,511001540}
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_SINGLE)
 	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -29,14 +29,14 @@ function c511001544.fcon(e,g,gc,chkf)
 	if gc then
 		if not gc:IsCanBeFusionMaterial(e:GetHandler()) then return false end
 		if gc:IsHasEffect(511002961) then
-			return mg:IsExists(aux.FConditionFilter22,1,gc,511001540,511001539,true,e:GetHandler())
+			return mg:IsExists(aux.FConditionFilter22,1,gc,511001540,42878636,true,e:GetHandler())
 		elseif gc:CheckFusionSubstitute(e:GetHandler()) then
-			return mg:IsExists(aux.FConditionFilter21,1,nil,511001540,511001539,true)
+			return mg:IsExists(aux.FConditionFilter21,1,nil,511001540,42878636,true)
 		elseif gc:IsFusionCode(511001540) then
-			return mg:IsExists(aux.FConditionFilter12,1,nil,511001539,true,e:GetHandler())
-		elseif gc:IsFusionCode(511001539) then
+			return mg:IsExists(aux.FConditionFilter12,1,nil,42878636,true,e:GetHandler())
+		elseif gc:IsFusionCode(42878636) then
 			return mg:IsExists(aux.FConditionFilter12,1,nil,511001540,true,e:GetHandler()) 
-				or mg:IsExists(Card.IsFusionCode,2,gc,511001539)
+				or mg:IsExists(Card.IsFusionCode,2,gc,42878636)
 		end
 	end
 	local b1=0 local b2=0 local bw=0 local bwxct=0
@@ -45,7 +45,7 @@ function c511001544.fcon(e,g,gc,chkf)
 	local tc=mg:GetFirst()
 	while tc do
 		local match=false
-		if tc:IsFusionCode(511001539) then b1=1 match=true end
+		if tc:IsFusionCode(42878636) then b1=1 match=true end
 		if tc:IsFusionCode(511001540) then b2=1 match=true end
 		if tc:IsHasEffect(511002961) then bwxct=bwxct+1 match=true end
 		if not tc:IsHasEffect(511002961) and tc:CheckFusionSubstitute(e:GetHandler()) then bw=1 match=true end
@@ -61,7 +61,7 @@ function c511001544.fcon(e,g,gc,chkf)
 	tc=mg:GetFirst()
 	b1=0
 	while tc do
-		if tc:IsFusionCode(511001539) then b1=b1+1 if aux.FConditionCheckF(tc,chkf) then fs=true end end
+		if tc:IsFusionCode(42878636) then b1=b1+1 if aux.FConditionCheckF(tc,chkf) then fs=true end end
 		tc=mg:GetNext()
 	end
 	return b1>2
@@ -72,7 +72,7 @@ function c511001544.fop(e,tp,eg,ep,ev,re,r,rp,gc,chkfnf)
 	local tc=gc
 	local g1=nil
 	local mat=Group.CreateGroup()
-	local sg=g:Filter(aux.FConditionFilter22,nil,511001539,511001540,true,e:GetHandler())
+	local sg=g:Filter(aux.FConditionFilter22,nil,42878636,511001540,true,e:GetHandler())
 	local sg2=sg:Clone()
 	if gc then
 		if chkf~=PLAYER_NONE and not aux.FConditionCheckF(gc,chkf) then
@@ -92,7 +92,7 @@ function c511001544.fop(e,tp,eg,ep,ev,re,r,rp,gc,chkfnf)
 		sg2:RemoveCard(tc)
 		mat:AddCard(tc)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-		local g2=sg2:FilterSelect(tp,aux.FConditionFilter22,1,1,nil,511001539,511001540,true,e:GetHandler())
+		local g2=sg2:FilterSelect(tp,aux.FConditionFilter22,1,1,nil,42878636,511001540,true,e:GetHandler())
 		local tc2=g2:GetFirst()
 		if tc2:IsHasEffect(511002961) then ok=true sg:RemoveCard(tc2) sg:Remove(c511001544.FConditionFilterx2,nil,e:GetHandler()) mat:AddCard(tc2)
 		elseif tc2:CheckFusionSubstitute(e:GetHandler()) then
@@ -112,7 +112,7 @@ function c511001544.fop(e,tp,eg,ep,ev,re,r,rp,gc,chkfnf)
 		sg:Remove(c511001544.FConditionFilterx,nil,e:GetHandler())
 		mat:AddCard(tc)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-		local g2=sg2:FilterSelect(tp,aux.FConditionFilter22,1,1,nil,511001539,511001540,true,e:GetHandler())
+		local g2=sg2:FilterSelect(tp,aux.FConditionFilter22,1,1,nil,42878636,511001540,true,e:GetHandler())
 		local tc2=g2:GetFirst()
 		if tc2:IsHasEffect(511002961) then ok=true sg:RemoveCard(tc2) sg:Remove(c511001544.FConditionFilterx2,nil,e:GetHandler()) mat:AddCard(tc2)
 		elseif tc2:IsFusionCode(511001540) then
@@ -127,7 +127,7 @@ function c511001544.fop(e,tp,eg,ep,ev,re,r,rp,gc,chkfnf)
 		end
 	elseif tc:IsFusionCode(511001540) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-		local g2=sg2:FilterSelect(tp,aux.FConditionFilter12,1,1,nil,511001539,true,e:GetHandler())
+		local g2=sg2:FilterSelect(tp,aux.FConditionFilter12,1,1,nil,42878636,true,e:GetHandler())
 		g2:AddCard(tc)
 		Duel.SetFusionMaterial(g2)
 		return
@@ -135,7 +135,7 @@ function c511001544.fop(e,tp,eg,ep,ev,re,r,rp,gc,chkfnf)
 		mat:AddCard(tc)
 		sg:RemoveCard(tc)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
-		local g2=sg2:FilterSelect(tp,aux.FConditionFilter22,1,1,nil,511001539,511001540,true,e:GetHandler())
+		local g2=sg2:FilterSelect(tp,aux.FConditionFilter22,1,1,nil,42878636,511001540,true,e:GetHandler())
 		local tc2=g2:GetFirst()
 		if tc2:IsHasEffect(511002961) then ok=true sg:RemoveCard(tc2) sg:Remove(c511001544.FConditionFilterx2,nil,e:GetHandler()) mat:AddCard(tc2)
 		elseif tc2:CheckFusionSubstitute(e:GetHandler()) then
@@ -152,7 +152,7 @@ function c511001544.fop(e,tp,eg,ep,ev,re,r,rp,gc,chkfnf)
 			sg:Remove(c511001544.FConditionFilterx2,nil,e:GetHandler())
 		end
 	end
-	if not ok or (sg:IsExists(aux.FConditionFilter12,1,nil,511001539,true,e:GetHandler()) and Duel.SelectYesNo(tp,93)) then
+	if not ok or (sg:IsExists(aux.FConditionFilter12,1,nil,42878636,true,e:GetHandler()) and Duel.SelectYesNo(tp,93)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
 		local g3=sg:Select(tp,1,1,nil)
 		mat:Merge(g3)
@@ -160,7 +160,7 @@ function c511001544.fop(e,tp,eg,ep,ev,re,r,rp,gc,chkfnf)
 	Duel.SetFusionMaterial(mat)
 end
 function c511001544.FConditionFilterx(c,fc)
-	return c:CheckFusionSubstitute(fc) and not c:IsHasEffect(511002961) and not c:IsFusionCode(511001539,511001540)
+	return c:CheckFusionSubstitute(fc) and not c:IsHasEffect(511002961) and not c:IsFusionCode(42878636,511001540)
 end
 function c511001544.FConditionFilterx2(c,fc)
 	return c:IsFusionCode(511001540) and not c:CheckFusionSubstitute(fc)

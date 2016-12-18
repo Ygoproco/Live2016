@@ -36,7 +36,9 @@ function c511001747.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c511001747.filter(chkc,e,tp,tid) end
 	if chk==0 then return Duel.IsExistingTarget(c511001747.filter,tp,LOCATION_GRAVE,0,1,nil,e,tp,tid) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	Duel.SelectTarget(tp,c511001747.filter,tp,LOCATION_GRAVE,0,1,99,nil,e,tp,tid)
+	local max=99
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then max=1 end
+	Duel.SelectTarget(tp,c511001747.filter,tp,LOCATION_GRAVE,0,1,max,nil,e,tp,tid)
 end
 function c511001747.op(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
@@ -60,12 +62,16 @@ end
 function c511001747.spop1(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,511001747)
 	local sg=Duel.GetMatchingGroup(c511001747.spfilter,tp,LOCATION_GRAVE,0,nil,e,tp)
-	if sg:GetCount()>Duel.GetLocationCount(tp,LOCATION_MZONE) then return end
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
+	if sg:GetCount()>ft then return end
 	Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
 end
 function c511001747.spop2(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_CARD,0,511001747)
 	local sg=Duel.GetMatchingGroup(c511001747.spfilter,1-tp,LOCATION_GRAVE,0,nil,e,tp)
-	if sg:GetCount()>Duel.GetLocationCount(1-tp,LOCATION_MZONE) then return end
+	local ft=Duel.GetLocationCount(1-tp,LOCATION_MZONE)
+	if ft>1 and Duel.IsPlayerAffectedByEffect(1-tp,59822133) then ft=1 end
+	if sg:GetCount()>ft then return end
 	Duel.SpecialSummon(sg,0,1-tp,1-tp,false,false,POS_FACEUP)
 end

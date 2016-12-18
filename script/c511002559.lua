@@ -10,7 +10,7 @@ function c511002559.initial_effect(c)
 end
 function c511002559.condition(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttacker()
-	return tc:IsControler(tp) and tc:GetAttackedCount()==1
+	return tc:IsControler(tp) and tc:GetAttackedCount()==2
 end
 function c511002559.activate(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()

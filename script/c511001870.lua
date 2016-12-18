@@ -21,9 +21,7 @@ function c511001870.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511001870.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
-	if tc and tc:IsRelateToEffect(e) and not Duel.GetControl(tc,tp) then
-		if not tc:IsImmuneToEffect(e) and tc:IsAbleToChangeControler() then
-			Duel.Destroy(tc,REASON_EFFECT)
-		end
+	if tc and tc:IsRelateToEffect(e) then
+		Duel.GetControl(tc,tp)
 	end
 end

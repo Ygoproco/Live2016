@@ -6,6 +6,7 @@ function c100000100.initial_effect(c)
 	e1:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
 	e1:SetCondition(c100000100.condition)
 	e1:SetCost(c100000100.cost)
+	e1:SetTarget(c100000100.target)
 	e1:SetOperation(c100000100.activate)
 	c:RegisterEffect(e1)
 end
@@ -13,12 +14,19 @@ function c100000100.condition(e,tp,eg,ep,ev,re,r,rp)
 	return tp~=Duel.GetTurnPlayer() and Duel.GetBattleDamage(tp)>=100 and Duel.GetAttackTarget()==nil
 end
 function c100000100.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	e:SetLabel(1)
+	if chk==0 then return true end
+end
+function c100000100.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local dam=Duel.GetBattleDamage(tp)
-	if chk==0 then return Duel.IsPlayerCanDiscardDeckAsCost(tp,1) end
+	if chk==0 then
+		if e:GetLabel()~=1 then return false end
+		e:SetLabel(0)
+		return Duel.IsPlayerCanDiscardDeckAsCost(tp,1) end
 	local ct=Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)
 	if ct==1 then 
 		Duel.DiscardDeck(tp,1,REASON_COST)
-		e:SetLabel(1)
+		Duel.SetTargetParam(100)
 	else
 		local t={}
 		local l=1
@@ -31,7 +39,7 @@ function c100000100.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 		Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(85087012,2))
 		local ac=Duel.AnnounceNumber(tp,table.unpack(t))
 		Duel.DiscardDeck(tp,ac,REASON_COST)
-		e:SetLabel(ac*100)
+		Duel.SetTargetParam(ac*100)
 	end
 end
 function c100000100.activate(e,tp,eg,ep,ev,re,r,rp)
@@ -39,7 +47,7 @@ function c100000100.activate(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_PRE_BATTLE_DAMAGE)
 	e1:SetOperation(c100000100.damop)
-	e1:SetLabel(e:GetLabel())
+	e1:SetLabel(Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM))
 	e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
 	Duel.RegisterEffect(e1,tp)
 end

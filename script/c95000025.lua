@@ -54,7 +54,9 @@ function c95000025.desop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.Destroy(sg,REASON_EFFECT)
 	if ct>0 then
 		local dg=Duel.GetOperatedGroup()
-		if not dg:IsExists(c95000025.mgfilter,1,nil,e,tp) and dg:GetCount()<=Duel.GetLocationCount(tp,LOCATION_MZONE) 
+		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+		if ft>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
+		if not dg:IsExists(c95000025.mgfilter,1,nil,e,tp) and dg:GetCount()<=ft 
 			and Duel.SelectYesNo(tp,aux.Stringid(95000025,1)) then
 			Duel.BreakEffect()
 			Duel.SpecialSummon(dg,0,tp,tp,false,false,POS_FACEUP_DEFENSE)

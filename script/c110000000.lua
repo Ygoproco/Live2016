@@ -8,7 +8,7 @@ function c110000000.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_PREDRAW)
 	e1:SetCountLimit(1)
-	e1:SetRange(0xff)
+	e1:SetRange(0xf7)
 	e1:SetOperation(c110000000.op)
 	c:RegisterEffect(e1)
 	--damage
@@ -110,7 +110,7 @@ function c110000000.initial_effect(c)
 	c:RegisterEffect(ee)
 end
 function c110000000.ctcon2(e,re)
-	return not re:GetHandler():IsCode(100100103) or re:GetOwner()~=e:GetOwner()
+	return not re:GetHandler():IsCode(100100103) and re:GetOwner()~=e:GetOwner()
 end
 function c110000000.filter(c)
 	return c:GetCode()~=110000000

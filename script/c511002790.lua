@@ -24,7 +24,7 @@ function c511002790.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=eg:Filter(c511002790.cfilter,nil,tp)
 	local tc=g:GetFirst():GetPreviousEquipTarget()
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 
-		and tc and tc:IsCanBeSpecialSummoned(e,0,tp,false,false) end
+		and tc and tc:IsCanBeSpecialSummoned(e,0,tp,false,false) and e:IsHasType(EFFECT_TYPE_ACTIVATE) end
 	Duel.SetTargetCard(tc)
 	Duel.SetTargetCard(g)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,tc,1,0,0)

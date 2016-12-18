@@ -15,14 +15,15 @@ function c511000928.cfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_SYNCHRO)
 end
 function c511000928.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c511000928.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,2,nil)
+	return Duel.IsExistingMatchingCard(c511000928.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,2,nil)
 end
 function c511000928.eqlimit(e,c)
 	return c:IsType(TYPE_SYNCHRO)
 end
 function c511000928.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c511000928.cfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c511000928.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	if chk==0 then return e:IsHasType(EFFECT_TYPE_ACTIVATE) 
+		and Duel.IsExistingTarget(c511000928.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
 	Duel.SelectTarget(tp,c511000928.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,e:GetHandler(),1,0,0)
@@ -30,7 +31,7 @@ end
 function c511000928.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if c:IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		Duel.Equip(tp,c,tc)
 		c:CancelToGrave()
 		--atk up

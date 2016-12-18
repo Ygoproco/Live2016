@@ -58,7 +58,7 @@ function c511000243.forbtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 end
 function c511000243.forbfilter(c)
-	return (c:IsCode(8124921) or c:IsCode(44519536) or c:IsCode(70903634) or c:IsCode(7902349) or c:IsCode(33396948)) and c:IsAbleToGrave()
+	return c:IsSetCard(0x40) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
 end
 function c511000243.forbop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
@@ -68,7 +68,7 @@ function c511000243.forbop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoGrave(tc,REASON_EFFECT)
 end
 function c511000243.atkfilter(c)
-	return c:IsCode(8124921) or c:IsCode(44519536) or c:IsCode(70903634) or c:IsCode(7902349) or c:IsCode(33396948)
+	return c:IsSetCard(0x40) and c:IsType(TYPE_MONSTER)
 end
 function c511000243.atkval(e,c)
 	return Duel.GetMatchingGroupCount(c511000243.atkfilter,c:GetControler(),LOCATION_GRAVE,0,nil)*1000
@@ -77,23 +77,8 @@ function c511000243.unval(e,te)
 	return te:GetOwnerPlayer()~=e:GetHandlerPlayer()
 end
 function c511000243.check(g)
-	local a1=false
-	local a2=false
-	local a3=false
-	local a4=false
-	local a5=false
-	local tc=g:GetFirst()
-	while tc do
-		local code=tc:GetCode()
-		if code==8124921 then a1=true
-		elseif code==44519536 then a2=true
-		elseif code==70903634 then a3=true
-		elseif code==7902349 then a4=true
-		elseif code==33396948 then a5=true
-		end
-		tc=g:GetNext()
-	end
-	return a1 and a2 and a3 and a4 and a5
+	g=g:Filter(c511000243.atkfilter,nil)
+	return g:GetClassCount(Card.GetCode)>=5
 end
 function c511000243.winop(e,tp,eg,ep,ev,re,r,rp)
 	local WIN_REASON_EXODIUS = 0x14

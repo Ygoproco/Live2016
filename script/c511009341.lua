@@ -1,4 +1,5 @@
 --Parasitic Maneuver
+--fixed by MLD
 function c511009341.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -11,7 +12,7 @@ function c511009341.initial_effect(c)
 end
 --OCG Parasite collection
 c511009341.collection={
-[0]=true;
+	[6205579]=true;
 }
 function c511009341.filter(c)
 	return c:IsFaceup() and (c511009341.collection[c:GetCode()] or c:IsSetCard(0x410))
@@ -25,7 +26,7 @@ end
 function c511009341.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsControler(tp) then
+	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_EXTRA_ATTACK)

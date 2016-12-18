@@ -20,19 +20,76 @@ function c511000990.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_IGNORE_RANGE+EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_CANNOT_DISABLE)
 	e2:SetValue(TYPE_NORMAL)
 	c:RegisterEffect(e2)
+	local f=Card.IsCanBeFusionMaterial
+	Card.IsCanBeFusionMaterial=function(c,fc,ismon)
+		if (c:GetSequence()==6 or c:GetSequence()==7) and c:IsLocation(LOCATION_SZONE) then
+			return f(c,fc,true)
+		end
+		if c:IsCode(80604091) then return f(c,fc,true) end
+		return f(c,fc,ismon)
+	end
+	local fchk=Card.CheckFusionMaterial
+	Card.CheckFusionMaterial=function(c,m,mc,chkf)
+		if c:IsCode(511000990) then
+			local mg1=Group.CreateGroup()
+			local mg2=Group.CreateGroup()
+			if m:IsExists(c511000990.sameplayerchk,1,nil,c:GetControler()) then
+				mg1=Duel.GetMatchingGroup(Card.IsCanBeFusionMaterial,c:GetControler(),LOCATION_SZONE,0,nil,c)
+				m:Merge(mg1)
+			end
+			if m:IsExists(c511000990.sameplayerchk,1,nil,1-c:GetControler()) then
+				mg1=Duel.GetMatchingGroup(Card.IsCanBeFusionMaterial,c:GetControler(),LOCATION_SZONE,0,nil,c)
+				mg2=Duel.GetMatchingGroup(c511000990.mat2,c:GetControler(),0,LOCATION_SZONE,nil,c)
+				m:Merge(mg1)
+				m:Merge(mg2)
+			end
+			if fchk(c,m,mc,chkf) then
+				m:Sub(mg1)
+				m:Sub(mg2)
+				return true
+			end
+			m:Sub(mg1)
+			m:Sub(mg2)
+		end
+		return fchk(c,m,mc,chkf)
+	end
+	local fsel=Duel.SelectFusionMaterial
+	Duel.SelectFusionMaterial=function(tp,c,mg,mc,chkf)
+		if c:IsCode(511000990) then
+			if mg:IsExists(c511000990.sameplayerchk,1,nil,tp) then
+				local mg1=Duel.GetMatchingGroup(Card.IsCanBeFusionMaterial,tp,LOCATION_SZONE,0,nil)
+				mg:Merge(mg1)
+			end
+			if mg:IsExists(c511000990.sameplayerchk,1,nil,1-tp) then
+				local mg1=Duel.GetMatchingGroup(Card.IsCanBeFusionMaterial,tp,LOCATION_SZONE,0,nil)
+				local mg2=Duel.GetMatchingGroup(c511000990.mat2,tp,0,LOCATION_SZONE,nil)
+				mg:Merge(mg1)
+				mg:Merge(mg2)
+			end
+		end
+		if Duel.IsPlayerAffectedByEffect(1-tp,5000) and Duel.SelectYesNo(1-tp,aux.Stringid(4002,8)) then  
+ 			Duel.ConfirmCards(1-tp,mg)
+ 			local label=0
+ 			if mg:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) or (mc and mc:IsLocation(LOCATION_HAND)) then label=label+1 end
+ 			if mg:IsExists(Card.IsLocation,1,nil,LOCATION_DECK) or (mc and mc:IsLocation(LOCATION_DECK)) then label=label+2 end
+ 			Duel.RegisterFlagEffect(1-tp,511004008+label,0,0,1)
+ 			return fsel(1-tp,c,mg,mc,chkf)
+ 		end
+		return fsel(tp,c,mg,mc,chkf)
+	end
+end
+function c511000990.sameplayerchk(c,tp)
+	return c:IsLocation(LOCATION_MZONE) and c:IsControler(tp)
+end
+function c511000990.mat2(c)
+	return c:IsCanBeFusionMaterial() and c:IsFaceup()
 end
 c511000990.illegal=true
 function c511000990.FConditionCheckF(c,chkf)
 	return c:IsLocation(LOCATION_MZONE) and c:IsControler(chkf)
 end
-function Auxiliary.FConditionFilter12(c,code,sub,fc)
-	return c:IsFusionCode(code) or (sub and c:CheckFusionSubstitute(fc))
-end
-function Auxiliary.FConditionFilter21(c,code1,code2)
-	return c:IsFusionCode(code1,code2)
-end
-function Auxiliary.FConditionFilter22(c,code1,code2,sub,fc)
-	return c:IsFusionCode(code1,code2) or (sub and c:CheckFusionSubstitute(fc))
+function Auxiliary.FConditionFilter21(c,code1,code2,sub)
+	return c:IsFusionCode(code1,code2) or (sub and c:IsHasEffect(511002961))
 end
 function c511000990.fscon(e,g,gc,chkfnf)
 	if g==nil then return true end
@@ -49,18 +106,14 @@ function c511000990.fscon(e,g,gc,chkfnf)
 		if chkf~=PLAYER_NONE and not aux.FConditionCheckF(gc,chkf) then
 			mg=mg:Filter(c511000990.FConditionCheckF,nil,chkf)
 		end
-		local sg=Duel.GetMatchingGroup(Card.IsCode,e:GetHandlerPlayer(),LOCATION_ONFIELD+LOCATION_HAND,0,nil,80604091)
 		if b1+b2+bw>1 or bwx==1 then
-			if mg:IsExists(aux.FConditionFilter22,1,nil,78010363,80604091,true,e:GetHandler()) then return true
-			else return sg:GetCount()>0 end
+			return mg:IsExists(aux.FConditionFilter22,1,nil,78010363,80604091,true,e:GetHandler())
 		elseif b1==1 then
-			if mg:IsExists(aux.FConditionFilter12,1,nil,80604091,true,e:GetHandler()) then return true
-			else return sg:GetCount()>0 end
+			return mg:IsExists(aux.FConditionFilter12,1,nil,80604091,true,e:GetHandler())
 		elseif b2==1 then
 			return mg:IsExists(aux.FConditionFilter12,1,nil,78010363,true,e:GetHandler())
 		else
-			if mg:IsExists(aux.FConditionFilter21,1,nil,78010363,80604091) then return true
-			else return sg:GetCount()>0 end
+			return mg:IsExists(aux.FConditionFilter21,1,nil,78010363,80604091)
 		end
 	end
 	local b1=0 local b2=0 local bw=0 local bwxct=0
@@ -79,11 +132,7 @@ function c511000990.fscon(e,g,gc,chkfnf)
 		end
 		tc=mg:GetNext()
 	end
-	if not fs then return false end
-	if ct>1 and b1+b2+bw+bwxct>1 then return true end
-	if b2==1 then return false end
-	local sg=Duel.GetMatchingGroup(Card.IsCode,e:GetHandlerPlayer(),LOCATION_ONFIELD+LOCATION_HAND,0,nil,80604091)
-	return ct>0 and b1+bw+bwxct>0 and sg:GetCount()>0
+	return fs and ct>1 and b1+b2+bw+bwxct>1
 end
 function c511000990.fsop(e,tp,eg,ep,ev,re,r,rp,gc,chkfnf)
 	local chkf=bit.band(chkfnf,0xff)
@@ -95,10 +144,7 @@ function c511000990.fsop(e,tp,eg,ep,ev,re,r,rp,gc,chkfnf)
 			g=g:Filter(c511000990.FConditionCheckF,nil,chkf)
 		end
 	else
-		local sg=g:Filter(Auxiliary.FConditionFilter22,nil,code1,code2,true,e:GetHandler())
-		local sg2=Duel.GetMatchingGroup(Card.IsCode,tp,LOCATION_ONFIELD+LOCATION_HAND,0,nil,80604091)
-		g:Merge(sg2)
-		sg:Merge(sg2)
+		local sg=g:Filter(Auxiliary.FConditionFilter22,nil,78010363,80604091,true,e:GetHandler())
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
 		if chkf~=PLAYER_NONE then g1=sg:FilterSelect(tp,c511000990.FConditionCheckF,1,1,nil,chkf)
 		else g1=sg:Select(tp,1,1,nil) end

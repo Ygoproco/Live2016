@@ -18,7 +18,7 @@ function c100000101.filter(c,code,e,tp)
 	return c:IsCode(code) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c100000101.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>2
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>2 and not Duel.IsPlayerAffectedByEffect(tp,59822133) 
 		and Duel.IsExistingMatchingCard(c100000101.filter,tp,LOCATION_GRAVE,0,1,nil,12482652,e,tp) 
 		and Duel.IsExistingMatchingCard(c100000101.filter,tp,LOCATION_GRAVE,0,1,nil,42941100,e,tp) 
 		and Duel.IsExistingMatchingCard(c100000101.filter,tp,LOCATION_GRAVE,0,1,nil,79335209,e,tp) end
@@ -28,7 +28,7 @@ function c100000101.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g1=Duel.GetMatchingGroup(c100000101.filter,tp,LOCATION_GRAVE,0,nil,12482652,e,tp)
 	local g2=Duel.GetMatchingGroup(c100000101.filter,tp,LOCATION_GRAVE,0,nil,42941100,e,tp)
 	local g3=Duel.GetMatchingGroup(c100000101.filter,tp,LOCATION_GRAVE,0,nil,79335209,e,tp)
-	if g1:GetCount()>0 and g2:GetCount()>0 and g3:GetCount()>0 then
+	if g1:GetCount()>0 and g2:GetCount()>0 and g3:GetCount()>0 and not Duel.IsPlayerAffectedByEffect(tp,59822133) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local sg1=g1:Select(tp,1,1,nil)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)

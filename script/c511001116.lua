@@ -24,20 +24,20 @@ function c511001116.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_CONTROL,g,2,0,0)
 end
 function c511001116.activate(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<2 then return end
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	local tc=g:GetFirst()
 	while tc do
-		Duel.GetControl(tc,tp)
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_CANNOT_ATTACK)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
-		tc:RegisterEffect(e1)
-		local e2=e1:Clone()
-		e2:SetCode(EFFECT_CANNOT_CHANGE_POSITION)
-		tc:RegisterEffect(e2)
+		if Duel.GetControl(tc,tp) then
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_CANNOT_ATTACK)
+			e1:SetReset(RESET_EVENT+0x1fe0000)
+			tc:RegisterEffect(e1)
+			local e2=e1:Clone()
+			e2:SetCode(EFFECT_CANNOT_CHANGE_POSITION)
+			tc:RegisterEffect(e2)
+		end
 		tc=g:GetNext()
 	end
 end

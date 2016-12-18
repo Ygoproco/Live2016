@@ -36,6 +36,6 @@ function c100000557.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 end
 function c100000557.activate(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(c100000557.filter1,tp,LOCATION_DECK,0,nil)
+	local g=Duel.GetMatchingGroup(c100000557.filter1,tp,LOCATION_DECK,0,nil,tp)
 	Duel.SendtoGrave(g,REASON_EFFECT)
 end

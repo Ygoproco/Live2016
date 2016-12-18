@@ -1,4 +1,5 @@
 --Raidraptor - Iron Heart
+--fixed by MLD
 function c511009317.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -26,6 +27,7 @@ function c511009317.initial_effect(c)
 	local e4=Effect.CreateEffect(c)
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e4:SetType(EFFECT_TYPE_IGNITION)
+	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e4:SetRange(LOCATION_GRAVE)
 	e4:SetCondition(c511009317.sumcon)
 	e4:SetTarget(c511009317.sumtg)
@@ -47,42 +49,53 @@ function c511009317.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c511009317.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if e:GetHandler():IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if e:GetHandler():IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		Duel.Equip(tp,e:GetHandler(),tc)
 	end
 end
-
-----------------------------------------------------
 function c511009317.sumcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetTurnID()==Duel.GetTurnCount() and not e:GetHandler():IsReason(REASON_RETURN)
 end
-function c511009317.filter1(c)
-	return c:IsSetCard(0xba) and c:IsType(TYPE_XYZ) and c:IsType(TYPE_MONSTER) 
+function c511009317.ovfilter(c,e)
+	return c:IsSetCard(0xba) and c:IsType(TYPE_XYZ) and c:IsType(TYPE_MONSTER) and (not e or c:IsCanBeEffectTarget(e))
 end
-function c511009317.filter2(c,e,tp)
+function c511009317.spfilter(c,e,tp,e2)
 	return c:IsSetCard(0xba) and c:IsType(TYPE_XYZ) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-		and Duel.IsExistingTarget(c511009317.filter1,tp,LOCATION_GRAVE,0,1,c)
+		and Duel.IsExistingTarget(c511009317.ovfilter,tp,LOCATION_GRAVE,0,1,c) and (not e2 or c:IsCanBeEffectTarget(e2))
 end
 function c511009317.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return false end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(c511009317.filter2,tp,LOCATION_GRAVE,0,1,nil) end
+		and Duel.IsExistingTarget(c511009317.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
+	local sg=Duel.GetMatchingGroup(c511009317.spfilter,tp,LOCATION_GRAVE,0,nil,e,tp,e)
+	local og=Duel.GetMatchingGroup(c511009317.ovfilter,tp,LOCATION_GRAVE,0,nil,e)
+	local g
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g1=Duel.SelectTarget(tp,c511009317.filter2,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
-	e:SetLabelObject(g1:GetFirst())
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	local g2=Duel.SelectTarget(tp,c511009317.filter,tp,LOCATION_GRAVE,0,1,1,g1:GetFirst())
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g1,1,0,0)
+	if sg:GetCount()==og:GetCount() then
+		g=sg:Select(tp,2,2,nil)
+	else
+		g=sg:Select(tp,1,1,nil)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
+		local g2=og:Select(tp,1,1,g:GetFirst())
+		g:Merge(g2)
+	end
+	Duel.SetTargetCard(g)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function c511009317.sumop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local sg=g:Filter(Card.IsRelateToEffect,nil,e)
-	local tc=e:GetLabelObject()
-	sg:RemoveCard(tc)
-	if tc:IsRelateToEffect(e) and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)>0 then
-		Duel.BreakEffect()
-		if sg:GetCount()>0 then 
-			Duel.Overlay(tc,sg)
-		end
+	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
+	if g:GetCount()~=2 then return end
+	local sg=g:Filter(Card.IsCanBeSpecialSummoned,nil,e,0,tp,false,false)
+	if sg:GetCount()==0 then return end
+	local tc
+	if sg:GetCount()==1 then
+		tc=sg:GetFirst()
+	else
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		tc=g:Select(tp,1,1,nil):GetFirst()
+	end
+	if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)>0 then
+		g:RemoveCard(tc)
+		Duel.Overlay(tc,g)
 	end
 end

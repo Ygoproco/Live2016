@@ -92,7 +92,7 @@ function c170000167.dscon(e,tp,eg,ep,ev,re,r,rp,chk)
 	return c:IsReason(REASON_DESTROY) and  e:GetHandler():GetPreviousAttackOnField()==0 and Duel.GetLP(tp)>=10000
 end
 function c170000167.filter(c,e,tp)
-	return c:IsCode(170000170) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+	return c:IsCode(82103466) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function c170000167.dstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -120,7 +120,7 @@ function c170000167.atkop(e,tp,eg,ep,ev,re,r,rp)
 	c:RegisterEffect(e1)
 end
 function c170000167.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>1 
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>1 and not Duel.IsPlayerAffectedByEffect(tp,59822133) 
 		and Duel.IsExistingMatchingCard(c170000167.spfilter,tp,LOCATION_DECK+LOCATION_HAND,0,1,nil,e,tp,170000168) 
 		and Duel.IsExistingMatchingCard(c170000167.spfilter,tp,LOCATION_DECK+LOCATION_HAND,0,1,nil,e,tp,170000169) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_DECK+LOCATION_HAND)
@@ -129,7 +129,7 @@ function c170000167.spfilter(c,e,tp,code)
 	return c:IsCode(code) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function c170000167.spop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=1 then return end
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=1 or Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
 	local g1=Duel.GetMatchingGroup(c170000167.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,nil,e,tp,170000168)
 	local g2=Duel.GetMatchingGroup(c170000167.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,nil,e,tp,170000169)
 	if g1:GetCount()>0 and g2:GetCount()>0 then

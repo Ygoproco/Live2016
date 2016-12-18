@@ -1,6 +1,19 @@
 --Earthbound God Uru
 function c511000242.initial_effect(c)
-	c:SetUniqueOnField(1,1,10000000)
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_FIELD)
+	e0:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e0:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e0:SetRange(LOCATION_MZONE)
+	e0:SetTargetRange(1,0)
+	e0:SetTarget(c511000242.sumlimit)
+	c:RegisterEffect(e0)
+	local e1=e0:Clone()
+	e1:SetCode(EFFECT_CANNOT_SUMMON)
+	c:RegisterEffect(e1)
+	local e2=e0:Clone()
+	e2:SetCode(EFFECT_CANNOT_FLIP_SUMMON)
+	c:RegisterEffect(e2)
 	--Can Attack Directly
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
@@ -56,15 +69,14 @@ function c511000242.initial_effect(c)
 	e10:SetTarget(c511000242.dirtg)
 	c:RegisterEffect(e10)
 end
+function c511000242.sumlimit(e,c,sump,sumtype,sumpos,targetp,se)
+	return c:IsSetCard(0x21)
+end
 function c511000242.dirfilter(c,card)
 	return card~=c
 end
 function c511000242.dirtg(e,c)
 	return not Duel.IsExistingMatchingCard(c511000242.dirfilter,c:GetControler(),0,LOCATION_MZONE,1,nil,e:GetHandler())
-end
-function c511000242.setcon(e,c)
-	if not c then return true end
-	return false
 end
 function c511000242.havefieldfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_FIELD)
@@ -75,12 +87,9 @@ end
 function c511000242.unaffectedval(e,te)
 	return (te:IsActiveType(TYPE_SPELL) or te:IsActiveType(TYPE_TRAP)) and te:GetOwnerPlayer()~=e:GetHandlerPlayer()
 end
-function c511000242.tributefilter(c)
-	return not c:IsPreviousLocation(LOCATION_MZONE,1,nil)
-end
 function c511000242.controlcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,c511000242.tributefilter,1,e:GetHandler()) end
-	local g=Duel.SelectReleaseGroup(tp,c511000242.tributefilter,1,1,e:GetHandler())
+	if chk==0 then return Duel.CheckReleaseGroup(tp,nil,1,nil) end
+	local g=Duel.SelectReleaseGroup(tp,nil,1,1,nil)
 	Duel.Release(g,REASON_COST)
 end
 function c511000242.controlfilter(c)
@@ -95,10 +104,8 @@ function c511000242.controltg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c511000242.controlop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() and not Duel.GetControl(tc,tp,PHASE_END,1) then
-		if not tc:IsImmuneToEffect(e) and tc:IsAbleToChangeControler() then
-			Duel.Destroy(tc,REASON_EFFECT)
-		end
+	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
+		Duel.GetControl(tc,tp,PHASE_END,1)
 	end
 end
 function c511000242.nofieldcon(e)

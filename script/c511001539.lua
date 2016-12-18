@@ -21,7 +21,7 @@ function c511001539.initial_effect(c)
 	--fusion
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(33550694,0))
-	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCondition(c511001539.fuscon)

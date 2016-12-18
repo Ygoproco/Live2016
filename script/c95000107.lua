@@ -27,10 +27,18 @@ function c95000107.initial_effect(c)
 	e6:SetCode(EFFECT_IMMUNE_EFFECT)
 	e6:SetValue(c95000107.ctcon2)
 	c:RegisterEffect(e6)
-	
+	--cannot set
+	local e7=Effect.CreateEffect(c)
+	e7:SetType(EFFECT_TYPE_FIELD)
+	e7:SetCode(EFFECT_CANNOT_SSET)
+	e7:SetRange(LOCATION_SZONE)
+	e7:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e7:SetTargetRange(1,0)
+	e7:SetTarget(c95000107.sfilter)
+	c:RegisterEffect(e7)
 	-- Add Action Card
 	local e8=Effect.CreateEffect(c)
-	e8:SetDescription(aux.Stringid(95000107,0))
+	e8:SetDescription(aux.Stringid(95000043,0))
 	e8:SetType(EFFECT_TYPE_QUICK_O)
 	e8:SetRange(LOCATION_SZONE)
 	e8:SetCode(EVENT_FREE_CHAIN)
@@ -40,24 +48,24 @@ function c95000107.initial_effect(c)
 	c:RegisterEffect(e8)
 
 --ad up
-	local e6=Effect.CreateEffect(c)
-	e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e6:SetCode(EVENT_DAMAGE_CALCULATING)
-	e6:SetRange(LOCATION_SZONE)
-	e6:SetOperation(c95000107.atkup)
-	e6:SetCondition(c95000107.Fcond)
-	c:RegisterEffect(e6)
+	local e9=Effect.CreateEffect(c)
+	e9:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e9:SetCode(EVENT_DAMAGE_CALCULATING)
+	e9:SetRange(LOCATION_SZONE)
+	e9:SetOperation(c95000107.atkup)
+	e9:SetCondition(c95000107.Fcond)
+	c:RegisterEffect(e9)
 	--Destroy replace
-	local e7=Effect.CreateEffect(c)
-	e7:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
-	e7:SetCode(EFFECT_DESTROY_REPLACE)
-	e7:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e7:SetRange(LOCATION_SZONE)
-	e7:SetTarget(c95000107.desreptg)
-	e7:SetCondition(c95000107.Fcond)
-	c:RegisterEffect(e7)
+	local e10=Effect.CreateEffect(c)
+	e10:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
+	e10:SetCode(EFFECT_DESTROY_REPLACE)
+	e10:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e10:SetRange(LOCATION_SZONE)
+	e10:SetTarget(c95000107.desreptg)
+	e10:SetCondition(c95000107.Fcond)
+	c:RegisterEffect(e10)
 	
-	--
+		--
 	local eb=Effect.CreateEffect(c)
 	eb:SetType(EFFECT_TYPE_FIELD)
 	eb:SetCode(EFFECT_CANNOT_TO_DECK)
@@ -102,7 +110,7 @@ function c95000107.op(e,tp,eg,ep,ev,re,r,rp,chk)
 	if tc==nil then
 		Duel.MoveToField(e:GetHandler(),tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 		if tc2==nil then
-			local token=Duel.CreateToken(tp,95000107,nil,nil,nil,nil,nil,nil)		
+			local token=Duel.CreateToken(tp,95000043,nil,nil,nil,nil,nil,nil)		
 			Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP)
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetCode(EFFECT_CHANGE_TYPE)
@@ -126,11 +134,8 @@ function c95000107.op(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 
-function c95000107.aclimit(e,re)
-	return re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_SPELL) and re:GetHandler():IsType(TYPE_FIELD)
-end
-function c95000107.aclimit2(e,c)
-	return c:IsType(TYPE_FIELD)
+function c95000107.sfilter(e,c,tp)
+	return c:IsType(TYPE_FIELD) 
 end
 function c95000107.tgn(e,c)
 	return c==e:GetHandler()
@@ -157,11 +162,11 @@ ac=math.random(1,#tableAction)
 e:SetLabel(tableAction[ac])
 end
 function c95000107.operation(e,tp,eg,ep,ev,re,r,rp)
-if Duel.SelectYesNo(1-tp,aux.Stringid(95000107,0)) then
+
 local dc=Duel.TossDice(tp,1)
 if dc==2 or dc==4 or dc==6 then
 
-Duel.RegisterFlagEffect(tp,95000107,RESET_PHASE+PHASE_END,0,1)
+Duel.RegisterFlagEffect(tp,95000043,RESET_PHASE+PHASE_END,0,1)
 end
 if dc==1 or dc==2 then
 if not Duel.IsExistingMatchingCard(c95000107.cfilter,tp,LOCATION_SZONE+LOCATION_HAND,0,1,nil) then	
@@ -179,10 +184,9 @@ if dc==5 or dc==6 then
 end
 
 end
-end
 function c95000107.condition(e,tp,eg,ep,ev,re,r,rp)
 	return not Duel.IsExistingMatchingCard(c95000107.cfilter,tp,LOCATION_SZONE+LOCATION_HAND,0,1,nil)
-	and Duel.GetFlagEffect(e:GetHandlerPlayer(),95000107)==0
+	and Duel.GetFlagEffect(e:GetHandlerPlayer(),95000043)==0
 	and not e:GetHandler():IsStatus(STATUS_CHAINING)
 end
 function c95000107.cfilter(c)
@@ -192,6 +196,8 @@ tableAction = {
 95000044,
 95000045,
 95000046,
+95000047,
+95000048,
 95000143
 } 
 function c95000107.repop(e)
@@ -215,10 +221,10 @@ function c95000107.returnop(e)
 	if not fc then
 		Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 	end
-	if fc and fc:GetFlagEffect(195000107)==0 then
+	if fc and fc:GetFlagEffect(195000043)==0 then
 	--action card get
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(95000107,0))
+	e1:SetDescription(aux.Stringid(95000043,0))
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetRange(LOCATION_SZONE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -228,7 +234,19 @@ function c95000107.returnop(e)
 	e1:SetOperation(c95000107.operation)
 	e1:SetReset(RESET_EVENT+0x1fe0000)
 	fc:RegisterEffect(e1)
-	fc:RegisterFlagEffect(195000107,RESET_EVENT+0x1fe0000,0,1)
+	
+	--cannot set
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_CANNOT_SSET)
+	e4:SetRange(LOCATION_SZONE)
+	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e4:SetTargetRange(1,0)
+	e4:SetTarget(c95000107.sfilter)
+	e4:SetReset(RESET_EVENT+0x1fe0000)
+	fc:RegisterEffect(e4)
+	
+	fc:RegisterFlagEffect(195000043,RESET_EVENT+0x1fe0000,0,1)
 	end
 end
 
@@ -248,7 +266,7 @@ function c95000107.adup(c,oc)
 	e1:SetValue(c:GetRank()*100)
 	c:RegisterEffect(e1)
 	local e2=e1:Clone()
-	e2:SetCode(EFFECT_UPDATE_DEFENSE)
+	e2:SetCode(EFFECT_UPDATE_DEFENCE)
 	c:RegisterEffect(e2)
 end
 function c95000107.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)

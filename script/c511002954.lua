@@ -2,7 +2,7 @@
 function c511002954.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcCodeFun(c,511002953,c511002954.mat_filter,1,true,true)
+	aux.AddFusionProcCodeFun(c,14577226,aux.FilterBoolFunction(Card.IsFusionSetCard,0xf0),1,true,true)
 	--copy
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(30312361,0))
@@ -40,9 +40,7 @@ function c511002954.initial_effect(c)
 		Duel.RegisterEffect(ge2,0)
 	end
 end
-function c511002954.mat_filter(c)
-	return c:IsFusionSetCard(0xf0)
-end
+c511002954.miracle_synchro_fusion=true
 function c511002954.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsType(TYPE_MONSTER) end
 	if chk==0 then return Duel.IsExistingTarget(Card.IsType,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil,TYPE_MONSTER) end
@@ -53,14 +51,14 @@ function c511002954.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if c:IsRelateToEffect(e) and c:IsFaceup() and tc and tc:IsRelateToEffect(e) then
-		c:CopyEffect(tc:GetOriginalCode(),RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,1)
+		c:ReplaceEffect(tc:GetOriginalCode(),RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 	end
 end
 function c511002954.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsReason(REASON_DESTROY)
 end
 function c511002954.spfilter(c,e,tp)
-	return c:IsCode(511002953) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) 
+	return c:IsCode(14577226) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) 
 		and Duel.IsExistingTarget(c511002954.spfilter2,tp,LOCATION_GRAVE,0,1,c,e,tp)
 end
 function c511002954.spfilter2(c,e,tp)

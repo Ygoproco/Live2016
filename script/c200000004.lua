@@ -19,24 +19,23 @@ function c200000004.spfilter(c,e,tp)
 	return c:IsSetCard(0x48) and not c:IsSetCard(0x1048) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c200000004.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	if chk==0 then return e:IsHasType(EFFECT_TYPE_ACTIVATE) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(c200000004.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp)end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(110000000,5))
 	local code=Duel.AnnounceCard(tp)
-    e:SetLabel(code)
+	Duel.SetTargetParam(code)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
-
 function c200000004.activate(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetLabel()~=200000005 then return end
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	if Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)~=200000005 or Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local c=e:GetHandler()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c200000004.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
-	local tc=g:GetFirst()
-	if tc and Duel.SpecialSummon(tc,0,tp,tp,true,true,POS_FACEUP)~=0 then
-		c:CancelToGrave()
-		Duel.Overlay(tc,Group.FromCards(c))
+	local tc=Duel.SelectMatchingCard(tp,c200000004.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp):GetFirst()
+	if tc and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0 then
+		if c:IsRelateToEffect(e) then
+			c:CancelToGrave()
+			Duel.Overlay(tc,Group.FromCards(c))
+		end
 		tc:CompleteProcedure()
 	end
 	Duel.RegisterFlagEffect(tp,200000004,0,0,0)

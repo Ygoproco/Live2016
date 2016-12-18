@@ -14,6 +14,8 @@ function c511001410.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_DESTROY_REPLACE)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
 	e2:SetTarget(c511001410.reptg)
 	c:RegisterEffect(e2)
@@ -63,7 +65,7 @@ function c511001410.refcon(e,re,val,r,rp,rc)
 end
 function c511001410.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return c:GetDefense()>=1000 end
+	if chk==0 then return not c:IsReason(REASON_REPLACE) and c:GetDefense()>=1000 end
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_COPY_INHERIT)

@@ -4,6 +4,7 @@ function c511002698.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetCondition(c511002698.condition)
 	e1:SetTarget(c511002698.target)
 	c:RegisterEffect(e1)
 	--change target
@@ -25,6 +26,12 @@ function c511002698.initial_effect(c)
 	e3:SetOperation(c511002698.desop)
 	c:RegisterEffect(e3)
 end
+function c511002698.cfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x21)
+end
+function c511002698.condition(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(c511002698.cfilter,tp,LOCATION_MZONE,0,1,nil)
+end
 function c511002698.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local a=Duel.GetAttacker()
@@ -39,16 +46,13 @@ end
 function c511002698.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetAttacker():IsControler(1-tp)
 end
-function c511002698.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x21)
-end
 function c511002698.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c511002698.filter,tp,LOCATION_MZONE,0,1,Duel.GetAttackTarget()) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c511002698.cfilter,tp,LOCATION_MZONE,0,1,Duel.GetAttackTarget()) end
 end
 function c511002698.atkop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	local g=Duel.SelectMatchingCard(tp,c511002698.filter,tp,LOCATION_MZONE,0,1,1,Duel.GetAttackTarget())
+	local g=Duel.SelectMatchingCard(tp,c511002698.cfilter,tp,LOCATION_MZONE,0,1,1,Duel.GetAttackTarget())
 	if g:GetCount()>0 then
 		Duel.ChangeAttackTarget(g:GetFirst())
 	end

@@ -20,8 +20,8 @@ function c511004116.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,nil,tp,LOCATION_MZONE,0,1,1,Duel.GetAttackTarget())
 	if g:GetCount()>0 then
 		local a=Duel.GetAttacker()
-		if Duel.ChangeAttackTarget(g:GetFirst())~=0 and g:GetFirst():GetCounter(0x104)>0 then
-		a:AddCounter(0x104,1)
+		if Duel.ChangeAttackTarget(g:GetFirst())~=0 and g:GetFirst():GetCounter(0x1104)>0 then
+		a:AddCounter(0x1104,1)
 		end
 	end
 end

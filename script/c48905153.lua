@@ -22,6 +22,7 @@ function c48905153.initial_effect(c)
 	e3:SetCategory(CATEGORY_DESTROY)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
+	e3:SetHintTiming(0,0x1c0+TIMING_END_PHASE)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1)
@@ -32,7 +33,7 @@ function c48905153.initial_effect(c)
 end
 
 function c48905153.ovfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0xf2) and not c:IsCode(48905153)
+	return c:IsFaceup() and c:IsSetCard(0xf1) and not c:IsCode(48905153)
 end
 function c48905153.xyzop(e,tp,chk)
   if chk==0 then return Duel.GetFlagEffect(tp,48905153)==0 end
@@ -40,7 +41,7 @@ function c48905153.xyzop(e,tp,chk)
 end
 
 function c48905153.adfil(c)
-	return c:IsSetCard(0xf2) and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(0xf1) and c:IsType(TYPE_MONSTER)
 end
 function c48905153.atkval(e,c)
 	return c:GetOverlayGroup():Filter(c48905153.adfil,nil):Filter(Card.IsAttackAbove,nil,1):GetSum(Card.GetAttack)
