@@ -27,7 +27,7 @@ function c511009411.initial_effect(c)
 	c:RegisterEffect(e4)
 end 
 function c511009411.costfilter(c)
-	return c:IsSetCard(0x10f3) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
+	return c:IsSetCard(0x10f3) and c:IsLevelBelow(4) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
 end
 function c511009411.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c511009411.costfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -58,7 +58,9 @@ function c511009411.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 ------------------------
-
+function c511009411.filter(c)
+	return c:IsFaceup() and c:IsSetCard(0x10f3)
+end
 function c511009411.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and chkc:IsDestructable() end
 	if chk==0 then return Duel.IsExistingMatchingCard(c511009411.filter,tp,LOCATION_MZONE,0,1,nil)
