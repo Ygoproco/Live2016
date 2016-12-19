@@ -1,8 +1,5 @@
 --Speedroid Vidroskull
 function c511009385.initial_effect(c)
-
-
-
 --spsummon
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(21250202,0))
@@ -46,6 +43,7 @@ function c511009385.spcheckop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c511009385.spcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	return Duel.GetFlagEffect(1-tp,511009385)~=0 and Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0)==0
 end
 function c511009385.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
