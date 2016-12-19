@@ -7,6 +7,7 @@ function c513000012.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(575512,0))
 	e1:SetHintTiming(0,TIMING_END_PHASE+TIMING_MAIN_END)
+	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetRange(LOCATION_EXTRA)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -58,7 +59,7 @@ function c513000012.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function c513000012.syncon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()~=tp and not e:GetHandler():IsStatus(STATUS_CHAINING) and Duel.GetCurrentChain()==0
+	return Duel.GetTurnPlayer()~=tp and not e:GetHandler():IsStatus(STATUS_CHAINING)
 end
 function c513000012.syntg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsSynchroSummonable(nil) end
@@ -79,32 +80,15 @@ function c513000012.mtop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetDecktopGroup(tp,5)
 	local ct=g:FilterCount(Card.IsType,nil,TYPE_TUNER)
 	Duel.ShuffleDeck(tp)
-	if ct==0 then
+	if ct>=2 then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
+		e1:SetCode(EFFECT_EXTRA_ATTACK_MONSTER)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
-		e1:SetValue(1)
+		e1:SetValue(ct-1)
 		c:RegisterEffect(e1)
-	elseif ct>=2 then
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_ATTACK_ALL)
-		e1:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
-		e1:SetValue(1)
-		c:RegisterEffect(e1)
-		local e2=Effect.CreateEffect(c)
-		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetCode(EFFECT_CANNOT_ATTACK)
-		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e2:SetCondition(c513000012.atcon)
-		e2:SetLabel(ct)
-		e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-		c:RegisterEffect(e2)
 	end
-end
-function c513000012.atcon(e)
-	return e:GetHandler():GetAttackedCount()>=e:GetLabel()
 end
 function c513000012.discon(e,tp,eg,ep,ev,re,r,rp)
 	if ep==tp or e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) or not Duel.IsChainNegatable(ev) then return false end
