@@ -20,7 +20,7 @@ function c100331006.initial_effect(c)
 	e3:SetDescription(aux.Stringid(100331006,1))
 	e3:SetCategory(CATEGORY_DESTROY)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e3:SetCode(EVENT_DESTROYED)
 	e3:SetCondition(c100331006.descon)
 	e3:SetTarget(c100331006.destg)
@@ -37,7 +37,7 @@ function c100331006.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return a:IsControler(tp) and a:IsAttribute(ATTRIBUTE_DARK) and a:IsRace(RACE_SPELLCASTER)
 end
 function c100331006.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsDestructable() end
+	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 end
 function c100331006.atkop(e,tp,eg,ep,ev,re,r,rp)
@@ -57,14 +57,11 @@ end
 function c100331006.descon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0
 end
-function c100331006.desfilter(c)
-	return c:IsFaceup() and c:IsDestructable()
-end
 function c100331006.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and c100331006.desfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c100331006.desfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
+	if chkc then return chkc:IsOnField() and chkc:IsFaceup() end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,c100331006.desfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+	local g=Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function c100331006.desop(e,tp,eg,ep,ev,re,r,rp)
