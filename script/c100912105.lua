@@ -43,7 +43,7 @@ function c100912105.initial_effect(c)
 	c:RegisterEffect(e4)
 	if c100912105.counter==nil then
 		c100912105.counter=true
-		c100912105[0]=0
+		c100912105[0]=0x7
 		c100912105[1]=0
 		local ge1=Effect.GlobalEffect()
 		ge1:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
@@ -58,25 +58,25 @@ function c100912105.initial_effect(c)
 	end
 end
 function c100912105.checkop(e,tp,eg,ep,ev,re,r,rp)
+	if c100912105[0]==0 then return end
 	local typ=0
 	local tc=eg:GetFirst()
 	while tc do
 		if tc:IsPreviousLocation(LOCATION_ONFIELD) and (tc:IsSetCard(0x1f9) or tc:IsCode(30539496,34079868,82321037,87765315,96746083)) then
-			typ=bit.bor(typ,bit.band(tc:GetOriginalType(),0x7))
+			typ=bit.bor(typ,tc:GetOriginalType())
 		end
 		tc=eg:GetNext()
 	end
-	if typ==0 then return end
-	local d=bit.bxor(c100912105[0],typ)
+	local d=bit.band(c100912105[0],typ)
 	if d~=0 then
-		c100912105[0]=bit.bor(c100912105[0],typ)
+		c100912105[0]=c100912105[0]-d
 		if bit.band(d,0x1)==0x1 then c100912105[1]=c100912105[1]+1 end
 		if bit.band(d,0x2)==0x2 then c100912105[1]=c100912105[1]+1 end
 		if bit.band(d,0x4)==0x4 then c100912105[1]=c100912105[1]+1 end
 	end
 end
 function c100912105.clearop(e,tp,eg,ep,ev,re,r,rp)
-	c100912105[0]=0
+	c100912105[0]=0x7
 	c100912105[1]=0
 end
 function c100912105.drcon(e,tp,eg,ep,ev,re,r,rp)
