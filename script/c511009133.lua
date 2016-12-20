@@ -27,10 +27,10 @@ function c511009133.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetAttacker()
 	if not tc then return false end
 	if tc:IsControler(1-tp) then 
-	tc=Duel.GetAttackTarget() 
+		tc=Duel.GetAttackTarget() 
 	end
 	e:SetLabelObject(tc)
-	return tc and tc:IsFaceup() and tc:IsSetCard(0xe5) and tc:IsRelateToBattle()  and d:IsRelateToBattle() 
+	return tc and tc:IsFaceup() and tc:IsSetCard(0xe5) and tc:IsRelateToBattle()
 	and Duel.IsExistingMatchingCard(c511009133.filter,0,LOCATION_MZONE,LOCATION_MZONE,1,tc,tc:GetCode())
 		and not e:GetHandler():IsStatus(STATUS_CHAINING)
 end

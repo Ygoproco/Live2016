@@ -46,9 +46,9 @@ function c41209827.initial_effect(c)
 end
 function c41209827.ffilter(c,fc)
 	if Card.IsFusionAttribute then
-		return c:IsFusionAttribute(ATTRIBUTE_DARK,fc) and c:IsLocation(LOCATION_MZONE) and not c:IsType(TYPE_TOKEN)
+		return c:IsFusionAttribute(ATTRIBUTE_DARK,fc) and c:IsLocation(LOCATION_ONFIELD) and not c:IsType(TYPE_TOKEN)
 	else
-		return c:IsAttribute(ATTRIBUTE_DARK) and c:IsLocation(LOCATION_MZONE) and not c:IsType(TYPE_TOKEN)
+		return c:IsAttribute(ATTRIBUTE_DARK) and c:IsLocation(LOCATION_ONFIELD) and not c:IsType(TYPE_TOKEN)
 	end
 end
 function c41209827.funcon(e,g,gc,chkfnf)

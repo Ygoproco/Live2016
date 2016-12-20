@@ -25,7 +25,7 @@ function c100331002.initial_effect(c)
 	e2:SetTarget(c100331002.sptg)
 	e2:SetOperation(c100331002.spop)
 	c:RegisterEffect(e2)
-	--Hitotsu Ni
+	--special summon
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(100331002,4))
 	e3:SetType(EFFECT_TYPE_IGNITION)
@@ -37,12 +37,11 @@ function c100331002.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c100331002.rpfilter(c,e,tp)
-	return c:IsCode(20409757) and (not c:IsForbidden() or 
-		(Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)))
+	return c:IsCode(20409757) and (not c:IsForbidden()
+		or (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)))
 end
 function c100331002.rptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsDestructable()
-		and Duel.IsExistingMatchingCard(c100331002.rpfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c100331002.rpfilter,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 end
 function c100331002.rpop(e,tp,eg,ep,ev,re,r,rp)
@@ -84,7 +83,8 @@ function c100331002.spop(e,tp,eg,ep,ev,re,r,rp)
 		return
 	end
 	local g=Duel.GetMatchingGroup(Card.IsCanBeSpecialSummoned,tp,LOCATION_HAND,0,nil,e,0,tp,false,false)
-	if g:GetCount()>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SelectYesNo(tp,aux.Stringid(100331002,3)) then
+	if g:GetCount()>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.SelectYesNo(tp,aux.Stringid(100331002,3)) then
 		Duel.BreakEffect()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local sg=g:Select(tp,1,1,nil)
@@ -92,25 +92,30 @@ function c100331002.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c100331002.hncfilter(c,sc)
-	return c:IsSetCard(sc) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
+	return (c:IsSetCard(sc)
+		or (sc==0x10f2 and c:IsCode(1516510,16178681,72378329,88305705))
+		or (sc==0x1046 and c:IsCode(41209827,51570882))
+		or (sc==0x2017 and c:IsCode(50954680,82044279))
+		or (sc==0x2073 and c:IsCode(16195942,1621413))
+	) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
 function c100331002.hncost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:IsAbleToRemoveAsCost()
-		and Duel.IsExistingMatchingCard(c100331002.hncfilter,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,0xf2)
+		and Duel.IsExistingMatchingCard(c100331002.hncfilter,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,0x10f2)
 		and Duel.IsExistingMatchingCard(c100331002.hncfilter,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,0x1046)
-		and Duel.IsExistingMatchingCard(c100331002.hncfilter,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,0x1f6)
+		and Duel.IsExistingMatchingCard(c100331002.hncfilter,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,0x2017)
 		and Duel.IsExistingMatchingCard(c100331002.hncfilter,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE,0,1,nil,0x2073)
 	end
 	local g=Group.FromCards(c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g1=Duel.SelectMatchingCard(tp,c100331002.hncfilter,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,0xf2)
+	local g1=Duel.SelectMatchingCard(tp,c100331002.hncfilter,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,0x10f2)
 	g:Merge(g1)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g1=Duel.SelectMatchingCard(tp,c100331002.hncfilter,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,0x1046)
 	g:Merge(g1)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g1=Duel.SelectMatchingCard(tp,c100331002.hncfilter,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,0x1f6)
+	local g1=Duel.SelectMatchingCard(tp,c100331002.hncfilter,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,0x2017)
 	g:Merge(g1)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g1=Duel.SelectMatchingCard(tp,c100331002.hncfilter,tp,LOCATION_HAND+LOCATION_MZONE+LOCATION_GRAVE,0,1,1,nil,0x2073)
@@ -118,10 +123,11 @@ function c100331002.hncost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c100331002.hnfilter(c,e,tp)
-	return c:IsFacedown() and c:IsCode(100912039) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false)
+	return not c:IsFaceup() and c:IsCode(100912039) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false)
 end
 function c100331002.hntg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1 and Duel.IsExistingMatchingCard(c100331002.hnfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
+		and Duel.IsExistingMatchingCard(c100331002.hnfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function c100331002.hnop(e,tp,eg,ep,ev,re,r,rp)
