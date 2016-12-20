@@ -84,7 +84,7 @@ function c511009410.con(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp
 end
 function c511009410.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x10f3) and c:IsReleasableByEffect()
+	return c:IsSetCard(0x10f3) and c:IsReleasableByEffect()
 end
 function c511009410.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return true end
@@ -94,16 +94,9 @@ function c511009410.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c511009410.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) then
 		Duel.Release(tc,REASON_COST)
 	else Duel.Destroy(c,REASON_COST)
 	end
 end
--- local c=e:GetHandler()
-	-- Duel.HintSelection(Group.FromCards(c))
-	-- if Duel.CheckReleaseGroup(tp,Card.IsReleasableByEffect,1,c) and Duel.SelectYesNo(tp,aux.Stringid(6283472,0)) then
-		-- local g=Duel.SelectReleaseGroup(tp,Card.IsReleasableByEffect,1,1,c)
-		-- Duel.Release(g,REASON_COST)
-	-- else Duel.Destroy(c,REASON_COST) end
