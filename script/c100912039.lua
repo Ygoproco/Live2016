@@ -118,7 +118,12 @@ function c100912039.FConditionFilterMulti(c,mg,funs,n,tbt)
 	return false
 end
 function c100912039.CloneTable(g)
-	return {table.unpack(g)}
+	local ng={}
+	for i=1,#g do
+		local sg=g[i]:Clone()
+		table.insert(ng,sg)
+	end
+	return ng
 end
 function c100912039.FConditionFilterMulti2(c,gr)
 	local gr2=c100912039.CloneTable(gr)
@@ -397,4 +402,3 @@ function c100912039.penop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 	end
 end
-
