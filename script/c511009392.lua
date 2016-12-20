@@ -34,8 +34,8 @@ function c511009392.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_BATTLE_DESTROYING)
 	e4:SetCondition(aux.bdocon)
-	e4:SetTarget(c511009392.target)
-	e4:SetOperation(c511009392.operation)
+	e4:SetTarget(c511009392.thtg)
+	e4:SetOperation(c511009392.thop)
 	c:RegisterEffect(e4)
 end
 -- REGEN LP
@@ -104,11 +104,11 @@ end
 function c511009392.filter(c)
 	return c:IsSetCard(0xae) and c:IsAbleToHand()
 end
-function c511009392.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function c511009392.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c511009392.filter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
-function c511009392.operation(e,tp,eg,ep,ev,re,r,rp)
+function c511009392.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,c511009392.filter,tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then

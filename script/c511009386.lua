@@ -15,7 +15,7 @@ function c511009386.cfilter(c)
 	return c:IsFaceup()
 end
 function c511009386.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetMatchingGroupCount(c55106249.cfilter,c:GetControler(),LOCATION_EXTRA,0,nil)>=3
+	return Duel.GetMatchingGroupCount(c511009386.cfilter,c:GetControler(),LOCATION_EXTRA,0,nil)>=3
 end
 function c511009386.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,2) end
