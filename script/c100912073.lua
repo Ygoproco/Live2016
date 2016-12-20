@@ -45,9 +45,9 @@ function c100912073.mfilter(c)
 end
 function c100912073.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(1-tp) and chkc:IsLocation(LOCATION_MZONE) and c100912073.mfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c100912073.mfilter,tp,LOCATION_MZONE,0,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(c100912073.mfilter,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	local g=Duel.SelectTarget(tp,c100912073.mfilter,tp,LOCATION_MZONE,0,1,1,nil)
+	local g=Duel.SelectTarget(tp,c100912073.mfilter,tp,0,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,1,0,0)
 end
 function c100912073.activate(e,tp,eg,ep,ev,re,r,rp)
@@ -92,7 +92,7 @@ function c100912073.efilter(c,e)
 	return c:IsFaceup() and c:IsType(TYPE_NORMAL) and c:IsCanBeEffectTarget(e)
 end
 function c100912073.eqfilter(c,g)
-	return c:IsFaceup() and c:IsType(TYPE_EQUIP) and c:IsSetCard(0x1fc) and g:IsExists(c100912073.eqcheck,1,nil,c)
+	return c:IsType(TYPE_EQUIP) and c:IsSetCard(0x1fc) and g:IsExists(c100912073.eqcheck,1,nil,c)
 end
 function c100912073.eqcheck(c,ec)
 	return ec:CheckEquipTarget(c)
@@ -107,10 +107,10 @@ function c100912073.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c100912073.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	local tc=g:GetFirst()
+	local tc=tg:GetFirst()
 	if tc:IsFacedown() or not tc:IsRelateToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-	local g=Duel.SelectMatchingCard(tp,c100912073.eqfilter,tp,LOCATION_HAND,0,1,1,nil,tg)
+	local g=Duel.SelectMatchingCard(tp,c100912073.eqfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,1,1,nil,tg)
 	local eq=g:GetFirst()
 	if eq then
 		Duel.Equip(tp,eq,tc,true)
