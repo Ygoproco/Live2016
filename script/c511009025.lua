@@ -58,7 +58,7 @@ function c511009025.mat_filter2(c)
   return c:IsAttribute(ATTRIBUTE_DARK)
 end
 function c511009025.atkfil(c)
-  return not c:IsPreviousLocation(LOCATION_MZONE)
+  return not c:IsPreviousLocation(LOCATION_ONFIELD)
 end
 function c511009025.atkcon(e,tp,eg,ep,ev,re,r,rp)
   local ph=Duel.GetCurrentPhase()
