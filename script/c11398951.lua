@@ -1,6 +1,6 @@
 --機械天使の絶対儀式
 --Machine Angel Absolute Ritual
---Scripted by Eerie Code
+--Scripted by Eerie Code; fixed by senpaizuri
 function c11398951.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -30,7 +30,7 @@ function c11398951.mfilterf(c,tp,mg,rc)
 	else return false end
 end
 function c11398951.mfilter(c)
-	return c:IsRace(RACE_FAIRY+RACE_WARRIOR) and c:IsAbleToDeck()
+	return c:IsRace(RACE_FAIRY+RACE_WARRIOR) and c:IsAbleToDeck() and not c:IsType(TYPE_XYZ)
 end
 function c11398951.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
