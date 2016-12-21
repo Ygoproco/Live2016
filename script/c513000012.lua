@@ -44,7 +44,7 @@ function c513000012.initial_effect(c)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCountLimit(1)
 	e4:SetCondition(c513000012.bancon)
-	e4:SetTarget(c513000012.bantg)
+	e4:SetCost(c513000012.bancost)
 	e4:SetOperation(c513000012.banop)
 	c:RegisterEffect(e4)
 	--Return
@@ -91,7 +91,7 @@ function c513000012.mtop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c513000012.discon(e,tp,eg,ep,ev,re,r,rp)
-	if ep==tp or e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) or not Duel.IsChainNegatable(ev) then return false end
+	if e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) or not Duel.IsChainNegatable(ev) then return false end
 	if re:IsHasCategory(CATEGORY_NEGATE)
 		and Duel.GetChainInfo(ev-1,CHAININFO_TRIGGERING_EFFECT):IsHasType(EFFECT_TYPE_ACTIVATE) then return false end
 	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_DESTROY)
@@ -113,14 +113,15 @@ end
 function c513000012.bancon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()~=tp
 end
-function c513000012.bantg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToRemove() end
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,e:GetHandler(),1,0,0)
+function c513000012.bancost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
+	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST+REASON_TEMPORARY)
 end
 function c513000012.banop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) and Duel.Remove(c,POS_FACEUP,REASON_EFFECT+REASON_TEMPORARY)>0 then
-		c:RegisterFlagEffect(513000012,RESET_EVENT+0x1fe0000,0,0)
+	c:RegisterFlagEffect(513000012,RESET_EVENT+0x1fe0000,0,0)
+	if Duel.GetAttacker() and Duel.SelectYesNo(tp,94) then Duel.NegateAttack()
+	else
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_FIELD)
 		e1:SetCode(EVENT_ATTACK_ANNOUNCE)
