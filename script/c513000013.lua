@@ -203,6 +203,8 @@ function c513000013.banop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and Duel.Remove(c,POS_FACEUP,REASON_EFFECT+REASON_TEMPORARY)>0 then
 		c:RegisterFlagEffect(513000013,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,0)
+		if Duel.GetAttacker() and Duel.SelectYesNo(tp,94) then Duel.NegateAttack()
+		else
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_FIELD)
 		e1:SetCode(EVENT_ATTACK_ANNOUNCE)
@@ -211,6 +213,7 @@ function c513000013.banop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetOperation(c513000013.negop)
 		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		c:RegisterEffect(e1)
+		end
 	end
 end
 function c513000013.rettg(e,tp,eg,ep,ev,re,r,rp,chk)
