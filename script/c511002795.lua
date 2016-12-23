@@ -15,7 +15,7 @@ end
 function c511002795.condition(e,tp,eg,ep,ev,re,r,rp)
 	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
 	local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
-	if not tg or tg:GetCount()~=1 or not tg:GetFirst():IsSetCard(0x33) or not tg:GetFirst():IsLocation(LOCATION_MZONE) 
+	if not tg or tg:GetCount()~=1 or tg:GetFirst():IsFacedown() or not tg:GetFirst():IsSetCard(0x33) or not tg:GetFirst():IsLocation(LOCATION_MZONE) 
 		or tg:GetFirst():IsControler(1-tp) then return false end
 	return rp~=tp and re:IsActiveType(TYPE_MONSTER) and Duel.IsChainNegatable(ev)
 end
@@ -30,7 +30,7 @@ function c511002795.activate(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if not c:IsFaceup() or not c:IsRelateToEffect(e) then return end
-	if c:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsRelateToEffect(e) then
+	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
 		c:SetCardTarget(tc)
 		Duel.NegateEffect(ev)
 		--destroy replace

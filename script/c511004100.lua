@@ -1,5 +1,6 @@
 --Zombie Heart
 --scripted by:urielkama
+--fixed by MLD
 function c511004100.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -25,36 +26,30 @@ function c511004100.initial_effect(c)
 	e3:SetCode(EVENT_PHASE+PHASE_END)
 	e3:SetCountLimit(1)
 	e3:SetRange(LOCATION_SZONE)
-	e3:SetCondition(c511004100.con)
-	e3:SetTarget(c511004100.tg)
-	e3:SetOperation(c511004100.op)
+	e3:SetCondition(c511004100.damcon)
+	e3:SetTarget(c511004100.damtg)
+	e3:SetOperation(c511004100.damop)
 	c:RegisterEffect(e3)
-	--negate
-	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(511004100,0))
-	e3:SetCategory(CATEGORY_NEGATE)
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
-	e3:SetCode(EVENT_CHAINING)
-	e3:SetRange(LOCATION_SZONE)
-	e3:SetCondition(c511004100.condition2)
-	e3:SetTarget(c511004100.target2)
-	e3:SetOperation(c511004100.operation2)
-	c:RegisterEffect(e3)
-	if not c511004100.global_check then
-		c511004100.global_check=true
-		c511004100[0]=false
-		c511004100[1]=false
-		local ge1=Effect.CreateEffect(c)
-		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge1:SetCode(EVENT_DAMAGE_STEP_END)
-		ge1:SetOperation(c511004100.checkop)
-		Duel.RegisterEffect(ge1,0)
-		local ge2=Effect.CreateEffect(c)
-		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge2:SetCode(EVENT_PHASE_START+PHASE_DRAW)
-		ge2:SetOperation(c511004100.clear)
-		Duel.RegisterEffect(ge2,0)
-	end
+	--battle/effect
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e4:SetCode(EVENT_DAMAGE_STEP_END)
+	e4:SetRange(LOCATION_SZONE)
+	e4:SetCondition(c511004100.atcon)
+	e4:SetOperation(c511004100.op)
+	c:RegisterEffect(e4)
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e5:SetCode(EVENT_CHAINING)
+	e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+	e5:SetRange(LOCATION_SZONE)
+	e5:SetCondition(c511004100.descon)
+	e5:SetOperation(c511004100.op)
+	c:RegisterEffect(e5)
+end
+function c511004100.eqlimit(e,c)
+	return c:IsRace(RACE_ZOMBIE)
 end
 function c511004100.filter(c)
 	return c:IsFaceup() and c:IsRace(RACE_ZOMBIE)
@@ -67,57 +62,44 @@ function c511004100.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,e:GetHandler(),1,0,0)
 end
 function c511004100.operation(e,tp,eg,ep,ev,re,r,rp)
-local tc=Duel.GetFirstTarget()
-	if e:GetHandler():IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	local tc=Duel.GetFirstTarget()
+	if e:GetHandler():IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		Duel.Equip(tp,e:GetHandler(),tc)
 	end
 end
-function c511004100.eqlimit(e,c)
-	return c:IsRace(RACE_ZOMBIE)
+function c511004100.damcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():GetFlagEffect(511004100)>0
 end
-function c511004100.checkop(e,tp,eg,ep,ev,re,r,rp)
-local eqc=e:GetHandler():GetEquipTarget()
-local a=Duel.GetAttacker()
-local d=Duel.GetAttackTarget()
-if not d or (a~=eqc and d~=eqc) then return end
-local la=a:GetAttack()
-local ld=d:GetAttack()
-	if (a==eqc and ld>=la) or (d==eqc and la>=ld) then
-		c511004100[0]=true
-		c511004100[1]=true
-	end
-end
-function c511004100.clear(e,tp,eg,ep,ev,re,r,rp)
-	c511004100[0]=false
-	c511004100[1]=false
-end
-function c511004100.eqfilter(c,ec,tp)
-	return c:IsOnField() and c:IsControler(tp) and c:GetEquipTarget()==ec
-end
-function c511004100.condition2(e,tp,eg,ep,ev,re,r,rp)
-	if e==re or e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) or not Duel.IsChainNegatable(ev) then return false end
-	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_DESTROY)
-	return ex and tg~=nil and tc+tg:FilterCount(c511004100.eqfilter,nil)-tg:GetCount()==1 and Duel.IsChainNegatable(ev)
-end
-function c511004100.target2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
-end
-function c511004100.operation2(e,tp,eg,ep,ev,re,r,rp)
-	Duel.NegateActivation(ev)
-	e:GetHandler():RegisterFlagEffect(511004100,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,0)
-end
-function c511004100.con(e,tp,eg,ep,ev,re,r,rp)
-	return c511004100[tp] or e:GetHandler():GetFlagEffect(511004100)>0
-end
-function c511004100.tg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c511004100.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local atk=e:GetHandler():GetEquipTarget():GetAttack()
 	Duel.SetTargetPlayer(1-tp)
 	Duel.SetTargetParam(atk)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,atk)
 end
+function c511004100.damop(e,tp,eg,ep,ev,re,r,rp)
+	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
+	local ec=e:GetHandler():GetEquipTarget()
+	if not ec then return end
+	local atk=ec:GetAttack()
+	Duel.Damage(p,atk,REASON_EFFECT)
+end
+function c511004100.atcon(e,tp,eg,ep,ev,re,r,rp)
+	local ec=e:GetHandler():GetEquipTarget()
+	if not ec then return false end
+	local bc=ec:GetBattleTarget()
+	return bc and ec:GetAttack()<bc:GetAttack()
+end
+function c511004100.cfilter(c,ec)
+	return c==ec
+end
+function c511004100.descon(e,tp,eg,ep,ev,re,r,rp)
+	local ec=e:GetHandler():GetEquipTarget()
+	if not ec then return false end
+	if ec:IsStatus(STATUS_BATTLE_DESTROYED) then return false end
+	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_DESTROY)
+	return ex and tg~=nil and tc+tg:FilterCount(c511004100.cfilter,nil,ec)-tg:GetCount()>0
+end
 function c511004100.op(e,tp,eg,ep,ev,re,r,rp)
-	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	Duel.Damage(p,d,REASON_EFFECT)
+	e:GetHandler():RegisterFlagEffect(511004100,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,0)
 end
