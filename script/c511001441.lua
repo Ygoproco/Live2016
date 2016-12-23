@@ -21,7 +21,7 @@ function c511001441.initial_effect(c)
 	e3:SetCategory(CATEGORY_DESTROY)
 	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e3:SetCode(511001265)
+	e3:SetCode(511001441)
 	e3:SetRange(LOCATION_SZONE)
 	e3:SetCondition(c511001441.descon)
 	e3:SetTarget(c511001441.destg)
@@ -30,12 +30,21 @@ function c511001441.initial_effect(c)
 	if not c511001441.global_check then
 		c511001441.global_check=true
 		--register
-		local e2=Effect.CreateEffect(c)
-		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e2:SetCode(EVENT_ADJUST)
-		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e2:SetOperation(c511001441.operation)
-		Duel.RegisterEffect(e2,0)
+		local ge1=Effect.CreateEffect(c)
+		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge1:SetCode(EVENT_ADJUST)
+		ge1:SetCountLimit(1)
+		ge1:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
+		ge1:SetOperation(c511001441.atkchk)
+		Duel.RegisterEffect(ge1,0)
+	end
+end
+function c511001441.atkchk(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetFlagEffect(tp,419)==0 and Duel.GetFlagEffect(1-tp,419)==0 then
+		Duel.CreateToken(tp,419)
+		Duel.CreateToken(1-tp,419)
+		Duel.RegisterFlagEffect(tp,419,nil,0,1)
+		Duel.RegisterFlagEffect(1-tp,419,nil,0,1)
 	end
 end
 function c511001441.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -47,45 +56,16 @@ function c511001441.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c511001441.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if e:GetHandler():IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if e:GetHandler():IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		Duel.Equip(tp,e:GetHandler(),tc)
 	end
 end
-function c511001441.operation(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()	
-	local g=Duel.GetMatchingGroup(nil,c:GetControler(),LOCATION_MZONE,LOCATION_MZONE,nil)
-	local tc=g:GetFirst()
-	while tc do
-		if tc:IsFaceup() and tc:GetFlagEffect(511001265)==0 then
-			local e1=Effect.CreateEffect(c)	
-			e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
-			e1:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-			e1:SetCode(EVENT_CHAIN_SOLVED)
-			e1:SetRange(LOCATION_MZONE)
-			e1:SetLabel(tc:GetAttack())
-			e1:SetOperation(c511001441.op)
-			e1:SetReset(RESET_EVENT+0x1fe0000)
-			tc:RegisterEffect(e1)
-			tc:RegisterFlagEffect(511001265,RESET_EVENT+0x1fe0000,0,1) 	
-		end	
-		tc=g:GetNext()
-	end
-end
-function c511001441.op(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if e:GetLabel()==c:GetAttack() then return end
-	local val=0
-	if e:GetLabel()>c:GetAttack() then
-		val=e:GetLabel()-c:GetAttack()
-	else
-		val=c:GetAttack()-e:GetLabel()
-	end
-	Duel.RaiseEvent(c,511001265,e,REASON_EFFECT,rp,tp,val)
-	e:SetLabel(c:GetAttack())
-end
 function c511001441.descon(e,tp,eg,ep,ev,re,r,rp)
-	local ec=eg:GetFirst()
-	return ec==e:GetHandler():GetEquipTarget() and rp~=tp and ev>0
+	local ec=e:GetHandler():GetEquipTarget()
+	if not ec or not eg:IsContains(ec) then return false end
+	local val=0
+	if ec:GetFlagEffect(284)>0 then val=ec:GetFlagEffectLabel(284) end
+	return ec:GetAttack()~=val and rp~=tp
 end
 function c511001441.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -94,6 +74,6 @@ end
 function c511001441.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
-		Duel.Destroy(e:GetHandler():GetEquipTarget(),REASON_EFFECT)
+		Duel.Destroy(c:GetEquipTarget(),REASON_EFFECT)
 	end
 end

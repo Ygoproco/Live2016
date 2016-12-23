@@ -26,45 +26,22 @@ function c511002524.initial_effect(c)
 	if not c511002524.global_check then
 		c511002524.global_check=true
 		--register
-		local e2=Effect.CreateEffect(c)
-		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e2:SetCode(EVENT_ADJUST)
-		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e2:SetOperation(c511002524.operation)
-		Duel.RegisterEffect(e2,0)
+		local ge1=Effect.CreateEffect(c)
+		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge1:SetCode(EVENT_ADJUST)
+		ge1:SetCountLimit(1)
+		ge1:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
+		ge1:SetOperation(c511002524.atkchk)
+		Duel.RegisterEffect(ge1,0)
 	end
 end
-function c511002524.operation(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()	
-	local g=Duel.GetMatchingGroup(nil,c:GetControler(),LOCATION_MZONE,LOCATION_MZONE,nil)
-	local tc=g:GetFirst()
-	while tc do
-		if tc:GetFlagEffect(511002524)==0 then
-			local e1=Effect.CreateEffect(c)	
-			e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
-			e1:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-			e1:SetCode(EVENT_CHAIN_SOLVED)
-			e1:SetRange(LOCATION_MZONE)
-			e1:SetLabel(tc:GetLevel())
-			e1:SetOperation(c511002524.op)
-			e1:SetReset(RESET_EVENT+0x1fe0000)
-			tc:RegisterEffect(e1)
-			tc:RegisterFlagEffect(511002524,RESET_EVENT+0x1fe0000,0,1) 	
-		end
-		tc=g:GetNext()
+function c511002524.atkchk(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetFlagEffect(tp,419)==0 and Duel.GetFlagEffect(1-tp,419)==0 then
+		Duel.CreateToken(tp,419)
+		Duel.CreateToken(1-tp,419)
+		Duel.RegisterFlagEffect(tp,419,nil,0,1)
+		Duel.RegisterFlagEffect(1-tp,419,nil,0,1)
 	end
-end
-function c511002524.op(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if e:GetLabel()==c:GetLevel() then return end
-	local val=0
-	if e:GetLabel()>c:GetLevel() then
-		val=e:GetLabel()-c:GetLevel()
-	else
-		val=c:GetLevel()-e:GetLabel()
-	end
-	Duel.RaiseSingleEvent(c,511002524,re,REASON_EFFECT,rp,tp,val)
-	e:SetLabel(c:GetLevel())
 end
 function c511002524.filter(c)
 	return c:IsFaceup() and c:GetLevel()>0
@@ -102,8 +79,9 @@ function c511002524.effop(e,tp,eg,ep,ev,re,r,rp)
 	while tc do
 		local e1=Effect.CreateEffect(tc)
 		e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
-		e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 		e1:SetCode(511002524)
+		e1:SetRange(LOCATION_MZONE)
 		e1:SetCondition(c511002524.scon)
 		e1:SetOperation(c511002524.sop)
 		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
@@ -112,7 +90,11 @@ function c511002524.effop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c511002524.scon(e,tp,eg,ep,ev,re,r,rp)
-	return ev>0 and re and re:GetHandler()~=e:GetHandler()
+	local c=e:GetHandler()
+	if not eg:IsContains(c) then return false end
+	local val=0
+	if c:GetFlagEffect(584)>0 then val=c:GetFlagEffectLabel(584) end
+	return c:GetLevel()~=val and re:GetHandler()~=e:GetHandler()
 end
 function c511002524.sop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

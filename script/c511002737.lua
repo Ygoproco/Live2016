@@ -1,4 +1,4 @@
---CH キング・アーサー
+﻿--CH キング・アーサー
 function c511002737.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_WARRIOR),4,2)
@@ -18,58 +18,45 @@ function c511002737.initial_effect(c)
 	if not c511002737.global_check then
 		c511002737.global_check=true
 		--register
-		local e2=Effect.CreateEffect(c)
-		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e2:SetCode(EVENT_ADJUST)
-		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e2:SetOperation(c511002737.operation)
-		Duel.RegisterEffect(e2,0)
+		local ge1=Effect.CreateEffect(c)
+		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge1:SetCode(EVENT_ADJUST)
+		ge1:SetCountLimit(1)
+		ge1:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
+		ge1:SetOperation(c511002737.atkchk)
+		Duel.RegisterEffect(ge1,0)
 	end
 end
-function c511002737.operation(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()	
-	local g=Duel.GetMatchingGroup(Card.IsFaceup,0,LOCATION_MZONE,LOCATION_MZONE,nil)
-	local tc=g:GetFirst()
-	while tc do
-		if tc:IsFaceup() and tc:GetFlagEffect(511001265)==0 then
-			local e1=Effect.CreateEffect(c)	
-			e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
-			e1:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-			e1:SetCode(EVENT_CHAIN_SOLVED)
-			e1:SetRange(LOCATION_MZONE)
-			e1:SetLabel(tc:GetAttack())
-			e1:SetOperation(c511002737.op)
-			e1:SetReset(RESET_EVENT+0x1fe0000)
-			tc:RegisterEffect(e1)
-			tc:RegisterFlagEffect(511001265,RESET_EVENT+0x1fe0000,0,1) 	
-		end	
-		tc=g:GetNext()
-	end		
-end
-function c511002737.op(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if e:GetLabel()==c:GetAttack() then return end
-	local val=0
-	if e:GetLabel()>c:GetAttack() then
-		val=e:GetLabel()-c:GetAttack()
-	else
-		val=c:GetAttack()-e:GetLabel()
+function c511002737.atkchk(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetFlagEffect(tp,419)==0 and Duel.GetFlagEffect(1-tp,419)==0 then
+		Duel.CreateToken(tp,419)
+		Duel.CreateToken(1-tp,419)
+		Duel.RegisterFlagEffect(tp,419,nil,0,1)
+		Duel.RegisterFlagEffect(1-tp,419,nil,0,1)
 	end
-	Duel.RaiseEvent(c,511001265,re,REASON_EFFECT,rp,tp,val)
-	e:SetLabel(c:GetAttack())
 end
 function c511002737.damcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler()==eg:GetFirst() and ev>0
+	local c=e:GetHandler()
+	if not eg:IsContains(c) then return false end
+	local val=0
+	if c:GetFlagEffect(284)>0 then val=c:GetFlagEffectLabel(284) end
+	return c:GetAttack()~=val
 end
 function c511002737.damcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function c511002737.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
 	if chk==0 then return true end
+	local dam=0
+	local val=0
+	if c:GetFlagEffect(284)>0 then val=c:GetFlagEffectLabel(284) end
+	if c:GetAttack()>val then dam=c:GetAttack()-val
+	else dam=val-c:GetAttack() end
 	Duel.SetTargetPlayer(1-tp)
-	Duel.SetTargetParam(ev)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,ev)
+	Duel.SetTargetParam(dam)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,dam)
 end
 function c511002737.damop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)

@@ -1,4 +1,4 @@
---Number 33: Chronomaly Machu Mech (anime)
+--No.33 先史遺産－超兵器マシュ＝マック
 function c511002091.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,nil,5,2)
@@ -25,12 +25,13 @@ function c511002091.initial_effect(c)
 	if not c511002091.global_check then
 		c511002091.global_check=true
 		--register
-		local e2=Effect.CreateEffect(c)
-		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e2:SetCode(EVENT_ADJUST)
-		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e2:SetOperation(c511002091.operation)
-		Duel.RegisterEffect(e2,0)
+		local ge1=Effect.CreateEffect(c)
+		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge1:SetCode(EVENT_ADJUST)
+		ge1:SetCountLimit(1)
+		ge1:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
+		ge1:SetOperation(c511002091.atkchk)
+		Duel.RegisterEffect(ge1,0)
 		local ge2=Effect.CreateEffect(c)
 		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		ge2:SetCode(EVENT_ADJUST)
@@ -41,58 +42,65 @@ function c511002091.initial_effect(c)
 	end
 end
 c511002091.xyz_number=33
+function c511002091.atkchk(e,tp,eg,ep,ev,re,r,rp)
+	Duel.CreateToken(tp,419)
+	Duel.CreateToken(1-tp,419)
+end
+function c511002091.cfilter(c)
+	local val=0
+	if c:GetFlagEffect(284)>0 then val=c:GetFlagEffectLabel(284) end
+	return c:GetAttack()~=val
+end
 function c511002091.damcon(e,tp,eg,ep,ev,re,r,rp)
-	return ev>0
+	return eg:IsExists(c511002091.cfilter,1,nil)
 end
 function c511002091.damcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
+function c511002091.diffilter1(c,g)
+	local dif=0
+	local val=0
+	if c:GetFlagEffect(284)>0 then val=c:GetFlagEffectLabel(284) end
+	if c:GetAttack()>val then dif=c:GetAttack()-val
+	else dif=val-c:GetAttack() end
+	return g:IsExists(c511002091.diffilter2,1,c,dif)
+end
+function c511002091.diffilter2(c,dif)
+	local dif2=0
+	local val=0
+	if c:GetFlagEffect(284)>0 then val=c:GetFlagEffectLabel(284) end
+	if c:GetAttack()>val then dif2=c:GetAttack()-val
+	else dif2=val-c:GetAttack() end
+	return dif~=dif2
+end
 function c511002091.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
+	local ec=eg:GetFirst()
+	local g=eg:Filter(c511002091.diffilter1,nil,eg)
+	local g2=Group.CreateGroup()
+	if g:GetCount()>0 then g2=g:Select(tp,1,1,nil) ec=g2:GetFirst() end
+	if g2:GetCount()>0 then Duel.HintSelection(g2) end
+	local dam=0
+	local val=0
+	if ec:GetFlagEffect(284)>0 then val=ec:GetFlagEffectLabel(284) end
+	if ec:GetAttack()>val then dam=ec:GetAttack()-val
+	else dam=val-ec:GetAttack() end
 	Duel.SetTargetPlayer(1-tp)
-	Duel.SetTargetParam(ev)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,ev)
+	Duel.SetTargetParam(dam)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,dam)
 end
 function c511002091.damop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Damage(p,d,REASON_EFFECT)
 end
-function c511002091.operation(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()	
-	local g=Duel.GetMatchingGroup(nil,c:GetControler(),LOCATION_MZONE,LOCATION_MZONE,nil)
-	local tc=g:GetFirst()
-	while tc do
-		if tc:IsFaceup() and tc:GetFlagEffect(511001265)==0 then
-			local e1=Effect.CreateEffect(c)	
-			e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
-			e1:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-			e1:SetCode(EVENT_CHAIN_SOLVED)
-			e1:SetRange(LOCATION_MZONE)
-			e1:SetLabel(tc:GetAttack())
-			e1:SetOperation(c511002091.op)
-			e1:SetReset(RESET_EVENT+0x1fe0000)
-			tc:RegisterEffect(e1)
-			tc:RegisterFlagEffect(511001265,RESET_EVENT+0x1fe0000,0,1) 	
-		end	
-		tc=g:GetNext()
-	end		
-end
-function c511002091.op(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if e:GetLabel()==c:GetAttack() then return end
-	local val=0
-	if e:GetLabel()>c:GetAttack() then
-		val=e:GetLabel()-c:GetAttack()
-	else
-		val=c:GetAttack()-e:GetLabel()
-	end
-	Duel.RaiseEvent(c,511001265,re,REASON_EFFECT,rp,tp,val)
-	e:SetLabel(c:GetAttack())
-end
 function c511002091.numchk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,39139935)
-	Duel.CreateToken(1-tp,39139935)
+	if Duel.GetFlagEffect(tp,419)==0 and Duel.GetFlagEffect(1-tp,419)==0 then
+		Duel.CreateToken(tp,419)
+		Duel.CreateToken(1-tp,419)
+		Duel.RegisterFlagEffect(tp,419,nil,0,1)
+		Duel.RegisterFlagEffect(1-tp,419,nil,0,1)
+	end
 end
 function c511002091.indes(e,c)
 	return not c:IsSetCard(0x48)
