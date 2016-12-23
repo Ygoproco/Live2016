@@ -8,7 +8,7 @@ function c511001094.initial_effect(c)
 	e2:SetRange(LOCATION_PZONE)
 	e2:SetTargetRange(LOCATION_MZONE,0)
 	e2:SetCode(EFFECT_UPDATE_ATTACK)
-	e2:SetTarget(c511001094.filter)
+	e2:SetTarget(aux.TargetBoolFunction(Card.IsAttribute,ATTRIBUTE_FIRE))
 	e2:SetValue(300)
 	c:RegisterEffect(e2)
 	--tohand
@@ -22,15 +22,12 @@ function c511001094.initial_effect(c)
 	e3:SetOperation(c511001094.thop)
 	c:RegisterEffect(e3)
 end
-function c511001094.filter(e,c)
-	return c:IsAttribute(ATTRIBUTE_FIRE)
-end
 function c511001094.thcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return c:GetSummonType()==SUMMON_TYPE_PENDULUM and c:IsPreviousLocation(LOCATION_EXTRA)
 end
 function c511001094.afilter(c)
-	return c:IsSetCard(0x121e) and c:IsAbleToHand()
+	return c:IsSetCard(0x21e) and c:IsSetCard(0xf2) and c:IsAbleToHand()
 end
 function c511001094.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c511001094.afilter,tp,LOCATION_DECK,0,1,nil) end
