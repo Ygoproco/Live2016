@@ -1,4 +1,5 @@
 --Pendulum Holt
+--fixed by MLD
 function c511009386.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -12,10 +13,10 @@ function c511009386.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511009386.cfilter(c)
-	return c:IsFaceup()
+	return c:IsFaceup() and c:IsType(TYPE_PENDULUM)
 end
 function c511009386.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetMatchingGroupCount(c511009386.cfilter,c:GetControler(),LOCATION_EXTRA,0,nil)>=3
+	return Duel.GetMatchingGroupCount(c511009386.cfilter,tp,LOCATION_EXTRA,0,nil)>=3
 end
 function c511009386.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,2) end

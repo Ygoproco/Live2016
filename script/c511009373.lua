@@ -1,4 +1,5 @@
 --Illegal Dark Contract with the War God
+--fixed by MLD
 function c511009373.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -14,13 +15,14 @@ function c511009373.initial_effect(c)
 	e2:SetCountLimit(1)
 	e2:SetCategory(CATEGORY_ATKCHANGE)
 	e2:SetRange(LOCATION_SZONE)
-	e2:SetCondition(c511009373.condition)
-	e2:SetTarget(c511009373.target)
-	e2:SetOperation(c511009373.operation)
+	e2:SetCondition(c511009373.atkcon)
+	e2:SetTarget(c511009373.atktg)
+	e2:SetOperation(c511009373.atkop)
 	c:RegisterEffect(e2)
 	-- damage
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(45974017,3))
+	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e3:SetCategory(CATEGORY_DAMAGE)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e3:SetRange(LOCATION_SZONE)
@@ -34,10 +36,10 @@ end
 function c511009373.filter(c)
 	return c:IsFaceup() and c:IsSetCard(0xaf)
 end
-function c511009373.condition(e,tp,eg,ep,ev,re,r,rp)
+function c511009373.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2
 end
-function c511009373.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function c511009373.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
 	if chk==0 then return Duel.IsExistingTarget(c511009373.filter,tp,LOCATION_MZONE,0,1,nil)
 		and Duel.IsExistingTarget(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil) end
@@ -46,18 +48,23 @@ function c511009373.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,Card.IsFaceup,tp,0,LOCATION_MZONE,1,1,nil)
 end
-function c511009373.operation(e,tp,eg,ep,ev,re,r,rp)
-local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
+function c511009373.atkop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
+	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 	local tc1=g:GetFirst()
 	local tc2=g:GetNext()
+	if not tc1 or not tc2 or tc1==tc2 then return end
+	if tc1:IsControler(1-tp) then tc1,tc2=tc2,tc1 end
+	if tc1:IsControler(1-tp) or tc2:IsControler(tp) then return end
 	if tc1:IsFaceup() and tc2:IsFaceup() and tc1:IsRelateToEffect(e) and tc2:IsRelateToEffect(e) then
-		local e1=Effect.CreateEffect(e:GetHandler())
+		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
 		e1:SetValue(1000)
 		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_BATTLE)
 		tc1:RegisterEffect(e1)
-		local e2=Effect.CreateEffect(e:GetHandler())
+		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_SINGLE)
 		e2:SetCode(EFFECT_UPDATE_ATTACK)
 		e2:SetValue(-1000)

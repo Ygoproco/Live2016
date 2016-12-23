@@ -1,4 +1,5 @@
 --Ivy Bind Castle
+--fixed by MLD
 function c511009410.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -39,30 +40,26 @@ function c511009410.initial_effect(c)
 	e5:SetTarget(c511009410.damtg)
 	e5:SetOperation(c511009410.damop)
 	c:RegisterEffect(e5)
-	
-	--maintain
-	local e6=Effect.CreateEffect(c)
-	e6:SetDescription(aux.Stringid(37195861,0))
-	e6:SetCategory(CATEGORY_TOHAND)
-	e6:SetType(EFFECT_TYPE_TRIGGER_F+EFFECT_TYPE_FIELD)
-	e6:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CARD_TARGET)
-	e6:SetRange(LOCATION_SZONE)
-	e6:SetCode(EVENT_PHASE+PHASE_STANDBY)
-	e6:SetCountLimit(1)
-	e6:SetCondition(c511009410.con)
-	e6:SetTarget(c511009410.tg)
-	e6:SetOperation(c511009410.op)
-	c:RegisterEffect(e6)
+	--tribute
+	local e7=Effect.CreateEffect(c)
+	e7:SetDescription(aux.Stringid(33900648,1))
+	e7:SetCategory(CATEGORY_RELEASE+CATEGORY_DESTROY)
+	e7:SetCode(EVENT_PHASE+PHASE_STANDBY)
+	e7:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+	e7:SetRange(LOCATION_SZONE)
+	e7:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e7:SetCountLimit(1)
+	e7:SetCondition(c511009410.descon)
+	e7:SetTarget(c511009410.destg)
+	e7:SetOperation(c511009410.desop)
+	c:RegisterEffect(e7)
 end
-
-
 function c511009410.disop(e,tp,eg,ep,ev,re,r,rp)
 	local tl=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
 	if rp~=tp and (tl==LOCATION_MZONE or tl==LOCATION_SZONE) then
 		Duel.NegateEffect(ev)
 	end
 end
-
 function c511009410.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return tp~=Duel.GetTurnPlayer()
 end
@@ -73,30 +70,31 @@ function c511009410.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,ct*800)
 end
 function c511009410.damop(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
 	local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)
 	Duel.Damage(p,ct*800,REASON_EFFECT)
 end
-function c511009410.effilter(c)
-	return c:IsFaceup() and c:IsReleasableByEffect()
-end
-function c511009410.con(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()==tp
+function c511009410.descon(e,tp,eg,ep,ev,re,r,rp)
+	return tp==Duel.GetTurnPlayer()
 end
 function c511009410.filter(c)
 	return c:IsSetCard(0x10f3) and c:IsReleasableByEffect()
 end
-function c511009410.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function c511009410.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and c511009410.filter(chkc) end
 	if chk==0 then return true end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
 	local g=Duel.SelectTarget(tp,c511009410.filter,tp,LOCATION_MZONE,0,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
+	if g:GetCount()==0 then
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
+	end
 end
-function c511009410.op(e,tp,eg,ep,ev,re,r,rp)
+function c511009410.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
+	if c:IsFacedown() or not c:IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToEffect(e) then
-		Duel.Release(tc,REASON_COST)
-	else Duel.Destroy(c,REASON_COST)
+	if not tc or not tc:IsRelateToEffect(e) or Duel.Release(tc,REASON_EFFECT)==0 then
+		Duel.Destroy(e:GetHandler(), REASON_EFFECT)
 	end
 end

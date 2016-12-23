@@ -1,4 +1,5 @@
 --Seed Cannon Salvo
+--fixed by MLD
 function c511009411.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -8,19 +9,20 @@ function c511009411.initial_effect(c)
 	--search
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(78748366,0))
-	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e2:SetCategory(CATEGORY_DAMAGE)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_SZONE)
-	e2:SetCost(c511009411.thcost)
-	e2:SetTarget(c511009411.thtg)
-	e2:SetOperation(c511009411.thop)
+	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e2:SetCost(c511009411.damcost)
+	e2:SetTarget(c511009411.damtg)
+	e2:SetOperation(c511009411.damop)
 	c:RegisterEffect(e2)
 	--destroy
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(41517968,0))
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e4:SetCategory(CATEGORY_DESTROY)
-	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e4:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e4:SetCode(EVENT_DESTROYED)
 	e4:SetTarget(c511009411.destg)
 	e4:SetOperation(c511009411.desop)
@@ -29,19 +31,20 @@ end
 function c511009411.costfilter(c)
 	return c:IsSetCard(0x10f3) and c:IsLevelBelow(4) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
 end
-function c511009411.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
+function c511009411.damcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c511009411.costfilter,tp,LOCATION_DECK,0,1,nil) end
 	local g=Duel.SelectMatchingCard(tp,c511009411.costfilter,tp,LOCATION_DECK,0,1,1,nil)
 	Duel.SendtoGrave(g,REASON_COST)
 end
-function c511009411.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c511009411.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetTargetPlayer(1-tp)
 	Duel.SetTargetParam(300)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,300)
 end
-function c511009411.thop(e,tp,eg,ep,ev,re,r,rp)
+function c511009411.damop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	if Duel.Damage(p,d,REASON_EFFECT)~=0 then
 		local mg=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
@@ -57,17 +60,15 @@ function c511009411.thop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-------------------------
 function c511009411.filter(c)
 	return c:IsFaceup() and c:IsSetCard(0x10f3)
 end
 function c511009411.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and chkc:IsDestructable() end
-	if chk==0 then return Duel.IsExistingMatchingCard(c511009411.filter,tp,LOCATION_MZONE,0,1,nil)
-		and Duel.IsExistingTarget(Card.IsDestructable,tp,0,LOCATION_ONFIELD,1,nil) end
+	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) end
+	if chk==0 then return true end
 	local ct=Duel.GetMatchingGroupCount(c511009411.filter,tp,LOCATION_MZONE,0,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,Card.IsDestructable,tp,0,LOCATION_ONFIELD,1,ct,nil)
+	local g=Duel.SelectTarget(tp,aux.TRUE,tp,0,LOCATION_ONFIELD,1,ct,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 function c511009411.desop(e,tp,eg,ep,ev,re,r,rp)
