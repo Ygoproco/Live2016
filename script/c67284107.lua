@@ -21,12 +21,10 @@ function c67284107.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
 	ft=math.min(ft,Duel.GetLocationCount(tp,LOCATION_MZONE))
 	if ft<=0 or not Duel.IsPlayerCanSpecialSummonMonster(tp,67284108,0,0x4011,0,0,1,RACE_ZOMBIE,ATTRIBUTE_DARK) then return end
-	local ct=1
 	repeat
-		local token=Duel.CreateToken(tp,67284107+ct)
+		local token=Duel.CreateToken(tp,67284108)
 		Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP)
 		ft=ft-1
-		if ct==4 then ct=1 else ct=ct+1 end
 	until ft<=0 or not Duel.SelectYesNo(tp,aux.Stringid(67284107,1))
 	Duel.SpecialSummonComplete()
 end
