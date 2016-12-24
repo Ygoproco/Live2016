@@ -28,15 +28,15 @@ function c511009392.initial_effect(c)
 	e3:SetOperation(c511009392.atkop)
 	c:RegisterEffect(e3)
 	--search
-	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(64973287,1))
-	e3:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e3:SetCode(EVENT_BATTLE_DESTROYING)
-	e3:SetCondition(aux.bdocon)
-	e3:SetTarget(c511009392.target)
-	e3:SetOperation(c511009392.operation)
-	c:RegisterEffect(e3)
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(64973287,1))
+	e4:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e4:SetCode(EVENT_BATTLE_DESTROYING)
+	e4:SetCondition(aux.bdocon)
+	e4:SetTarget(c511009392.thtg)
+	e4:SetOperation(c511009392.thop)
+	c:RegisterEffect(e4)
 end
 -- REGEN LP
 function c511009392.damcon(e,tp,eg,ep,ev,re,r,rp)
@@ -58,7 +58,7 @@ function c511009392.damop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetReset(RESET_CHAIN)
 	Duel.RegisterEffect(e1,tp)
 end
-function .rec511009392fcon(e,re,r,rp,rc)
+function c511009392.refcon(e,re,r,rp,rc)
 	local cc=Duel.GetCurrentChain()
 	if cc==0 or bit.band(r,REASON_EFFECT)==0 then return end
 	local cid=Duel.GetChainInfo(0,CHAININFO_CHAIN_ID)
@@ -104,11 +104,11 @@ end
 function c511009392.filter(c)
 	return c:IsSetCard(0xae) and c:IsAbleToHand()
 end
-function c511009392.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function c511009392.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c511009392.filter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
-function c511009392.operation(e,tp,eg,ep,ev,re,r,rp)
+function c511009392.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,c511009392.filter,tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then

@@ -41,7 +41,7 @@ function c511000873.rmop(e,tp,eg,ep,ev,re,r,rp)
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e1:SetCode(EVENT_PHASE+PHASE_BATTLE)
-		if Duel.GetTurnPlayer()~=tp
+		if Duel.GetTurnPlayer()~=tp then
 			e1:SetReset(RESET_PHASE+PHASE_BATTLE+RESET_OPPO_TURN,4)
 			e1:SetLabel(-1)
 		else

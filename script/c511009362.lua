@@ -1,4 +1,5 @@
 --Dark Contract with the Monopoly Seal
+--fixed by MLD
 function c511009362.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -37,7 +38,7 @@ function c511009362.sumlimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return c:IsLocation(LOCATION_EXTRA)
 end
 function c511009362.splimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return c:IsLocation(LOCATION_EXTRA) and c:IsType(TYPE_FUSION)
+	return c:IsLocation(LOCATION_EXTRA) and c:IsType(e:GetLabel())
 end
 function c511009362.filter(c,tpe)
 	return c:IsFaceup() and c:IsType(tpe)

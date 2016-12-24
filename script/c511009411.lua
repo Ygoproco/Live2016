@@ -27,7 +27,7 @@ function c511009411.initial_effect(c)
 	c:RegisterEffect(e4)
 end 
 function c511009411.costfilter(c)
-	return c:IsSetCard(0x10f3) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
+	return c:IsSetCard(0x10f3) and c:IsLevelBelow(4) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
 end
 function c511009411.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c511009411.costfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -41,6 +41,7 @@ function c511009411.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,300)
 end
 function c511009411.thop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	if Duel.Damage(p,d,REASON_EFFECT)~=0 then
 		local mg=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
@@ -57,7 +58,9 @@ function c511009411.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 ------------------------
-
+function c511009411.filter(c)
+	return c:IsFaceup() and c:IsSetCard(0x10f3)
+end
 function c511009411.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(1-tp) and chkc:IsDestructable() end
 	if chk==0 then return Duel.IsExistingMatchingCard(c511009411.filter,tp,LOCATION_MZONE,0,1,nil)

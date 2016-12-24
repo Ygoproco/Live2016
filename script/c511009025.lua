@@ -2,7 +2,12 @@
 function c511009025.initial_effect(c)
   --fusion
   c:EnableReviveLimit()
-  aux.AddFusionProcFunRep(c,c511009025.mat_filter,2,true)
+  -- aux.AddFusionProcFunRep(c,c511009025.mat_filter,2,true)
+  if Card.IsFusionAttribute then
+		aux.AddFusionProcFunRep(c,c511009025.mat_filter1,2,true)
+	else
+		aux.AddFusionProcFunRep(c,c511009025.mat_filter2,2,true)
+	end
   --material
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
@@ -46,12 +51,14 @@ function c511009025.initial_effect(c)
 		Duel.RegisterEffect(ge1,0)
 	end
 end
-
-function c511009025.mat_filter(c)
+function c511009025.mat_filter1(c)
+  return c:IsFusionAttribute(ATTRIBUTE_DARK)
+end
+function c511009025.mat_filter2(c)
   return c:IsAttribute(ATTRIBUTE_DARK)
 end
 function c511009025.atkfil(c)
-  return not c:IsPreviousLocation(LOCATION_MZONE)
+  return not c:IsPreviousLocation(LOCATION_ONFIELD)
 end
 function c511009025.atkcon(e,tp,eg,ep,ev,re,r,rp)
   local ph=Duel.GetCurrentPhase()
@@ -101,13 +108,13 @@ function c511009025.nmop(e,tp,eg,ep,ev,re,r,rp)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetCode(EFFECT_DISABLE)
-	e2:SetReset(RESET_EVENT+0x1fe0000)
+	e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 	tc:RegisterEffect(e2)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
 	e3:SetCode(EFFECT_DISABLE_EFFECT)
 	e3:SetValue(RESET_TURN_SET)
-	e3:SetReset(RESET_EVENT+0x1fe0000)
+	e3:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 	tc:RegisterEffect(e3)
 	c:CopyEffect(code,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,1)
   end
@@ -128,7 +135,7 @@ function c511009025.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511009025.desop(e,tp,eg,ep,ev,re,r,rp)
  local g=Duel.GetMatchingGroup(c511009025.desfil,tp,0,LOCATION_MZONE,nil)
-	if Duel.Destroy(sg,REASON_EFFECT)>0 then
+	if Duel.Destroy(g,REASON_EFFECT)>0 then
 		local dg=Duel.GetOperatedGroup()
 		local atk=0
 		local tc=dg:GetFirst()
