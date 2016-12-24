@@ -112,6 +112,7 @@ function c77565204.procfilter(c,code,e,tp)
 end
 function c77565204.procop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
+	c:RegisterFlagEffect(77565204,RESET_EVENT+0x1fe0000,0,1)
 	if not c:IsRelateToEffect(e) then return end
 	local code=e:GetLabelObject():GetLabel()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
@@ -126,7 +127,6 @@ function c77565204.procop(e,tp,eg,ep,ev,re,r,rp)
 		tc:CompleteProcedure()
 		c:SetCardTarget(tc)
 	end
-	e:GetHandler():RegisterFlagEffect(77565204,RESET_EVENT+0x1fe0000,0,1)
 end
 function c77565204.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetHandler():GetFirstCardTarget()
