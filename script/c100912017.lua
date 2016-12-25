@@ -3,6 +3,15 @@
 --Scripted by Eerie Code
 function c100912017.initial_effect(c)
 	aux.EnablePendulumAttribute(c)
+	--scale fix
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_SINGLE)
+	e0:SetCode(EFFECT_CHANGE_LSCALE)
+	e0:SetValue(0)
+	c:RegisterEffect(e0)
+	local e0b=e0:Clone()
+	e0b:SetCode(EFFECT_CHANGE_RSCALE)
+	c:RegisterEffect(e0b)
 	--avoid damage
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
