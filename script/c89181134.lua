@@ -35,6 +35,7 @@ function c89181134.initial_effect(c)
 	c:RegisterEffect(e2)
 	if not Card.IsFusionAttribute then
 		function Card.IsFusionAttribute(c,att,fc)
+			if not fc then return c:IsAttribute(att) end
 			local tp=fc:GetControler()
 			local gc=Duel.IsPlayerAffectedByEffect(tp,0x10000000)
 			if gc then
