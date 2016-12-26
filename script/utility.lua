@@ -1722,6 +1722,11 @@ end
 function Auxiliary.nvfilter(c)
 	return not c:IsHasEffect(EFFECT_NECRO_VALLEY)
 end
+function Auxiliary.NecroValleyFilter(f)
+	return	function(target,...)
+				return f(target,...) and not target:IsHasEffect(EFFECT_NECRO_VALLEY)
+			end
+end
 
 --Function to check the summon method used for the card. Credit goes to Cute-Nekomimi
 function Card.IsSummonType(c,t)
