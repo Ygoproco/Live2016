@@ -82,7 +82,12 @@ end
 function c100912004.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then
-		local mg1=Duel.GetFusionMaterial(tp):Filter(c100912004.spfilter0,c)
+		local mg1=nil
+		if Duel.GetFusionMaterial then
+			mg1=Duel.GetFusionMaterial(tp):Filter(c100912004.spfilter0,c)
+		else
+			mg1=Duel.GetMatchingGroup(c100912004.spfilter0,tp,LOCATION_ONFIELD,0,c):Filter(Card.IsCanBeFusionMaterial,nil)
+		end
 		local res=Duel.IsExistingMatchingCard(c100912004.spfilter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,c)
 		if not res then
 			local ce=Duel.GetChainMaterial(tp)
@@ -100,7 +105,12 @@ end
 function c100912004.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsFacedown() or not c:IsRelateToEffect(e) or c:IsImmuneToEffect(e) or c:IsControler(1-tp) then return end
-	local mg1=Duel.GetFusionMaterial(tp):Filter(c100912004.spfilter1,c,e)
+	local mg1=nil
+	if Duel.GetFusionMaterial then
+		mg1=Duel.GetFusionMaterial(tp):Filter(c100912004.spfilter1,c,e)
+	else
+		mg1=Duel.GetMatchingGroup(c100912004.spfilter1,tp,LOCATION_ONFIELD,0,c,e):Filter(Card.IsCanBeFusionMaterial,nil)
+	end
 	local sg1=Duel.GetMatchingGroup(c100912004.spfilter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,c)
 	local mg2=nil
 	local sg2=nil
