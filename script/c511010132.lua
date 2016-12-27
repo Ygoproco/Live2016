@@ -6,13 +6,11 @@ function c511010132.initial_effect(c)
 	--atk/def
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(511010132,1))
+	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetCategory(CATEGORY_ATKCHANGE)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
-	e1:SetType(EFFECT_TYPE_QUICK_O)
-	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetRange(LOCATION_MZONE)
-	e1:SetHintTiming(TIMING_DAMAGE_STEP)
-	e1:SetCondition(c511010132.condition)
+	e1:SetCountLimit(1)
 	e1:SetCost(c511010132.cost)
 	e1:SetTarget(c511010132.target)
 	e1:SetOperation(c511010132.operation)
@@ -56,9 +54,6 @@ c511010132.collection={
 	[65676461]=true;[440556]=true;[511001273]=true;[31320433]=true;[5014629]=true;
 	[14306092]=true;[84224627]=true;[511001163]=true;[511001169]=true;[511001858]=true;
 }
-function c511010132.condition(e,tp,eg,ep,ev,re,r,rp)
-	return (Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated())
-end
 function c511010132.rfilter(c)
 	return c:IsType(TYPE_MONSTER) and (c:IsSetCard(0x2D56) or c:IsSetCard(0x321) or c511010132.collection[c:GetCode()]) and c:IsAbleToRemoveAsCost()
 end
@@ -70,7 +65,7 @@ function c511010132.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	else 
 	local og=e:GetHandler():GetOverlayGroup()
 	if og:GetCount()>0 then
-		local mg=og:Select(tp,c511010132.rfilter,1,1,nil)
+		local mg=og:FilterSelect(tp,c511010132.rfilter,1,1,nil)
 			Duel.SendtoGrave(mg,REASON_COST)
 			Duel.RaiseSingleEvent(e:GetHandler(),EVENT_DETACH_MATERIAL,e,0,0,0,0)
 		end
