@@ -67,6 +67,10 @@ function c511010032.atop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
+function c511010032.numchk(e,tp,eg,ep,ev,re,r,rp)
+	Duel.CreateToken(tp,65676461)
+	Duel.CreateToken(1-tp,65676461)
+end
 function c511010032.indes(e,c)
 	return not c:IsSetCard(0x48)
 end
