@@ -1,7 +1,8 @@
 --調弦の魔術師
 --Tune Magician
 --Script by mercury233
---fusion and xyz limit not implemented
+--fusion limit not implemented
+--xyz limit by edo9300
 function c73941492.initial_effect(c)
 	local xmck=Duel.CheckXyzMaterial
 	Duel.CheckXyzMaterial=function(c,f,lv,minc,maxc,og)
