@@ -29,7 +29,7 @@ function c100912014.hspcon(e,c)
 		and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
 function c100912014.spfilter(c,e,tp)
-	return c:IsSetCard(0x1f8) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return (c:IsSetCard(0x1f8) or c:IsCode(8491961)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c100912014.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousLocation(LOCATION_HAND)
@@ -41,12 +41,8 @@ function c100912014.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c100912014.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<1 then return end
-	local g=Duel.SelectMatchingCard(tp,c100912014.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
-	local tc=g:GetFirst()
-	if not tc then return end
-	if tc:IsHasEffect(EFFECT_NECRO_VALLEY) and Duel.IsChainDisablable(0) then
-		Duel.NegateEffect(0)
-		return
+	local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(c100912014.spfilter),tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
+	if g:GetCount()>0 then
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
-	Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 end

@@ -15,6 +15,22 @@ function c511010032.initial_effect(c)
 	e1:SetTarget(c511010032.attg)
 	e1:SetOperation(c511010032.atop)
 	c:RegisterEffect(e1)
+    --battle indestructable
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e2:SetValue(c511010032.indes)
+	c:RegisterEffect(e2)
+	if not c511010032.global_check then
+		c511010032.global_check=true
+		local ge2=Effect.CreateEffect(c)
+		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge2:SetCode(EVENT_ADJUST)
+		ge2:SetCountLimit(1)
+		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
+		ge2:SetOperation(c511010032.numchk)
+		Duel.RegisterEffect(ge2,0)
+	end
 end
 c511010032.xyz_number=32
 function c511010032.atcon(e,tp,eg,ep,ev,re,r,rp)
@@ -50,4 +66,7 @@ function c511010032.atop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.ChainAttack(bc)
 		end
 	end
+end
+function c511010032.indes(e,c)
+	return not c:IsSetCard(0x48)
 end
