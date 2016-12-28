@@ -4,7 +4,7 @@
 function c100912023.initial_effect(c)
 	--summon with 1 tribute
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(100912101,0))
+	e1:SetDescription(aux.Stringid(100912023,0))
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetCode(EFFECT_SUMMON_PROC)
@@ -43,7 +43,7 @@ end
 function c100912023.otcon(e,c,minc)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return minc==0 and c:GetLevel()>4 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	return c:GetLevel()>4 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(c100912023.otfilter,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function c100912023.otop(e,tp,eg,ep,ev,re,r,rp,c)

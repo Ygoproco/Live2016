@@ -1,6 +1,4 @@
 --白のヴェール
---White Veil
---Script by dest
 function c49306994.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -20,42 +18,46 @@ function c49306994.initial_effect(c)
 	c:RegisterEffect(e2)
 	--Actlimit
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e3:SetRange(LOCATION_SZONE)
-	e3:SetCode(EVENT_ATTACK_ANNOUNCE)
-	e3:SetOperation(c49306994.lmop)
+	e3:SetCode(EFFECT_CANNOT_ACTIVATE)
+	e3:SetTargetRange(0,1)
+	e3:SetValue(c49306994.aclimit)
+	e3:SetCondition(c49306994.actcon)
 	c:RegisterEffect(e3)
 	--disable
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e3:SetRange(LOCATION_SZONE)
-	e3:SetCode(EVENT_ATTACK_ANNOUNCE)
-	e3:SetOperation(c49306994.disop)
-	c:RegisterEffect(e3)
-	--draw
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(49306994,0))
-	e4:SetCategory(CATEGORY_DESTROY)
-	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e4:SetCode(EVENT_BATTLE_DESTROYING)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e4:SetRange(LOCATION_SZONE)
-	e4:SetCondition(c49306994.descon)
-	e4:SetTarget(c49306994.destg)
-	e4:SetOperation(c49306994.desop)
+	e4:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e4:SetCondition(c49306994.discon)
+	e4:SetOperation(c49306994.disop)
 	c:RegisterEffect(e4)
-	--leave
+	--destroy
 	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
-	e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-	e5:SetCode(EVENT_LEAVE_FIELD_P)
-	e5:SetOperation(c49306994.checkop)
+	e5:SetDescription(aux.Stringid(49306994,0))
+	e5:SetCategory(CATEGORY_DESTROY)
+	e5:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e5:SetCode(EVENT_BATTLE_DESTROYING)
+	e5:SetRange(LOCATION_SZONE)
+	e5:SetCondition(c49306994.descon)
+	e5:SetTarget(c49306994.destg)
+	e5:SetOperation(c49306994.desop)
 	c:RegisterEffect(e5)
+	--leave
 	local e6=Effect.CreateEffect(c)
-	e6:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	e6:SetCode(EVENT_LEAVE_FIELD)
-	e6:SetLabelObject(e5)
-	e6:SetOperation(c49306994.leave)
+	e6:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_SINGLE)
+	e6:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e6:SetCode(EVENT_LEAVE_FIELD_P)
+	e6:SetOperation(c49306994.checkop)
 	c:RegisterEffect(e6)
+	local e7=Effect.CreateEffect(c)
+	e7:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e7:SetCode(EVENT_LEAVE_FIELD)
+	e7:SetLabelObject(e6)
+	e7:SetOperation(c49306994.leave)
+	c:RegisterEffect(e7)
 end
 function c49306994.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() end
@@ -70,31 +72,45 @@ function c49306994.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Equip(tp,e:GetHandler(),tc)
 	end
 end
-function c49306994.lmop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=e:GetHandler():GetEquipTarget()
-	if tc~=Duel.GetAttacker() or tc~=Duel.GetAttackTarget() then return end
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e1:SetCode(EFFECT_CANNOT_ACTIVATE)
-	e1:SetTargetRange(0,1)
-	e1:SetValue(c49306994.aclimit)
-	e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
-	Duel.RegisterEffect(e1,tp)
-end
 function c49306994.aclimit(e,re,tp)
-	return re:IsHasType(EFFECT_TYPE_ACTIVATE)
+	return re:IsHasType(EFFECT_TYPE_ACTIVATE) and not re:GetHandler():IsImmuneToEffect(e)
+end
+function c49306994.actcon(e)
+	local tc=e:GetHandler():GetEquipTarget()
+	return Duel.GetAttacker()==tc or Duel.GetAttackTarget()==tc
+end
+function c49306994.discon(e,tp,eg,ep,ev,re,r,rp)
+	local tc=e:GetHandler():GetEquipTarget()
+	return Duel.GetAttacker()==tc or Duel.GetAttackTarget()==tc
+end
+function c49306994.disfilter(c)
+	return aux.disfilter1(c) and c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function c49306994.disop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:GetEquipTarget()~=Duel.GetAttacker() then return end
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_DISABLE)
-	e1:SetRange(LOCATION_SZONE)
-	e1:SetTargetRange(0,LOCATION_SZONE)
-	e1:SetTarget(Card.IsFaceup)
-	c:RegisterEffect(e1)
+	if not c:IsRelateToEffect(e) then return end
+	local g=Duel.GetMatchingGroup(c49306994.disfilter,tp,0,LOCATION_ONFIELD,c)
+	local tc=g:GetFirst()
+	while tc do
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_DISABLE)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE)
+		tc:RegisterEffect(e1)
+		local e2=Effect.CreateEffect(c)
+		e2:SetType(EFFECT_TYPE_SINGLE)
+		e2:SetCode(EFFECT_DISABLE_EFFECT)
+		e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE)
+		tc:RegisterEffect(e2)
+		if tc:IsType(TYPE_TRAPMONSTER) then
+			local e3=Effect.CreateEffect(c)
+			e3:SetType(EFFECT_TYPE_SINGLE)
+			e3:SetCode(EFFECT_DISABLE_TRAPMONSTER)
+			e3:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE)
+			tc:RegisterEffect(e3)
+		end
+		tc=g:GetNext()
+	end
 end
 function c49306994.descon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetEquipTarget()==eg:GetFirst()
@@ -118,8 +134,8 @@ function c49306994.checkop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c49306994.leave(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if e:GetLabelObject():GetLabel()==0 and c:GetPreviousControler()==tp 
-		and c:IsPreviousLocation(LOCATION_SZONE) and c:IsStatus(STATUS_ACTIVATED) then
+	if e:GetLabelObject():GetLabel()==0 and c:GetPreviousControler()==tp
+		and c:IsPreviousLocation(LOCATION_SZONE) and c:IsPreviousPosition(POS_FACEUP) then
 		Duel.Damage(tp,3000,REASON_EFFECT)
 	end
 end
