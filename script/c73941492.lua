@@ -82,7 +82,7 @@ function c73941492.initial_effect(c)
 	c:RegisterEffect(e7)
 end
 function c73941492.xyzfil(c,xyzc,lv)
-	return c:IsSetCard(0x98) and c:IsXyzLevel(xyzc,lv)
+	return c:IsSetCard(0x98) and c:IsXyzLevel(xyzc,lv) and c:IsType(TYPE_PENDULUM)
 end
 function c73941492.xyzfil2(c,xyzc,lv,tp)
 	return c:IsXyzLevel(xyzc,lv) and c:GetControler()==tp or (c:IsHasEffect(EFFECT_XYZ_MATERIAL) and c:GetControler()~=tp)
