@@ -27,12 +27,13 @@ function c100912101.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c100912101.otfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_CONTINUOUS) and c:IsReleasable()
+	return c:IsType(TYPE_CONTINUOUS) and c:IsReleasable()
 end
-function c100912101.otcon(e,c)
+function c100912101.otcon(e,c,minc)
 	if c==nil then return true end
-	return c:GetLevel()>4 and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c100912101.otfilter,c:GetControler(),LOCATION_ONFIELD,0,1,nil)
+	local tp=c:GetControler()
+	return c:GetLevel()>4 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(c100912101.otfilter,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function c100912101.otop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
@@ -46,7 +47,7 @@ function c100912101.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(c:GetSummonType(),SUMMON_TYPE_ADVANCE)==SUMMON_TYPE_ADVANCE and rp~=tp and Duel.IsChainNegatable(ev)
 end
 function c100912101.thfilter(c,tp)
-	return c:IsSetCard(0x1f9) and c:GetType()==0x20002 and (c:IsAbleToHand() or c:GetActivateEffect():IsActivatable(tp))
+	return (c:IsSetCard(0x1f9) or c:IsCode(30539496,34079868,82321037,87765315,96746083)) and c:GetType()==0x20002 and (c:IsAbleToHand() or c:GetActivateEffect():IsActivatable(tp))
 end
 function c100912101.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100912101.thfilter,tp,LOCATION_DECK,0,1,nil,tp) end
