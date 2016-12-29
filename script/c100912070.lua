@@ -7,7 +7,6 @@ function c100912070.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetHintTiming(0,TIMING_END_PHASE)
-	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetTarget(c100912070.target)
 	c:RegisterEffect(e1)
 	--destory and atk & def down
@@ -17,9 +16,10 @@ function c100912070.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetCode(EVENT_FREE_CHAIN)
-	e2:SetHintTiming(0,TIMING_END_PHASE)
+	e2:SetHintTiming(TIMING_DAMAGE_STEP,TIMING_DAMAGE_STEP+TIMING_END_PHASE)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCountLimit(1,100912070)
+	e2:SetCondition(c100912070.atkcon)
 	e2:SetCost(c100912070.cost)
 	e2:SetTarget(c100912070.atktg)
 	e2:SetOperation(c100912070.atkop)
@@ -54,7 +54,7 @@ end
 function c100912070.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return c100912070.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc) end
 	if chk==0 then return true end
-	local b1=c100912070.atktg(e,tp,eg,ep,ev,re,r,rp,0)
+	local b1=c100912070.atkcon(e,tp,eg,ep,ev,re,r,rp) and c100912070.atktg(e,tp,eg,ep,ev,re,r,rp,0)
 	local b2=c100912070.sumcon(e,tp,eg,ep,ev,re,r,rp) and c100912070.sumtg(e,tp,eg,ep,ev,re,r,rp,0)
 	if (b1 or b2) and Duel.SelectYesNo(tp,94) then
 		local op=0
@@ -63,7 +63,7 @@ function c100912070.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		else op=Duel.SelectOption(tp,aux.Stringid(100912070,1))+1 end
 		if op==0 then
 			e:SetCategory(CATEGORY_DESTROY+CATEGORY_ATKCHANGE+CATEGORY_DEFCHANGE)
-			e:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
+			e:SetProperty(EFFECT_FLAG_CARD_TARGET)
 			e:SetOperation(c100912070.atkop)
 			c100912070.atktg(e,tp,eg,ep,ev,re,r,rp,1)
 		else
@@ -78,11 +78,14 @@ function c100912070.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		e:SetOperation(nil)
 	end
 end
+function c100912070.atkcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated()
+end
 function c100912070.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsStatus(STATUS_CHAINING) end
 end
 function c100912070.tgfilter(c)
-	return c:IsFaceup() and(c:IsSetCard(0x1f9) or c:IsCode(30539496,34079868,82321037,87765315,96746083))
+	return c:IsFaceup() and (c:IsSetCard(0x1f9) or c:IsCode(30539496,34079868,82321037,87765315,96746083))
 end
 function c100912070.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
@@ -107,12 +110,12 @@ function c100912070.atkop(e,tp,eg,ep,ev,re,r,rp)
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_SET_ATTACK_FINAL)
-			e1:SetValue(tc2:GetAttack()/2)
+			e1:SetValue(math.ceil(tc2:GetAttack()/2))
 			e1:SetReset(RESET_EVENT+0x1fe0000)
 			tc2:RegisterEffect(e1)
 			local e2=e1:Clone()
 			e2:SetCode(EFFECT_SET_DEFENSE_FINAL)
-			e2:SetValue(tc2:GetDefense()/2)
+			e2:SetValue(math.ceil(tc2:GetDefense()/2))
 			tc2:RegisterEffect(e2)
 			tc2=g:GetNext()
 		end
