@@ -56,7 +56,7 @@ function c100912024.otcon(e,c,minc)
 			or (Duel.CheckTribute(c,2))
 	else
 		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-		local mg=Duel.GetMatchingGroup(c100912025.otfilter,tp,LOCATION_ONFIELD,0,nil)
+		local mg=Duel.GetMatchingGroup(c100912024.otfilter,tp,LOCATION_ONFIELD,0,nil)
 		if ft<=0 and Duel.GetTributeCount(c)<=0 then return false end
 		return ft>-2 and Duel.GetTributeCount(c)+mg:GetCount()>=2
 	end
