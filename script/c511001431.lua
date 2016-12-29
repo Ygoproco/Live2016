@@ -46,13 +46,14 @@ function c511001431.initial_effect(c)
 	end
 end
 c511001431.xyz_number=106
-
 function c511001431.rumfilter(c)
-	return c:IsCode(88177324) and not c:IsPreviousLocation(LOCATION_OVERLAY)
+	return c:IsCode(63746411) and not c:IsPreviousLocation(LOCATION_OVERLAY)
 end
 function c511001431.rankupregcon(e,tp,eg,ep,ev,re,r,rp)
-		local rc=re:GetHandler()
-	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ) and (rc:IsSetCard(0x95) or rc:IsCode(100000581) or rc:IsCode(111011002) or rc:IsCode(511000580) or rc:IsCode(511002068) or rc:IsCode(511002164) or rc:IsCode(93238626)) and e:GetHandler():GetMaterial():IsExists(c511001431.rumfilter,1,nil)
+	local rc=re:GetHandler()
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ) and re 
+		and (rc:IsSetCard(0x95) or rc:IsCode(100000581) or rc:IsCode(111011002) or rc:IsCode(511000580) or rc:IsCode(511002068) or rc:IsCode(511002164) or rc:IsCode(93238626)) 
+		and e:GetHandler():GetMaterial():IsExists(c511001431.rumfilter,1,nil)
 end
 function c511001431.rankupregop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -62,7 +63,6 @@ function c511001431.rankupregop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetCategory(CATEGORY_DISABLE)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
-	e1:SetCondition(c511001431.discon)
 	e1:SetCost(c511001431.discost)
 	e1:SetTarget(c511001431.distg)
 	e1:SetOperation(c511001431.disop)
@@ -72,9 +72,6 @@ end
 function c511001431.damval(e,re,val,r,rp,rc)
 	if e:GetHandler():IsPosition(POS_FACEUP_ATTACK) and bit.band(r,REASON_EFFECT)~=0 then return 0
 	else return val end
-end
-function c511001431.discon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetOverlayGroup():IsExists(Card.IsCode,1,nil,63746411)
 end
 function c511001431.discost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end

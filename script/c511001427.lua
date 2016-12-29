@@ -28,9 +28,11 @@ function c511001427.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local tid=Duel.GetTurnCount()
 	local g=Duel.GetMatchingGroup(c511001427.filter,tp,LOCATION_GRAVE,LOCATION_GRAVE,nil,tp,tid)
 	local ct=g:GetCount()
+	local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
 	if chk==0 then return ct>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>=ct and Duel.GetLocationCount(1-tp,LOCATION_MZONE)>=ct 
-		and g:IsExists(Card.IsCanBeSpecialSummoned,ct,nil,e,0,tp,false,false) 
-		and Duel.IsExistingMatchingCard(c511001427.spfilter,tp,LOCATION_EXTRA,0,ct,nil,e,tp) end
+		and g:IsExists(Card.IsCanBeSpecialSummoned,ct,nil,e,0,tp,false,false) and (not ect or ect>=ct) 
+		and Duel.IsExistingMatchingCard(c511001427.spfilter,tp,LOCATION_EXTRA,0,ct,nil,e,tp) 
+		and (not Duel.IsPlayerAffectedByEffect(tp,59822133) or ct<2) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,ct,0,0)
 end
 function c511001427.activate(e,tp,eg,ep,ev,re,r,rp)
@@ -40,6 +42,9 @@ function c511001427.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<ct or Duel.GetLocationCount(1-tp,LOCATION_MZONE)<ct then return end
 	if not Duel.IsExistingMatchingCard(c511001427.spfilter,tp,LOCATION_EXTRA,0,ct,nil,e,tp) then return end
 	if not g:IsExists(Card.IsCanBeSpecialSummoned,ct,nil,e,0,tp,false,false) then return end
+	if ct>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
+	local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
+	if ect~=nil and ct>ect then return end
 	if ct>0 then
 		local tc=g:GetFirst()
 		while tc do

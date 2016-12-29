@@ -25,7 +25,11 @@ function c511002395.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c511002395.activate(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetMatchingGroup(c511002395.filter,tp,LOCATION_MZONE,0,nil)
-	if Duel.SendtoDeck(sg,nil,0,REASON_EFFECT)>0 then
+	local ct=Duel.SendtoDeck(sg,nil,0,REASON_EFFECT)
+	if ct>0 then
+		if Duel.IsPlayerAffectedByEffect(tp,59822133) and ct>1 then return end
+		local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
+		if ect~=nil and ct>ect then return end
 		local spg=Group.CreateGroup()
 		local tc=sg:GetFirst()
 		while tc do

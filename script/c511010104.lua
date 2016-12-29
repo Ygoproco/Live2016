@@ -1,7 +1,8 @@
 --No.104 仮面魔踏士シャイニング
+--fixed by MLD
 function c511010104.initial_effect(c)
 	--xyz summon
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_LIGHT),4,3)
+	aux.AddXyzProcedure(c,nil,4,3)
 	c:EnableReviveLimit()
 	--negate activate
 	local e1=Effect.CreateEffect(c)
@@ -23,6 +24,8 @@ function c511010104.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetCountLimit(1)
 	e2:SetRange(LOCATION_MZONE)
+	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e2:SetCost(c511010104.deckcost)
 	e2:SetTarget(c511010104.decktg)
 	e2:SetOperation(c511010104.deckop)
 	c:RegisterEffect(e2)
@@ -63,6 +66,16 @@ function c511010104.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Damage(1-tp,800,REASON_EFFECT)
 	end
 end
+function c511010104.deckcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return c:GetAttackAnnouncedCount()==0 end
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_OATH)
+	e1:SetCode(EFFECT_CANNOT_ATTACK)
+	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+	c:RegisterEffect(e1,true)
+end
 function c511010104.decktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDiscardDeck(1-tp,1) end
 	Duel.SetTargetPlayer(1-tp)
@@ -72,12 +85,13 @@ end
 function c511010104.deckop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.DiscardDeck(p,d,REASON_EFFECT)
+	Duel.BreakEffect()
+	Duel.ShuffleDeck(p)
 end
-
 function c511010104.numchk(e,tp,eg,ep,ev,re,r,rp)
 	Duel.CreateToken(tp,2061963)
 	Duel.CreateToken(1-tp,2061963)
 end
 function c511010104.indes(e,c)
-return not c:IsSetCard(0x48)
+	return not c:IsSetCard(0x48)
 end
