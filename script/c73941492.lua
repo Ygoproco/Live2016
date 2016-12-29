@@ -4,38 +4,43 @@
 --fusion limit not implemented
 --xyz limit by edo9300
 function c73941492.initial_effect(c)
-	local xmck=Duel.CheckXyzMaterial
-	Duel.CheckXyzMaterial=function(c,f,lv,minc,maxc,og)
-		local og2=Group.CreateGroup()
-		if not og then
-			og=Duel.GetFieldGroup(tp,LOCATION_MZONE,LOCATION_MZONE)
+	if not c73941492.global_check then
+		c73941492.global_check=true
+		local xmck=Duel.CheckXyzMaterial
+		Duel.CheckXyzMaterial=function(c,f,lv,minc,maxc,og)
+			local og2=Group.CreateGroup()
+			if not og then
+				local tp=c:GetControler()
+				og=Duel.GetMatchingGroup(c73941492.xyzfil2,tp,LOCATION_MZONE,LOCATION_MZONE,nil,c,lv,tp)
+			end
+			if og:IsExists(Card.IsCode,1,nil,73941492) then
+				og2=og:Filter(c73941492.xyzfil3,nil)
+				og=og:Filter(c73941492.xyzfil,nil,c,lv)
+			end
+			return xmck(c,f,lv,minc,maxc,og) or xmck(c,f,lv,minc,maxc,og2)
 		end
-		if og:IsExists(Card.IsCode,1,nil,73941492) then
-			og2=og:Filter(c73941492.xyzfil3,nil)
-			og=og:Filter(c73941492.xyzfil,nil,c,lv)
-		end		
-		return xmck(c,f,lv,minc,maxc,og) or xmck(c,f,lv,minc,maxc,og2)
-	end
-	local xsel=Duel.SelectXyzMaterial
-	Duel.SelectXyzMaterial=function(tp,c,f,lv,minc,maxc,og)
-		if not og then
-			og=Duel.GetFieldGroup(tp,LOCATION_MZONE,LOCATION_MZONE):Filter(c73941492.xyzfil2,nil,c,lv,tp)
-		end
-		local og2=og:Filter(c73941492.xyzfil3,nil)
-		if og:IsExists(Card.IsCode,1,nil,73941492) then
-			if og:IsExists(c73941492.xyzfil,minc,nil,c,lv) and og2:GetCount()>=minc then
-				if Duel.SelectYesNo(tp,aux.Stringid(73941492,1)) then
+		local xsel=Duel.SelectXyzMaterial
+		Duel.SelectXyzMaterial=function(tp,c,f,lv,minc,maxc,og)
+			if not og then
+				og=Duel.GetMatchingGroup(c73941492.xyzfil2,tp,LOCATION_MZONE,LOCATION_MZONE,nil,c,lv,tp)
+			end
+			local og2=og:Filter(c73941492.xyzfil3,nil)
+			if og:IsExists(Card.IsCode,1,nil,73941492) then
+				if og:IsExists(c73941492.xyzfil,minc,nil,c,lv) and og2:GetCount()>=minc then
+					local og3=og:Filter(c73941492.xyzfil,nil,c,lv)
+					if og3:Equal(og) or Duel.SelectYesNo(tp,aux.Stringid(73941492,1)) then
+						og=og3
+					else 
+						og=og2
+					end
+				elseif og:IsExists(c73941492.xyzfil,minc,nil,c,lv) and og2:GetCount()<minc then
 					og=og:Filter(c73941492.xyzfil,nil,c,lv)
-				else 
+				elseif not og:IsExists(c73941492.xyzfil,minc,nil,c,lv) and og2:GetCount()>=minc then
 					og=og2
 				end
-			elseif og:IsExists(c73941492.xyzfil,minc,nil,c,lv) and og2:GetCount()<minc then
-				og=og:Filter(c73941492.xyzfil,nil,c,lv)
-			elseif not og:IsExists(c73941492.xyzfil,minc,nil,c,lv) and og2:GetCount()>=minc then
-				og=og2
 			end
+			return xsel(tp,c,f,lv,minc,maxc,og)
 		end
-		return xsel(tp,c,f,lv,minc,maxc,og)
 	end
 	--pendulum summon
 	aux.EnablePendulumAttribute(c)
@@ -86,7 +91,7 @@ function c73941492.xyzfil(c,xyzc,lv)
 	return c:IsSetCard(0x98) and c:IsXyzLevel(xyzc,lv) and c:IsType(TYPE_PENDULUM)
 end
 function c73941492.xyzfil2(c,xyzc,lv,tp)
-	return c:IsXyzLevel(xyzc,lv) and c:GetControler()==tp or (c:IsHasEffect(EFFECT_XYZ_MATERIAL) and c:GetControler()~=tp)
+	return c:IsXyzLevel(xyzc,lv) and (c:GetControler()==tp or c:IsHasEffect(EFFECT_XYZ_MATERIAL))
 end
 function c73941492.xyzfil3(c)
 	return not c:IsCode(73941492)
