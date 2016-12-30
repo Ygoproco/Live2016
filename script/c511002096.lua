@@ -91,8 +91,12 @@ function c511002096.initial_effect(c)
 	end
 end
 function c511002096.synchk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,419)
-	Duel.CreateToken(1-tp,419)
+	if Duel.GetFlagEffect(tp,419)==0 and Duel.GetFlagEffect(1-tp,419)==0 then
+		Duel.CreateToken(tp,419)
+		Duel.CreateToken(1-tp,419)
+		Duel.RegisterFlagEffect(tp,419,nil,0,1)
+		Duel.RegisterFlagEffect(1-tp,419,nil,0,1)
+	end
 end
 function c511002096.xyzfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_XYZ)

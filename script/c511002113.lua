@@ -28,7 +28,8 @@ function c511002113.initial_effect(c)
 	end
 end
 function c511002113.cfilter(c,tp)
-	return c:IsPreviousLocation(LOCATION_MZONE) and c:IsType(TYPE_MONSTER) and not c:IsReason(REASON_BATTLE)
+	return c:IsPreviousLocation(LOCATION_MZONE) and c:IsType(TYPE_MONSTER) and not c:IsReason(REASON_BATTLE) 
+		and c:GetPreviousControler()==tp
 end
 function c511002113.checkop(e,tp,eg,ep,ev,re,r,rp)
 	if eg:IsExists(c511002113.cfilter,1,nil,tp) then

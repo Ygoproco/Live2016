@@ -3,17 +3,14 @@ function c511001188.initial_effect(c)
 	function aux.AddXyzProcedure(c,f,lv,ct,alterf,desc,maxct,op)
 		local code=c:GetOriginalCode()
 		local mt=_G["c" .. code]
-		if f then
-			mt.xyz_filter=function(mc) return mc and f(mc) end
-		else
-			mt.xyz_filter=function(mc) return true end
-		end
+		mt.xyz_filter=function(mc) return mc and (not f or f(mc)) and mc:IsXyzLevel(c,lv) and not mc:IsType(TYPE_TOKEN) end
 		mt.minxyzct=ct
 		if not maxct then
 			mt.maxxyzct=ct
 		else
-			if maxct==5 then
-				mt.maxxyzct=99
+			if maxct==5 and code~=14306092 and code~=63504681 and code~=23776077 then
+				maxct=63
+				mt.maxxyzct=63
 			else
 				mt.maxxyzct=maxct
 			end
@@ -70,7 +67,7 @@ function c511001188.spfilter(c,e,tp)
 end
 function c511001188.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c511001188.spfilter(chkc,e,tp) end
-	if chk==0 then return e:IsHasType(EFFECT_TYPE_ACTIVATE) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingTarget(c511001188.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectTarget(tp,c511001188.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
@@ -83,7 +80,7 @@ end
 function c511001188.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) then
+	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) then
 		if Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)==0 then return end
 		c:CancelToGrave()
 		Duel.Equip(tp,c,tc,true)
@@ -133,6 +130,10 @@ function c511001188.ccost(e,tp)
 	end
 end
 function c511001188.xyzchk(e,tp,eg,ep,ev,re,r,rp)
-	Duel.CreateToken(tp,419)
-	Duel.CreateToken(1-tp,419)
+	if Duel.GetFlagEffect(tp,419)==0 and Duel.GetFlagEffect(1-tp,419)==0 then
+		Duel.CreateToken(tp,419)
+		Duel.CreateToken(1-tp,419)
+		Duel.RegisterFlagEffect(tp,419,nil,0,1)
+		Duel.RegisterFlagEffect(1-tp,419,nil,0,1)
+	end
 end

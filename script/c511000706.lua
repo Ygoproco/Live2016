@@ -10,10 +10,7 @@ function c511000706.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
-	e2:SetTarget(c511000706.disable)
+	e2:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x21e))
 	e2:SetCode(EFFECT_DISABLE)
 	c:RegisterEffect(e2)
-end
-function c511000706.disable(e,c)
-	return c:IsSetCard(0x21e)
 end

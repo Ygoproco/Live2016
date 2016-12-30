@@ -3,17 +3,14 @@ function c511000829.initial_effect(c)
 	function aux.AddXyzProcedure(c,f,lv,ct,alterf,desc,maxct,op)
 		local code=c:GetOriginalCode()
 		local mt=_G["c" .. code]
-		if f then
-			mt.xyz_filter=function(mc) return mc and f(mc) end
-		else
-			mt.xyz_filter=function(mc) return true end
-		end
+		mt.xyz_filter=function(mc) return mc and (not f or f(mc)) and mc:IsXyzLevel(c,lv) and not mc:IsType(TYPE_TOKEN) end
 		mt.minxyzct=ct
 		if not maxct then
 			mt.maxxyzct=ct
 		else
 			if maxct==5 and code~=14306092 and code~=63504681 and code~=23776077 then
-				mt.maxxyzct=99
+				maxct=63
+				mt.maxxyzct=63
 			else
 				mt.maxxyzct=maxct
 			end

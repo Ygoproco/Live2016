@@ -3,17 +3,14 @@ function c511002746.initial_effect(c)
 	function aux.AddXyzProcedure(c,f,lv,ct,alterf,desc,maxct,op)
 		local code=c:GetOriginalCode()
 		local mt=_G["c" .. code]
-		if f then
-			mt.xyz_filter=function(mc) return mc and f(mc) end
-		else
-			mt.xyz_filter=function(mc) return true end
-		end
+		mt.xyz_filter=function(mc) return mc and (not f or f(mc)) and mc:IsXyzLevel(c,lv) and not mc:IsType(TYPE_TOKEN) end
 		mt.minxyzct=ct
 		if not maxct then
 			mt.maxxyzct=ct
 		else
 			if maxct==5 and code~=14306092 and code~=63504681 and code~=23776077 then
-				mt.maxxyzct=99
+				maxct=63
+				mt.maxxyzct=63
 			else
 				mt.maxxyzct=maxct
 			end
@@ -47,11 +44,7 @@ function c511002746.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c511002746.xyzfilter(c,mg)
-	local ct=c.minxyzct
-	return c:IsXyzSummonable(mg) and ct<=mg:GetCount() and mg:IsExists(c511002746.mfilter,ct,nil,c)
-end
-function c511002746.mfilter(c,xyz)
-	return xyz.xyz_filter(c) and c:IsCanBeXyzMaterial(xyz)
+	return c:IsXyzSummonable(mg,1,mg:GetCount())
 end
 function c511002746.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local mg=Duel.GetMatchingGroup(Card.IsSetCard,tp,LOCATION_GRAVE,0,nil,0x76)
@@ -66,10 +59,6 @@ function c511002746.activate(e,tp,eg,ep,ev,re,r,rp)
 	if xyzg:GetCount()>0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local xyz=xyzg:Select(tp,1,1,nil):GetFirst()
-		local ct=xyz.minxyzct
-		local ct2=xyz.maxxyzct
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-		local g=mg:FilterSelect(tp,c511002746.mfilter,ct,ct2,nil,xyz)
-		Duel.XyzSummon(tp,xyz,g)
+		Duel.XyzSummon(tp,xyz,mg,1,mg:GetCount())
 	end
 end

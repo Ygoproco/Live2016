@@ -42,7 +42,7 @@ function c511000264.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c511000264.con(e,tp,eg,ep,ev,re,r,rp)
-	return not e:GetHandler():GetFlagEffect(511000263)>0
+	return e:GetHandler():GetFlagEffect(511000263)==0
 end
 function c511000264.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -64,7 +64,7 @@ function c511000264.op(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetOperation(c511000264.disop)
 		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		c:RegisterEffect(e1)
-		c:RegisterFlagEffect(511000263,RESET_EVENT+0x1fe0000,0,0)
+		c:RegisterFlagEffect(511000263,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,0)
 	end
 end
 function c511000264.cfilter(c)
