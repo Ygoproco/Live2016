@@ -86,7 +86,7 @@ function c73941492.xyzfil(c,xyzc,lv)
 	return c:IsSetCard(0x98) and c:IsXyzLevel(xyzc,lv) and c:IsType(TYPE_PENDULUM)
 end
 function c73941492.xyzfil2(c,tp)
-	return c:IsFaceup() and c:GetControler()==tp or (c:IsHasEffect(EFFECT_XYZ_MATERIAL) and c:GetControler()~=tp)
+	return c:IsFaceup() and not c:IsType(TYPE_TOKEN) and c:GetControler()==tp or (c:IsHasEffect(EFFECT_XYZ_MATERIAL) and c:GetControler()~=tp)
 end
 function c73941492.xyzfil3(c)
 	return not c:IsCode(73941492)
