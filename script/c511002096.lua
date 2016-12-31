@@ -175,6 +175,6 @@ function c511002096.disop(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetType(EFFECT_TYPE_SINGLE)
 		e3:SetCode(EFFECT_CANNOT_TRIGGER)
 		e3:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-		c:RegisterEffect(e3)
+		tc:RegisterEffect(e3)
 	end
 end
