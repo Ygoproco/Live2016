@@ -34,9 +34,11 @@ function c89181134.initial_effect(c)
 	e2:SetOperation(c89181134.operation)
 	c:RegisterEffect(e2)
 	if not Card.IsFusionAttribute then
-		function Card.IsFusionAttribute(c,att,fc)
-			if not fc then return c:IsAttribute(att) end
-			local tp=fc:GetControler()
+		function Card.IsFusionAttribute(c,att,fc,tp)
+			if tp==nil then
+				if not fc then return c:IsAttribute(att) end
+				tp=fc:GetControler()
+			end
 			local gc=Duel.IsPlayerAffectedByEffect(tp,0x10000000)
 			if gc then
 				local att2=0x01
