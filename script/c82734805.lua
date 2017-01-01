@@ -158,7 +158,7 @@ function c82734805.extramaterial(c,mg,chkf,eff)
 	local g=mg:Clone()
 	g:AddCard(c)
 	if g:IsExists(aux.TuneMagFusFilter,1,nil,g,chkf) then return false end
-	return c82734805.matfilter2(c) and (not c:IsLocation(LOCATION_DECK) or not eff or g:FilterCount(Card.IsLocation,nil,LOCATION_DECK)<6)
+	return c82734805.matfilter2(c) and (not c:IsLocation(LOCATION_DECK) or not eff or g:FilterCount(Card.IsLocation,nil,LOCATION_DECK)<=6)
 end
 function c82734805.fsop(e,tp,eg,ep,ev,re,r,rp,gc,chkf)
 	local g=eg:Filter(Card.IsCanBeFusionMaterial,nil,e:GetHandler())
