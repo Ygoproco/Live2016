@@ -795,14 +795,14 @@ function Auxiliary.AddFusionProcCodeFun(c,code1,f,cc,sub,insf)
 	e1:SetOperation(Auxiliary.FOperationCodeFun(code1,f,cc,sub,insf))
 	c:RegisterEffect(e1)
 end
-function Auxiliary.FConditionFilterCF1(c,code,f,cc,sub,fc,chkf,mg,g2,ct,gc)
+function Auxiliary.FConditionFilterCF1(c,code,f,cc,sub,fc,chkf,mg,g2,ct,gc,tp)
 	local tg=Group.CreateGroup()
 	local g=mg:Clone()
 	tg:AddCard(c)
 	g:RemoveCard(c)
-	return g:IsExists(Auxiliary.FConditionFilterCF2,1,c,code,f,cc,sub,fc,chkf,g,tg,ct,gc)
+	return g:IsExists(Auxiliary.FConditionFilterCF2,1,c,code,f,cc,sub,fc,chkf,g,tg,ct,gc,tp)
 end
-function Auxiliary.FConditionFilterCF2(c,code,f,cc,sub,fc,chkf,mg,g2,ct,gc)
+function Auxiliary.FConditionFilterCF2(c,code,f,cc,sub,fc,chkf,mg,g2,ct,gc,tp)
 	local tg=g2:Clone()
 	local g=mg:Clone()
 	local ctc=ct+1
@@ -814,19 +814,19 @@ function Auxiliary.FConditionFilterCF2(c,code,f,cc,sub,fc,chkf,mg,g2,ct,gc)
 		g:RemoveCard(c)
 	end
 	if ctc==cc then
-		return Auxiliary.FConditionFilterCF3(code,f,cc,sub,fc,chkf,tg)
+		return Auxiliary.FConditionFilterCF3(code,f,cc,sub,fc,chkf,tg,tp)
 	else
-		return g:IsExists(Auxiliary.FConditionFilterCF2,1,nil,code,f,cc,sub,fc,chkf,g,tg,ctc,nil)
+		return g:IsExists(Auxiliary.FConditionFilterCF2,1,nil,code,f,cc,sub,fc,chkf,g,tg,ctc,nil,tp)
 	end
 end
-function Auxiliary.FConditionFilterCF3(code,f,cc,sub,fc,chkf,g)
+function Auxiliary.FConditionFilterCF3(code,f,cc,sub,fc,chkf,g,tp)
 	if g:IsExists(Auxiliary.TuneMagFusFilter,1,nil,g,chkf) then return false end
 	local b1=0 local b2=0 local bw=0
 	local fs=false
 	local tc=g:GetFirst()
 	while tc do
 		local c1=tc:IsFusionCode(code) or (sub and tc:CheckFusionSubstitute(fc))
-		local c2=f(tc) or (sub and tc:IsHasEffect(511002961))
+		local c2=f(tc,tp) or (sub and tc:IsHasEffect(511002961))
 		if c1 or c2 then
 			if Auxiliary.FConditionCheckF(tc,chkf) then fs=true end
 			if c1 and c2 then bw=bw+1
@@ -847,12 +847,13 @@ function Auxiliary.FConditionCodeFun(code,f,cc,sub,insf)
 				local sub=sub or notfusion
 				local mg=g:Filter(Card.IsCanBeFusionMaterial,nil,e:GetHandler())
 				local mg1=mg:Filter(Auxiliary.FConditionFilterCR,nil,code,sub,e:GetHandler())
+				local tp=e:GetHandlerPlayer()
 				if gc then
 					if not gc:IsCanBeFusionMaterial(e:GetHandler()) then return false end
-					return Auxiliary.FConditionFilterCF1(gc,code,f,cc,sub,e:GetHandler(),chkf,mg,nil,0,nil) 
-						or mg1:IsExists(Auxiliary.FConditionFilterCF1,1,nil,code,f,cc,sub,e:GetHandler(),chkf,mg,nil,0,gc)
+					return Auxiliary.FConditionFilterCF1(gc,code,f,cc,sub,e:GetHandler(),chkf,mg,nil,0,nil,tp) 
+						or mg1:IsExists(Auxiliary.FConditionFilterCF1,1,nil,code,f,cc,sub,e:GetHandler(),chkf,mg,nil,0,gc,tp)
 				end
-				return mg1:IsExists(Auxiliary.FConditionFilterCF1,1,nil,code,f,cc,sub,e:GetHandler(),chkf,mg,nil,0,nil)
+				return mg1:IsExists(Auxiliary.FConditionFilterCF1,1,nil,code,f,cc,sub,e:GetHandler(),chkf,mg,nil,0,nil,tp)
 			end
 end
 function Auxiliary.FOperationCodeFun(code,f,cc,sub,insf)
@@ -869,12 +870,12 @@ function Auxiliary.FOperationCodeFun(code,f,cc,sub,insf)
 					if g:IsExists(Card.IsLocation,1,nil,LOCATION_HAND) then sfhchk=true end
 				end
 				if gc then
-					if Auxiliary.FConditionFilterCF1(gc,code,f,cc,sub,e:GetHandler(),chkf,g,nil,0,nil) then
+					if Auxiliary.FConditionFilterCF1(gc,code,f,cc,sub,e:GetHandler(),chkf,g,nil,0,nil,tp) then
 						local matg=Group.FromCards(gc)
 						local ct=0
 						for i=1,cc do
 							Duel.Hint(HINT_SELECTMSG,p,HINTMSG_FMATERIAL)
-							local g1=g:FilterSelect(p,Auxiliary.FConditionFilterCF2,1,1,nil,code,f,cc,sub,e:GetHandler(),chkf,g,matg,ct)
+							local g1=g:FilterSelect(p,Auxiliary.FConditionFilterCF2,1,1,nil,code,f,cc,sub,e:GetHandler(),chkf,g,matg,ct,nil,tp)
 							ct=ct+1
 							matg:Merge(g1)
 							g:Sub(g1)
@@ -886,7 +887,7 @@ function Auxiliary.FOperationCodeFun(code,f,cc,sub,insf)
 						local ct=0
 						local mc=gc
 						Duel.Hint(HINT_SELECTMSG,p,HINTMSG_FMATERIAL)
-						local matg=mg1:FilterSelect(p,Auxiliary.FConditionFilterCF1,1,1,nil,code,f,cc,sub,e:GetHandler(),chkf,g,nil,ct,mc)
+						local matg=mg1:FilterSelect(p,Auxiliary.FConditionFilterCF1,1,1,nil,code,f,cc,sub,e:GetHandler(),chkf,g,nil,ct,mc,tp)
 						matg:AddCard(mc)
 						g:Sub(matg)
 						mc=nil
@@ -894,7 +895,7 @@ function Auxiliary.FOperationCodeFun(code,f,cc,sub,insf)
 						if cc>ct then
 							for i=1,cc-1 do
 								Duel.Hint(HINT_SELECTMSG,p,HINTMSG_FMATERIAL)
-								local g1=g:FilterSelect(p,Auxiliary.FConditionFilterCF2,1,1,nil,code,f,cc,sub,e:GetHandler(),chkf,g,matg,ct)
+								local g1=g:FilterSelect(p,Auxiliary.FConditionFilterCF2,1,1,nil,code,f,cc,sub,e:GetHandler(),chkf,g,matg,ct,nil,tp)
 								ct=ct+1
 								matg:Merge(g1)
 								g:Sub(g1)
@@ -908,11 +909,11 @@ function Auxiliary.FOperationCodeFun(code,f,cc,sub,insf)
 				end
 				local ct=0
 				Duel.Hint(HINT_SELECTMSG,p,HINTMSG_FMATERIAL)
-				local matg=mg1:FilterSelect(p,Auxiliary.FConditionFilterCF1,1,1,nil,code,f,cc,sub,e:GetHandler(),chkf,g,nil,ct)
+				local matg=mg1:FilterSelect(p,Auxiliary.FConditionFilterCF1,1,1,nil,code,f,cc,sub,e:GetHandler(),chkf,g,nil,ct,nil,tp)
 				g:Sub(matg)
 				for i=1,cc do
 					Duel.Hint(HINT_SELECTMSG,p,HINTMSG_FMATERIAL)
-					local g1=g:FilterSelect(p,Auxiliary.FConditionFilterCF2,1,1,nil,code,f,cc,sub,e:GetHandler(),chkf,g,matg,ct)
+					local g1=g:FilterSelect(p,Auxiliary.FConditionFilterCF2,1,1,nil,code,f,cc,sub,e:GetHandler(),chkf,g,matg,ct,nil,tp)
 					ct=ct+1
 					matg:Merge(g1)
 					g:Sub(g1)
@@ -936,17 +937,17 @@ end
 function Auxiliary.FConditionFilterF2c(c,g2)
 	return g2:IsExists(aux.TRUE,1,c)
 end
-function Auxiliary.FConditionFilterF2(c,f1,f2,mg,chkf)
-	return mg:IsExists(Auxiliary.FConditionFilterF2chk,1,c,f1,f2,c,chkf)
+function Auxiliary.FConditionFilterF2(c,f1,f2,mg,chkf,tp)
+	return mg:IsExists(Auxiliary.FConditionFilterF2chk,1,c,f1,f2,c,chkf,tp)
 end
-function Auxiliary.FConditionFilterF2chk(c,f1,f2,c2,chkf)
+function Auxiliary.FConditionFilterF2chk(c,f1,f2,c2,chkf,tp)
 	local g=Group.FromCards(c,c2)
 	if g:IsExists(Auxiliary.TuneMagFusFilter,1,nil,g,chkf) then return false end
 	local g1=Group.CreateGroup() local g2=Group.CreateGroup() local fs=false
 	local tc=g:GetFirst()
 	while tc do
-		if f1(tc) or tc:IsHasEffect(511002961) then g1:AddCard(tc) if Auxiliary.FConditionCheckF(tc,chkf) then fs=true end end
-		if f2(tc) or tc:IsHasEffect(511002961) then g2:AddCard(tc) if Auxiliary.FConditionCheckF(tc,chkf) then fs=true end end
+		if f1(tc,tp) or tc:IsHasEffect(511002961) then g1:AddCard(tc) if Auxiliary.FConditionCheckF(tc,chkf) then fs=true end end
+		if f2(tc,tp) or tc:IsHasEffect(511002961) then g2:AddCard(tc) if Auxiliary.FConditionCheckF(tc,chkf) then fs=true end end
 		tc=g:GetNext()
 	end
 	if chkf~=PLAYER_NONE then
@@ -958,11 +959,12 @@ function Auxiliary.FConditionFun2(f1,f2,insf)
 				if g==nil then return insf end
 				local chkf=bit.band(chkfnf,0xff)
 				local mg=g:Filter(Card.IsCanBeFusionMaterial,nil,e:GetHandler())
+				local tp=e:GetHandlerPlayer()
 				if gc then
 					if not gc:IsCanBeFusionMaterial(e:GetHandler()) then return false end
-					return Auxiliary.FConditionFilterF2(gc,f1,f2,mg,chkf)
+					return Auxiliary.FConditionFilterF2(gc,f1,f2,mg,chkf,tp)
 				end
-				return mg:IsExists(Auxiliary.FConditionFilterF2,1,nil,f1,f2,mg,chkf)
+				return mg:IsExists(Auxiliary.FConditionFilterF2,1,nil,f1,f2,mg,chkf,tp)
 			end
 end
 function Auxiliary.FOperationFun2(f1,f2,insf)
@@ -978,16 +980,16 @@ function Auxiliary.FOperationFun2(f1,f2,insf)
 				end
 				if gc then
 					Duel.Hint(HINT_SELECTMSG,p,HINTMSG_FMATERIAL)
-					local g1=g:FilterSelect(p,Auxiliary.FConditionFilterF2chk,1,1,gc,f1,f2,gc,chkf)
+					local g1=g:FilterSelect(p,Auxiliary.FConditionFilterF2chk,1,1,gc,f1,f2,gc,chkf,tp)
 					if sfhchk then Duel.ShuffleHand(tp) end
 					Duel.SetFusionMaterial(g1)
 					return
 				end
 				Duel.Hint(HINT_SELECTMSG,p,HINTMSG_FMATERIAL)
-				local g1=g:FilterSelect(p,Auxiliary.FConditionFilterF2,1,1,nil,f1,f2,g,chkf)
+				local g1=g:FilterSelect(p,Auxiliary.FConditionFilterF2,1,1,nil,f1,f2,g,chkf,tp)
 				local tc1=g1:GetFirst()
 				Duel.Hint(HINT_SELECTMSG,p,HINTMSG_FMATERIAL)
-				local g2=g:FilterSelect(p,Auxiliary.FConditionFilterF2chk,1,1,tc1,f1,f2,tc1,chkf)
+				local g2=g:FilterSelect(p,Auxiliary.FConditionFilterF2chk,1,1,tc1,f1,f2,tc1,chkf,tp)
 				g1:Merge(g2)
 				if sfhchk then Duel.ShuffleHand(tp) end
 				Duel.SetFusionMaterial(g1)
@@ -1122,10 +1124,10 @@ function Auxiliary.AddFusionProcFunRep(c,f,cc,insf)
 	e1:SetOperation(Auxiliary.FOperationFunRep(f,cc,insf))
 	c:RegisterEffect(e1)
 end
-function Auxiliary.FConditionFilterConAndSub(c,f,sub)
-	return f(c) or (sub and c:IsHasEffect(511002961))
+function Auxiliary.FConditionFilterConAndSub(c,f,sub,tp)
+	return f(c,tp) or (sub and c:IsHasEffect(511002961))
 end
-function Auxiliary.FConditionFilterConN(c,f,cc,fc,chkf,mg,g2,ct)
+function Auxiliary.FConditionFilterConN(c,f,cc,fc,chkf,mg,g2,ct,tp)
 	local tg
 	if g2==nil or g2:GetCount()==0 then tg=Group.CreateGroup() else tg=g2:Clone() end
 	local g=mg:Clone()
@@ -1133,14 +1135,14 @@ function Auxiliary.FConditionFilterConN(c,f,cc,fc,chkf,mg,g2,ct)
 	tg:AddCard(c)
 	g:RemoveCard(c)
 	if ctc==cc then
-		return Auxiliary.FConditionFilterConNChk(f,cc,fc,chkf,tg)
+		return Auxiliary.FConditionFilterConNChk(f,cc,fc,chkf,tg,tp)
 	else
-		return g:IsExists(Auxiliary.FConditionFilterConN,1,nil,f,cc,fc,chkf,g,tg,ctc)
+		return g:IsExists(Auxiliary.FConditionFilterConN,1,nil,f,cc,fc,chkf,g,tg,ctc,tp)
 	end
 end
-function Auxiliary.FConditionFilterConNChk(f,cc,fc,chkf,g)
+function Auxiliary.FConditionFilterConNChk(f,cc,fc,chkf,g,tp)
 	if g:IsExists(Auxiliary.TuneMagFusFilter,1,nil,g,chkf) then return false end
-	local g1=g:Filter(Auxiliary.FConditionFilterConAndSub,nil,f,true)
+	local g1=g:Filter(Auxiliary.FConditionFilterConAndSub,nil,f,true,tp)
 	if chkf~=PLAYER_NONE then
 		return g1:FilterCount(Card.IsOnField,nil)~=0 and g1:GetCount()>=cc
 	else return g1:GetCount()>=cc end
@@ -1150,11 +1152,12 @@ function Auxiliary.FConditionFunRep(f,cc,insf)
 				if g==nil then return insf end
 				local chkf=bit.band(chkfnf,0xff)
 				local mg=g:Filter(Card.IsCanBeFusionMaterial,nil,e:GetHandler())
+				local tp=e:GetHandlerPlayer()
 				if gc then
 					if not gc:IsCanBeFusionMaterial(e:GetHandler()) then return false end
-					return Auxiliary.FConditionFilterConN(gc,f,cc,e:GetHandler(),chkf,mg,g2,0)
+					return Auxiliary.FConditionFilterConN(gc,f,cc,e:GetHandler(),chkf,mg,g2,0,tp)
 				end
-				return mg:IsExists(Auxiliary.FConditionFilterConN,1,nil,f,cc,e:GetHandler(),chkf,mg,nil,0)
+				return mg:IsExists(Auxiliary.FConditionFilterConN,1,nil,f,cc,e:GetHandler(),chkf,mg,nil,0,tp)
 			end
 end
 function Auxiliary.FOperationFunRep(f,cc,insf)
@@ -1175,7 +1178,7 @@ function Auxiliary.FOperationFunRep(f,cc,insf)
 						matg:AddCard(gc)
 						for i=1,cc-1 do
 							Duel.Hint(HINT_SELECTMSG,p,HINTMSG_FMATERIAL)
-							local g1=g:FilterSelect(p,Auxiliary.FConditionFilterConN,1,1,nil,f,cc,e:GetHandler(),chkf,g,matg,ct)
+							local g1=g:FilterSelect(p,Auxiliary.FConditionFilterConN,1,1,nil,f,cc,e:GetHandler(),chkf,g,matg,ct,tp)
 							matg:Merge(g1)
 							g:Sub(g1)
 							ct=ct+1
@@ -1190,7 +1193,7 @@ function Auxiliary.FOperationFunRep(f,cc,insf)
 				local ct=0
 				for i=1,cc do
 					Duel.Hint(HINT_SELECTMSG,p,HINTMSG_FMATERIAL)
-					local g1=g:FilterSelect(p,Auxiliary.FConditionFilterConN,1,1,nil,f,cc,e:GetHandler(),chkf,g,matg,ct)
+					local g1=g:FilterSelect(p,Auxiliary.FConditionFilterConN,1,1,nil,f,cc,e:GetHandler(),chkf,g,matg,ct,tp)
 					matg:Merge(g1)
 					g:Sub(g1)
 					ct=ct+1
@@ -1211,14 +1214,14 @@ function Auxiliary.AddFusionProcFunFunRep(c,f1,f2,minc,maxc,insf)
 	e1:SetOperation(Auxiliary.FOperationFunFunRep(f1,f2,minc,maxc,insf))
 	c:RegisterEffect(e1)
 end
-function Auxiliary.FConditionFilterFFRCol1(c,f1,f2,minc,chkf,mg,g2,ct,gc)
+function Auxiliary.FConditionFilterFFRCol1(c,f1,f2,minc,chkf,mg,g2,ct,gc,tp)
 	local tg=Group.CreateGroup()
 	local g=mg:Clone()
 	tg:AddCard(c)
 	g:RemoveCard(c)
-	return g:IsExists(Auxiliary.FConditionFilterFFRCol2,1,c,f1,f2,minc,chkf,g,tg,ct,gc)
+	return g:IsExists(Auxiliary.FConditionFilterFFRCol2,1,c,f1,f2,minc,chkf,g,tg,ct,gc,tp)
 end
-function Auxiliary.FConditionFilterFFRCol2(c,f1,f2,minc,chkf,mg,g2,ct,gc)
+function Auxiliary.FConditionFilterFFRCol2(c,f1,f2,minc,chkf,mg,g2,ct,gc,tp)
 	local tg=g2:Clone()
 	local g=mg:Clone()
 	local ctc=ct+1
@@ -1230,21 +1233,21 @@ function Auxiliary.FConditionFilterFFRCol2(c,f1,f2,minc,chkf,mg,g2,ct,gc)
 		g:RemoveCard(c)
 	end
 	if ctc==minc then
-		return Auxiliary.FConditionFilterFFRColChk(f1,f2,minc,chkf,tg)
+		return Auxiliary.FConditionFilterFFRColChk(f1,f2,minc,chkf,tg,tp)
 	else
-		return g:IsExists(Auxiliary.FConditionFilterFFRCol2,1,nil,f1,f2,minc,chkf,g,tg,ctc,nil)
+		return g:IsExists(Auxiliary.FConditionFilterFFRCol2,1,nil,f1,f2,minc,chkf,g,tg,ctc,nil,tp)
 	end
 end
-function Auxiliary.FConditionFilterFFRColChk(f1,f2,minc,chkf,g)
+function Auxiliary.FConditionFilterFFRColChk(f1,f2,minc,chkf,g,tp)
 	if g:IsExists(Auxiliary.TuneMagFusFilter,1,nil,g,chkf) then return false end
-	return g:IsExists(Auxiliary.FConditionFilterFFR,1,nil,f1,f2,g,minc,chkf)
+	return g:IsExists(Auxiliary.FConditionFilterFFR,1,nil,f1,f2,g,minc,chkf,tp)
 end
-function Auxiliary.FConditionFilterFFR(c,f1,f2,mg,minc,chkf)
+function Auxiliary.FConditionFilterFFR(c,f1,f2,mg,minc,chkf,tp)
 	if not f1(c) and not c:IsHasEffect(511002961) then return false end
 	if chkf==PLAYER_NONE or aux.FConditionCheckF(c,chkf) then
-		return minc<=0 or mg:IsExists(Auxiliary.FConditionFilterConAndSub,minc,c,f2,true)
+		return minc<=0 or mg:IsExists(Auxiliary.FConditionFilterConAndSub,minc,c,f2,true,tp)
 	else
-		local mg2=mg:Filter(Auxiliary.FConditionFilterConAndSub,c,f2,true)
+		local mg2=mg:Filter(Auxiliary.FConditionFilterConAndSub,c,f2,true,tp)
 		return mg2:GetCount()>=minc and mg2:IsExists(aux.FConditionCheckF,1,nil,chkf)
 	end
 end
@@ -1253,26 +1256,27 @@ function Auxiliary.FConditionFunFunRep(f1,f2,minc,maxc,insf)
 			if g==nil then return insf end
 			local chkf=bit.band(chkfnf,0xff)
 			local mg=g:Filter(Card.IsCanBeFusionMaterial,nil,e:GetHandler())
-			local mg1=mg:Filter(Auxiliary.FConditionFilterConAndSub,nil,f1,true)
+			local tp=e:GetHandlerPlayer()
+			local mg1=mg:Filter(Auxiliary.FConditionFilterConAndSub,nil,f1,true,tp)
 			if gc then
 				if not gc:IsCanBeFusionMaterial(e:GetHandler()) then return false end
-				return Auxiliary.FConditionFilterFFRCol1(gc,f1,f2,minc,chkf,mg,nil,0) 
-					or mg1:IsExists(Auxiliary.FConditionFilterFFRCol1,1,nil,f1,f2,minc,chkf,mg,nil,0,gc)
+				return Auxiliary.FConditionFilterFFRCol1(gc,f1,f2,minc,chkf,mg,nil,0,nil,tp) 
+					or mg1:IsExists(Auxiliary.FConditionFilterFFRCol1,1,nil,f1,f2,minc,chkf,mg,nil,0,gc,tp)
 			end
-			return mg1:IsExists(Auxiliary.FConditionFilterFFRCol1,1,nil,f1,f2,minc,chkf,mg,nil,0)
+			return mg1:IsExists(Auxiliary.FConditionFilterFFRCol1,1,nil,f1,f2,minc,chkf,mg,nil,0,nil,tp)
 		end
 end
-function Auxiliary.FConditionFilterExtraMaterial(c,mg,f)
+function Auxiliary.FConditionFilterExtraMaterial(c,mg,f,tp)
 	local g=mg:Clone()
 	g:AddCard(c)
 	if g:IsExists(Auxiliary.TuneMagFusFilter,1,nil,g,chkf) then return false end
-	return Auxiliary.FConditionFilterConAndSub(c,f,true)
+	return Auxiliary.FConditionFilterConAndSub(c,f,true,tp)
 end
 function Auxiliary.FOperationFunFunRep(f1,f2,minc,maxc,insf)
 	return	function(e,tp,eg,ep,ev,re,r,rp,gc,chkfnf)
 			local chkf=bit.band(chkfnf,0xff)
 			local g=eg:Filter(Card.IsCanBeFusionMaterial,nil,e:GetHandler())
-			local mg1=g:Filter(Auxiliary.FConditionFilterConAndSub,nil,f1,true)
+			local mg1=g:Filter(Auxiliary.FConditionFilterConAndSub,nil,f1,true,tp)
 			local minct=minc
 			local maxct=maxc
 			local p=tp
@@ -1284,19 +1288,19 @@ function Auxiliary.FOperationFunFunRep(f1,f2,minc,maxc,insf)
 			if gc then
 				local matg=Group.CreateGroup()
 				local ct=0
-				if Auxiliary.FConditionFilterFFRCol1(gc,f1,f2,minc,chkf,g,nil,0) then
+				if Auxiliary.FConditionFilterFFRCol1(gc,f1,f2,minc,chkf,g,nil,0,nil,tp) then
 					matg:AddCard(gc)
 					for i=1,minct do
 						Duel.Hint(HINT_SELECTMSG,p,HINTMSG_FMATERIAL)
-						local g1=g:FilterSelect(p,Auxiliary.FConditionFilterFFRCol2,1,1,nil,f1,f2,minct,chkf,g,matg,ct)
+						local g1=g:FilterSelect(p,Auxiliary.FConditionFilterFFRCol2,1,1,nil,f1,f2,minct,chkf,g,matg,ct,nil,tp)
 						matg:Merge(g1)
 						g:Sub(g1)
 						ct=ct+1
 					end
 					maxct=maxct-minct
-					while g:IsExists(Auxiliary.FConditionFilterExtraMaterial,1,nil,g,f2) and maxct>0 and Duel.SelectYesNo(p,93) do
+					while g:IsExists(Auxiliary.FConditionFilterExtraMaterial,1,nil,g,f2,tp) and maxct>0 and Duel.SelectYesNo(p,93) do
 						Duel.Hint(HINT_SELECTMSG,p,HINTMSG_FMATERIAL)
-						local g1=g:FilterSelect(p,Auxiliary.FConditionFilterExtraMaterial,1,1,nil,g,f2)
+						local g1=g:FilterSelect(p,Auxiliary.FConditionFilterExtraMaterial,1,1,nil,g,f2,tp)
 						matg:Merge(g1)
 						g:Sub(g1)
 						maxct=maxct-1
@@ -1306,21 +1310,21 @@ function Auxiliary.FOperationFunFunRep(f1,f2,minc,maxc,insf)
 					Duel.SetFusionMaterial(matg)
 				else
 					Duel.Hint(HINT_SELECTMSG,p,HINTMSG_FMATERIAL)
-					local matg=mg1:FilterSelect(p,Auxiliary.FConditionFilterFFRCol1,1,1,nil,f1,f2,minct,chkf,g,nil,ct,gc)
+					local matg=mg1:FilterSelect(p,Auxiliary.FConditionFilterFFRCol1,1,1,nil,f1,f2,minct,chkf,g,nil,ct,gc,tp)
 					matg:AddCard(gc)
 					g:Sub(matg)
 					ct=ct+1
 					for i=1,minct-1 do
 						Duel.Hint(HINT_SELECTMSG,p,HINTMSG_FMATERIAL)
-						local g1=g:FilterSelect(p,Auxiliary.FConditionFilterFFRCol2,1,1,nil,f1,f2,minct,chkf,g,matg,ct)
+						local g1=g:FilterSelect(p,Auxiliary.FConditionFilterFFRCol2,1,1,nil,f1,f2,minct,chkf,g,matg,ct,nil,tp)
 						matg:Merge(g1)
 						g:Sub(g1)
 						ct=ct+1
 					end
 					maxct=maxct-minct
-					while g:IsExists(Auxiliary.FConditionFilterExtraMaterial,1,nil,g,f2) and maxct>0 and Duel.SelectYesNo(p,93) do
+					while g:IsExists(Auxiliary.FConditionFilterExtraMaterial,1,nil,g,f2,tp) and maxct>0 and Duel.SelectYesNo(p,93) do
 						Duel.Hint(HINT_SELECTMSG,p,HINTMSG_FMATERIAL)
-						local g1=g:FilterSelect(p,Auxiliary.FConditionFilterExtraMaterial,1,1,nil,g,f2)
+						local g1=g:FilterSelect(p,Auxiliary.FConditionFilterExtraMaterial,1,1,nil,g,f2,tp)
 						matg:Merge(g1)
 						g:Sub(g1)
 						maxct=maxct-1
@@ -1334,19 +1338,19 @@ function Auxiliary.FOperationFunFunRep(f1,f2,minc,maxc,insf)
 			local matg=Group.CreateGroup()
 			local ct=0
 			Duel.Hint(HINT_SELECTMSG,p,HINTMSG_FMATERIAL)
-			local matg=mg1:FilterSelect(p,Auxiliary.FConditionFilterFFRCol1,1,1,nil,f1,f2,minct,chkf,g,nil,ct,gc)
+			local matg=mg1:FilterSelect(p,Auxiliary.FConditionFilterFFRCol1,1,1,nil,f1,f2,minct,chkf,g,nil,ct,nil,tp)
 			g:Sub(matg)
 			for i=1,minct do
 				Duel.Hint(HINT_SELECTMSG,p,HINTMSG_FMATERIAL)
-				local g1=g:FilterSelect(p,Auxiliary.FConditionFilterFFRCol2,1,1,nil,f1,f2,minct,chkf,g,matg,ct)
+				local g1=g:FilterSelect(p,Auxiliary.FConditionFilterFFRCol2,1,1,nil,f1,f2,minct,chkf,g,matg,ct,nil,tp)
 				matg:Merge(g1)
 				g:Sub(g1)
 				ct=ct+1
 			end
 			maxct=maxct-minct
-			while g:IsExists(Auxiliary.FConditionFilterExtraMaterial,1,nil,g,f2) and maxct>0 and Duel.SelectYesNo(p,93) do
+			while g:IsExists(Auxiliary.FConditionFilterExtraMaterial,1,nil,g,f2,tp) and maxct>0 and Duel.SelectYesNo(p,93) do
 				Duel.Hint(HINT_SELECTMSG,p,HINTMSG_FMATERIAL)
-				local g1=g:FilterSelect(p,Auxiliary.FConditionFilterExtraMaterial,1,1,nil,g,f2)
+				local g1=g:FilterSelect(p,Auxiliary.FConditionFilterExtraMaterial,1,1,nil,g,f2,tp)
 				matg:Merge(g1)
 				g:Sub(g1)
 				maxct=maxct-1
