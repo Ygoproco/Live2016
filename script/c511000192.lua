@@ -30,15 +30,12 @@ function c511000192.initial_effect(c)
 	--control
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(511000192,0))
+	e5:SetCategory(CATEGORY_CONTROL)
 	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e5:SetCode(EVENT_DAMAGE_STEP_END)
 	e5:SetTarget(c511000192.atktg)
 	e5:SetOperation(c511000192.atkop)
 	c:RegisterEffect(e5)
-	local e6=e5:Clone()
-	e6:SetCode(EVENT_BE_BATTLE_TARGET)
-	e6:SetTarget(c511000192.atktg2)
-	c:RegisterEffect(e6)
 	--prevent destroy
 	local e7=Effect.CreateEffect(c)
 	e7:SetDescription(aux.Stringid(59251766,0))
@@ -59,9 +56,6 @@ function c511000192.initial_effect(c)
 	e8:SetCost(c511000192.cost)
 	e8:SetOperation(c511000192.op3)
 	c:RegisterEffect(e8)
-	if not c511000192.xyz_filter then
-		c511000192.xyz_filter=function(mc) return mc:IsType(TYPE_XYZ) and mc:IsCanBeXyzMaterial(c) end
-	end
 	if not c511000192.global_check then
 		c511000192.global_check=true
 		local ge2=Effect.CreateEffect(c)
@@ -73,57 +67,105 @@ function c511000192.initial_effect(c)
 		Duel.RegisterEffect(ge2,0)
 	end
 end
-c511000192.xyz_number=0
-c511000192.minxyzct=2
-c511000192.maxxyzct=2
-c511000192.maintain_overlay=true
-function c511000192.ovfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_XYZ)
+function c511000192.ovfilter(c,xyz)
+	if c:IsLocation(LOCATION_GRAVE) and not c:IsHasEffect(511002793) then return false end
+	if c:IsOnField() and c:IsFacedown() then return false end
+	return (c:IsType(TYPE_XYZ) and c:IsCanBeXyzMaterial(xyz))
+		or c:IsHasEffect(511002116)
 end	
-function c511000192.xyzcon(e,c,og)
+function c511000192.doubfilter(c,xyz)
+	return c:IsHasEffect(511001225) and (not c.xyzlimit2 or c.xyzlimit2(xyz))
+end
+function c511000192.amfilter(c)
+	return c:GetEquipGroup():IsExists(Card.IsHasEffect,1,nil,511001175)
+end
+function c511000192.xyzcon(e,c,og,min,max)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.IsExistingMatchingCard(c511000192.ovfilter,tp,LOCATION_MZONE,0,2,nil)
-end
-function c511000192.xyzop(e,tp,eg,ep,ev,re,r,rp,c,og)
-	if chk==0 then return Duel.IsExistingMatchingCard(c511000192.ovfilter,tp,LOCATION_MZONE,0,2,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-	local g1=Duel.SelectMatchingCard(tp,c511000192.ovfilter,tp,LOCATION_MZONE,0,1,1,nil)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-	local g2=Duel.SelectMatchingCard(tp,c511000192.ovfilter,tp,LOCATION_MZONE,0,1,1,g1:GetFirst())
-	og=Group.CreateGroup()
-	og:Merge(g1)
-	og:Merge(g2)
-	if g1:GetCount()>0 then
-		local mg1=g1:GetFirst():GetOverlayGroup()
-		if mg1:GetCount()~=0 then
-			og:Merge(mg1)
-			Duel.Overlay(g2:GetFirst(),mg1)
-		end
-		Duel.Overlay(g2:GetFirst(),g1)
-		local mg2=g2:GetFirst():GetOverlayGroup()
-		if mg2:GetCount()~=0 then
-			og:Merge(mg2)
-			Duel.Overlay(c,mg2)
-		end
-		c:SetMaterial(og)
-		Duel.Overlay(c,g2:GetFirst())	
+	local mg=nil
+	if og then
+		mg=og:Filter(c511000192.ovfilter,nil,c)
+	else
+		mg=Duel.GetMatchingGroup(c511000192.ovfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,nil,c)
 	end
+	return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or mg:IsExists(Card.IsLocation,1,nil,LOCATION_MZONE))
+		and (not min or min<=2 and max>=2)
+		and (mg:GetCount()>1 or mg:IsExists(c511000192.doubfilter,1,nil,c) or mg:IsExists(c511000192.amfilter,1,nil))
+end
+function c511000192.xyzop(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
+	local g=nil
+	local sg=Group.CreateGroup()
+	if og and not min then
+		g=og
+		local tc=og:GetFirst()
+		while tc do
+			local mg=tc:GetOverlayGroup()
+			if mg:GetCount()>0 then
+				g:Merge(tc:GetOverlayGroup())
+				Duel.Overlay(c,mg)
+			end
+			tc=og:GetNext()
+		end
+	else
+		local mg=nil
+		if og then
+			mg=og:Filter(c511000192.ovfilter,nil,c)
+		else
+			mg=Duel.GetMatchingGroup(c511000192.ovfilter,tp,LOCATION_ONFIELD+LOCATION_GRAVE,0,nil,c)
+		end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
+			g=mg:Select(tp,1,1,nil)
+		else
+			g=mg:FilterSelect(tp,Card.IsLocation,1,1,nil,LOCATION_MZONE)
+		end
+		local tc1=g:GetFirst()
+		local mg1=tc1:GetOverlayGroup()
+		if mg1:GetCount()~=0 then
+			g:Merge(mg1)
+			Duel.Overlay(c,mg1)
+		end
+		if tc1:IsHasEffect(511002116) then
+			tc1:RegisterFlagEffect(511002115,RESET_EVENT+0x1fe0000,0,0)
+		end
+		local eqg=tc1:GetEquipGroup()
+		local eqc=eqg:GetFirst()
+		while eqc do
+			if eqc:IsHasEffect(511001175) then
+				mg:AddCard(eqc)
+			end
+			eqc=eqg:GetNext()
+		end
+		if not tc1:IsHasEffect(511001225) or (mg:GetCount()>1 and Duel.SelectYesNo(tp,560)) then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+			local g2=mg:Select(tp,1,1,tc1)
+			local tc2=g2:GetFirst()
+			g:Merge(g2)
+			local mg2=tc2:GetOverlayGroup()
+			if mg2:GetCount()~=0 then
+				g:Merge(mg2)
+				Duel.Overlay(c,mg2)
+			end
+			if tc2:IsHasEffect(511002116) then
+				tc2:RegisterFlagEffect(511002115,RESET_EVENT+0x1fe0000,0,0)
+			end
+		end
+	end
+	g:Remove(Card.IsHasEffect,nil,511002116)
+	g:Remove(Card.IsHasEffect,nil,511002115)
+	c:SetMaterial(g)
+	Duel.Overlay(c,g)
 end
 function c511000192.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	if Duel.GetAttackTarget()~=nil then
-		Duel.SetTargetCard(Duel.GetAttackTarget())
-	end
-end
-function c511000192.atktg2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetTargetCard(Duel.GetAttacker())
+	local bc=e:GetHandler():GetBattleTarget()
+	if chk==0 then return bc end
+	Duel.SetTargetCard(bc)
+	Duel.SetOperationInfo(0,CATEGORY_CONTROL,bc,1,0,0)
 end
 function c511000192.atkop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToEffect(e) then
-		Duel.GetControl(tc,tp,PHASE_BATTLE,1)
+	local bc=e:GetHandler():GetBattleTarget()
+	if bc and bc:IsRelateToBattle() then
+		Duel.GetControl(bc,tp,PHASE_BATTLE,1)
 	end
 end
 function c511000192.cost(e,tp,eg,ep,ev,re,r,rp,chk)
