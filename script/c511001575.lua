@@ -27,7 +27,7 @@ function c511001575.initial_effect(c)
 	e4:SetCategory(CATEGORY_DAMAGE)
 	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e4:SetCode(511001265)
+	e4:SetCode(511001441)
 	e4:SetRange(LOCATION_SZONE)
 	e4:SetCondition(c511001575.damcon)
 	e4:SetTarget(c511001575.damtg)
@@ -36,12 +36,13 @@ function c511001575.initial_effect(c)
 	if not c511001575.global_check then
 		c511001575.global_check=true
 		--register
-		local ge=Effect.CreateEffect(c)
-		ge:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge:SetCode(EVENT_ADJUST)
-		ge:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		ge:SetOperation(c511001575.regop)
-		Duel.RegisterEffect(ge,0)
+		local ge1=Effect.CreateEffect(c)
+		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge1:SetCode(EVENT_ADJUST)
+		ge1:SetCountLimit(1)
+		ge1:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
+		ge1:SetOperation(c511001575.atkchk)
+		Duel.RegisterEffect(ge1,0)
 	end
 end
 function c511001575.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -58,48 +59,35 @@ function c511001575.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c511001575.damcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:GetFirst()==e:GetHandler():GetEquipTarget() and ev>0 and re:GetOwner()~=e:GetHandler()
+	local c=e:GetHandler()
+	local ec=c:GetEquipTarget()
+	if not ec or not eg:IsContains(ec) then return false end
+	local val=0
+	if ec:GetFlagEffect(284)>0 then val=ec:GetFlagEffectLabel(284) end
+	return ec:GetAttack()~=val and re:GetOwner()~=c
 end
 function c511001575.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
+	local ec=e:GetHandler():GetEquipTarget()
+	local dam=0
+	local val=0
+	if ec:GetFlagEffect(284)>0 then val=ec:GetFlagEffectLabel(284) end
+	if ec:GetAttack()>val then dam=ec:GetAttack()-val
+	else dam=val-ec:GetAttack() end
 	Duel.SetTargetPlayer(1-tp)
-	Duel.SetTargetParam(ev)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,ev)
+	Duel.SetTargetParam(dam)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,dam)
 end
 function c511001575.damop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Damage(p,d,REASON_EFFECT)
 end
-function c511001575.regop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()	
-	local g=Duel.GetMatchingGroup(nil,c:GetControler(),LOCATION_MZONE,LOCATION_MZONE,nil)
-	local tc=g:GetFirst()
-	while tc do
-		if tc:IsFaceup() and tc:GetFlagEffect(511001265)==0 then
-			local e1=Effect.CreateEffect(c)	
-			e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
-			e1:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-			e1:SetCode(EVENT_CHAIN_SOLVED)
-			e1:SetRange(LOCATION_MZONE)
-			e1:SetLabel(tc:GetAttack())
-			e1:SetOperation(c511001575.op)
-			e1:SetReset(RESET_EVENT+0x1fe0000)
-			tc:RegisterEffect(e1)
-			tc:RegisterFlagEffect(511001265,RESET_EVENT+0x1fe0000,0,1) 	
-		end	
-		tc=g:GetNext()
+function c511001575.atkchk(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetFlagEffect(tp,419)==0 and Duel.GetFlagEffect(1-tp,419)==0 then
+		Duel.CreateToken(tp,419)
+		Duel.CreateToken(1-tp,419)
+		Duel.RegisterFlagEffect(tp,419,nil,0,1)
+		Duel.RegisterFlagEffect(1-tp,419,nil,0,1)
 	end
-end
-function c511001575.op(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if e:GetLabel()==c:GetAttack() then return end
-	local val=0
-	if e:GetLabel()>c:GetAttack() then
-		val=e:GetLabel()-c:GetAttack()
-	else
-		val=c:GetAttack()-e:GetLabel()
-	end
-	Duel.RaiseEvent(c,511001265,re,REASON_EFFECT,rp,tp,val)
-	e:SetLabel(c:GetAttack())
 end

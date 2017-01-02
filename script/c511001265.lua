@@ -6,65 +6,70 @@ function c511001265.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(511001265)
-	e1:SetCondition(c511001265.damcon)
-	e1:SetTarget(c511001265.damtg)
-	e1:SetOperation(c511001265.damop)
+	e1:SetCondition(c511001265.condition)
+	e1:SetTarget(c511001265.target)
+	e1:SetOperation(c511001265.activate)
 	c:RegisterEffect(e1)
 	if not c511001265.global_check then
 		c511001265.global_check=true
-		--register
-		local e2=Effect.CreateEffect(c)
-		e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e2:SetCode(EVENT_ADJUST)
-		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e2:SetOperation(c511001265.operation)
-		Duel.RegisterEffect(e2,0)
+		local ge2=Effect.CreateEffect(c)
+		ge2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge2:SetCode(EVENT_ADJUST)
+		ge2:SetCountLimit(1)
+		ge2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
+		ge2:SetOperation(c511001265.atkchk)
+		Duel.RegisterEffect(ge2,0)
 	end
 end
-function c511001265.operation(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()	
-	local g=Duel.GetMatchingGroup(nil,c:GetControler(),LOCATION_MZONE,LOCATION_MZONE,nil)
-	local tc=g:GetFirst()
-	while tc do
-		if tc:IsFaceup() and tc:GetFlagEffect(511001265)==0 then
-			local e1=Effect.CreateEffect(c)	
-			e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
-			e1:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-			e1:SetCode(EVENT_CHAIN_SOLVED)
-			e1:SetRange(LOCATION_MZONE)
-			e1:SetLabel(tc:GetAttack())
-			e1:SetOperation(c511001265.op)
-			e1:SetReset(RESET_EVENT+0x1fe0000)
-			tc:RegisterEffect(e1)
-			tc:RegisterFlagEffect(511001265,RESET_EVENT+0x1fe0000,0,1) 	
-		end	
-		tc=g:GetNext()
-	end		
+function c511001265.atkchk(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetFlagEffect(tp,419)==0 and Duel.GetFlagEffect(1-tp,419)==0 then
+		Duel.CreateToken(tp,419)
+		Duel.CreateToken(1-tp,419)
+		Duel.RegisterFlagEffect(tp,419,nil,0,1)
+		Duel.RegisterFlagEffect(1-tp,419,nil,0,1)
+	end
 end
-function c511001265.op(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if e:GetLabel()==c:GetAttack() then return end
+function c511001265.cfilter(c,tp)
 	local val=0
-	if e:GetLabel()>c:GetAttack() then
-		val=e:GetLabel()-c:GetAttack()
-	else
-		val=c:GetAttack()-e:GetLabel()
-	end
-	Duel.RaiseEvent(c,511001265,re,REASON_EFFECT,rp,tp,val)
-	e:SetLabel(c:GetAttack())
+	if c:GetFlagEffect(284)>0 then val=c:GetFlagEffectLabel(284) end
+	return c:IsControler(1-tp) and c:GetAttack()~=val
 end
-function c511001265.damcon(e,tp,eg,ep,ev,re,r,rp)
-	local ec=eg:GetFirst()
-	e:SetLabel(ev)
-	return ec:IsControler(1-tp) and ev>0
+function c511001265.condition(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(c511001265.cfilter,1,nil,tp)
 end
-function c511001265.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c511001265.diffilter1(c,g)
+	local dif=0
+	local val=0
+	if c:GetFlagEffect(284)>0 then val=c:GetFlagEffectLabel(284) end
+	if c:GetAttack()>val then dif=c:GetAttack()-val
+	else dif=val-c:GetAttack() end
+	return g:IsExists(c511001265.diffilter2,1,c,dif)
+end
+function c511001265.diffilter2(c,dif)
+	local dif2=0
+	local val=0
+	if c:GetFlagEffect(284)>0 then val=c:GetFlagEffectLabel(284) end
+	if c:GetAttack()>val then dif2=c:GetAttack()-val
+	else dif2=val-c:GetAttack() end
+	return dif~=dif2
+end
+function c511001265.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
+	local ec=eg:GetFirst()
+	local g=eg:Filter(c511001265.diffilter1,nil,eg)
+	local g2=Group.CreateGroup()
+	if g:GetCount()>0 then g2=g:Select(tp,1,1,nil) ec=g2:GetFirst() end
+	if g2:GetCount()>0 then Duel.HintSelection(g2) end
+	local dam=0
+	local val=0
+	if ec:GetFlagEffect(284)>0 then val=ec:GetFlagEffectLabel(284) end
+	if ec:GetAttack()>val then dam=ec:GetAttack()-val
+	else dam=val-ec:GetAttack() end
 	Duel.SetTargetPlayer(1-tp)
-	Duel.SetTargetParam(e:GetLabel())
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,e:GetLabel())
+	Duel.SetTargetParam(dam)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,dam)
 end
-function c511001265.damop(e,tp,eg,ep,ev,re,r,rp)
+function c511001265.activate(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Damage(p,d,REASON_EFFECT)
 end
