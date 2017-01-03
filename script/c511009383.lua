@@ -72,7 +72,7 @@ end
 function c511009383.sctg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return chkc:IsLocation(LOCATION_SZONE) and chkc:IsControler(tp) and c511009383.filter(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1 and e:GetHandler():IsReleasableByEffect() 
-		and Duel.IsExistingMatchingCard(c511009383.tfilter,tp,LOCATION_MZONE,0,1,nil) 
+		and Duel.IsExistingMatchingCard(c511009383.tfilter,tp,LOCATION_MZONE,0,1,e:GetHandler()) 
 		and Duel.IsExistingTarget(c511009383.filter,tp,LOCATION_SZONE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectTarget(tp,c511009383.filter,tp,LOCATION_SZONE,0,1,1,nil,e,tp)
