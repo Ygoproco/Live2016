@@ -64,7 +64,7 @@ function c100912046.atop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e3,tp)
 end
 function c100912046.aclimit(e,re,tp)
-	return re:GetHandler():IsAttribute(e:GetLabel()) and re:GetHandler():IsLocation(LOCATION_MZONE) and re:GetHandler():IsFaceup()
+	return re:GetHandler():IsAttribute(e:GetLabel()) and not re:GetHandler():IsImmuneToEffect(e)
 end
 function c100912046.atktarget(e,c)
 	return c:IsAttribute(e:GetLabel())
