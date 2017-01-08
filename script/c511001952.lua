@@ -4,11 +4,9 @@ function c511001952.initial_effect(c)
 	c:SetStatus(STATUS_NO_LEVEL,true)
 	--dark synchro summon
 	c:EnableReviveLimit()
-	c511001952.tuner_filter=function(mc) return mc and mc:IsSetCard(0x301) end
-	c511001952.nontuner_filter=function(mc) return true end
-	c511001952.minntct=1
-	c511001952.maxntct=1
-	c511001952.sync=true
+	c511001952.darksynchro=true
+	c511001952.tuner=nil
+	c511001952.nontuner=aux.NonTuner(nil)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
@@ -66,18 +64,22 @@ function c511001952.tmatfilter(c,syncard)
 	return c:IsSetCard(0x301) and c:IsType(TYPE_TUNER) and c:IsFaceup() and c:IsCanBeSynchroMaterial(syncard)
 end
 function c511001952.ntmatfilter(c,syncard)	
-	return c:IsFaceup() and c:IsCanBeSynchroMaterial(syncard) and not c:IsType(TYPE_TUNER)
+	return c:IsFaceup() and c:IsCanBeSynchroMaterial(syncard) and c:IsNotTuner()
 end
 function c511001952.synfilter1(c,lv,tuner,syncard)
 	local tlv=c:GetSynchroLevel(syncard)
 	if c:GetFlagEffect(100000147)==0 then
-		return c:IsLevelAbove(8) and tuner:IsExists(c511001952.synfilter2,1,nil,tlv,lv+tlv,syncard)
+		return c:IsLevelAbove(8) and tuner:IsExists(c511001952.synfilter2,1,c,true,tlv,lv,syncard)
 	else
-		return tuner:IsExists(c511001952.synfilter2,1,nil,lv-tlv,syncard)
-	end	
+		return tuner:IsExists(c511001952.synfilter2,1,c,false,tlv,lv,syncard)
+	end
 end
-function c511001952.synfilter2(c,lv,lv2,syncard)
-	return c:GetSynchroLevel(syncard)==lv or c:GetSynchroLevel(syncard)==lv2
+function c511001952.synfilter2(c,chk,tlv,lv,syncard)
+	local lv1=bit.band(tlv,0xffff)
+	local lv2=bit.rshift(tlv,16)
+	if chk then return c:GetSynchroLevel(syncard)==lv1 or c:GetSynchroLevel(syncard)==lv2 or c:GetSynchroLevel(syncard)==lv1+lv 
+		or c:GetSynchroLevel(syncard)==lv2+lv
+	else return c:GetSynchroLevel(syncard)==lv-lv1 or c:GetSynchroLevel(syncard)==lv-lv2 end
 end
 function c511001952.syncon(e,c,tuner)
 	if c==nil then return true end
@@ -99,9 +101,9 @@ function c511001952.synop(e,tp,eg,ep,ev,re,r,rp,c,tuner)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
 	local t
 	if mat1:GetFlagEffect(100000147)==0 then
-		t=tun:FilterSelect(tp,c511001952.synfilter2,1,1,nil,12+lv1,lv1,c)
+		t=tun:FilterSelect(tp,c511001952.synfilter2,1,1,mat1,true,lv1,12,c)
 	else
-		t=tun:FilterSelect(tp,c511001952.synfilter2,1,1,nil,12-lv1,c)
+		t=tun:FilterSelect(tp,c511001952.synfilter2,1,1,mat1,false,lv1,12,c)
 	end
 	g:Merge(t)
 	c:SetMaterial(g)
