@@ -38,14 +38,14 @@ function c170000201.filter(c)
 	return c:IsCode(48179391) or c:IsCode(110000100) or c:IsCode(110000101)
 end
 function c170000201.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>1 
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>1 and not Duel.IsPlayerAffectedByEffect(tp,59822133) 
 		and Duel.IsExistingMatchingCard(c170000201.spfilter,tp,0x33,0,1,nil,e,tp,80019195)
 		and Duel.IsExistingMatchingCard(c170000201.spfilter,tp,0x33,0,1,nil,e,tp,85800949)
 		and Duel.IsExistingMatchingCard(c170000201.spfilter,tp,0x33,0,1,nil,e,tp,84565800) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g1,3,0,0)
 end
 function c170000201.operation(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=2 then return end
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=2 or Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
 	local g1=Duel.GetMatchingGroup(c170000201.spfilter,tp,0x33,0,nil,e,tp,80019195)
 	local g2=Duel.GetMatchingGroup(c170000201.spfilter,tp,0x33,0,nil,e,tp,85800949)
 	local g3=Duel.GetMatchingGroup(c170000201.spfilter,tp,0x33,0,nil,e,tp,84565800)
@@ -58,7 +58,14 @@ function c170000201.operation(e,tp,eg,ep,ev,re,r,rp)
 		local sg3=g3:Select(tp,1,1,nil)
 		sg1:Merge(sg2)
 		sg1:Merge(sg3)
-		Duel.SpecialSummon(sg1,0,tp,tp,true,true,POS_FACEUP)
+		local tc=sg1:GetFirst()
+		while tc do
+			if tc:IsHasEffect(EFFECT_NECRO_VALLEY) then return end
+			Duel.SpecialSummonStep(tc,0,tp,tp,true,true,POS_FACEUP)
+			tc:CompleteProcedure()
+			tc=sg1:GetNext()
+		end
+		Duel.SpecialSummonComplete()
 	end
 	Duel.BreakEffect()
 	local g=Duel.GetMatchingGroup(c170000201.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)

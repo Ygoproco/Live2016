@@ -34,7 +34,7 @@ function c511001282.atkcon(e,tp,eg,ep,ev,re,r,rp)
 		and re and re:GetOwner()==e:GetOwner()
 end
 function c511001282.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x204)
+	return c:IsFaceup() and c:IsSetCard(0x10db)
 end
 function c511001282.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c511001282.filter(chkc) end
@@ -44,7 +44,7 @@ function c511001282.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c511001282.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() then
+	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)

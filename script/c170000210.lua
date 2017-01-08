@@ -19,12 +19,14 @@ function c170000210.initial_effect(c)
 	e2:SetCode(EFFECT_SPSUMMON_CONDITION)
 	e2:SetValue(aux.FALSE)
 	c:RegisterEffect(e2)
-	--Indestructible by Battle
-	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_SINGLE)
-	e4:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-	e4:SetValue(1)
-	c:RegisterEffect(e4)
+	--sp summon legendary knight
+	local e3=Effect.CreateEffect(c)
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
+	e3:SetCode(EVENT_BATTLE_DESTROYED)
+	e3:SetTarget(c170000210.destg)
+	e3:SetOperation(c170000210.desop)
+	c:RegisterEffect(e3)
 end
 function c170000210.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -46,4 +48,21 @@ function c170000210.spop(e,tp,eg,ep,ev,re,r,rp)
 		c:RegisterEffect(e2)
 		c:CompleteProcedure()
 	end
+end
+function c170000210.destg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,3,tp,0x13)
+end
+function c170000210.spfilter(c,e,tp)
+	return c:IsSetCard(0xa0) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+end
+function c170000210.desop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<3 then return end
+	local g=Duel.GetMatchingGroup(c170000210.spfilter,tp,0x13,0,nil,e,tp)
+	if g:GetCount()<3 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local sg=g:Select(tp,3,3,nil)
+	if sg:IsExists(Card.IsHasEffect,1,nil,EFFECT_NECRO_VALLEY) then return end
+	Duel.SpecialSummon(sg,0,tp,tp,true,false,POS_FACEUP)
 end

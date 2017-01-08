@@ -27,6 +27,7 @@ function c511001433.activate(e,tp,eg,ep,ev,re,r,rp)
 		or not Duel.IsPlayerCanSpecialSummonMonster(tp,511001433,0,0x21,0,0,1,RACE_FIEND,ATTRIBUTE_LIGHT) then return end
 	c:AddMonsterAttribute(TYPE_EFFECT)
 	Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP_ATTACK)
+	c:AddMonsterAttributeComplete()
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(27062594,0))
 	e1:SetCategory(CATEGORY_REMOVE+CATEGORY_DAMAGE)
