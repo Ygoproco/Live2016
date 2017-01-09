@@ -1,6 +1,6 @@
 --召喚獣メルカバー
 --Merkabah the Eidolon Beast
---Scripted by Eerie Code
+--Scripted by Eerie Code; fixed by senpaiziri3
 function c75286621.initial_effect(c)
 	c:EnableReviveLimit()
 	if Card.IsFusionAttribute then
@@ -13,7 +13,7 @@ function c75286621.initial_effect(c)
 	e1:SetCategory(CATEGORY_NEGATE+CATEGORY_REMOVE)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_CHAINING)
-	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
+	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e1:SetCountLimit(1)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCondition(c75286621.condition)
