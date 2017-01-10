@@ -1,6 +1,6 @@
 --古代の歯車機械
 --Ancient Gear Gadget
---Scripted by Eerie Code
+--Scripted by Eerie Code; fixed by senpaizuri3
 function c18486927.initial_effect(c)
 	--
 	local e1=Effect.CreateEffect(c)
@@ -44,7 +44,7 @@ function c18486927.limop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetCode(EFFECT_CANNOT_ACTIVATE)
 	e1:SetTargetRange(0,1)
 	e1:SetValue(c18486927.aclimit)
-	e1:SetTarget(c18486927.accon)
+	e1:SetCondition(c18486927.accon)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	e1:SetLabel(t)
 	Duel.RegisterEffect(e1,tp)
@@ -83,7 +83,7 @@ function c18486927.nmop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetRange(LOCATION_MZONE)
 		e1:SetCode(EFFECT_CHANGE_CODE)
 		e1:SetValue(ac)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		c:RegisterEffect(e1)
 	end
 end
