@@ -1753,7 +1753,7 @@ function Auxiliary.AddPersistentProcedure(c,p,f,category,property,hint1,hint2,co
 	e1:SetCode(EVENT_FREE_CHAIN)
 	if hint1 or hint2 then
 		if hint1==hint2 then
-			e1:SetHintTiming(hint)
+			e1:SetHintTiming(hint1)
 		elseif hint1 and not hint2 then
 			e1:SetHintTiming(hint1,0)
 		elseif hint2 and not hint1 then
