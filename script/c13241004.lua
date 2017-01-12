@@ -1,6 +1,6 @@
 --ファーニマル・ペンギン
 --Fluffal Penguin
---Script by nekrozar
+--Script by nekrozar; fixed by senpaizuri
 function c13241004.initial_effect(c)
 	--special summon
 	local e1=Effect.CreateEffect(c)
@@ -44,7 +44,7 @@ function c13241004.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c13241004.drcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return c:IsLocation(LOCATION_GRAVE) and r==REASON_FUSION and c:GetReasonCard():IsSetCard(0xad)
+	return c:IsLocation(LOCATION_GRAVE) and r==REASON_FUSION and c:GetReasonCard():IsPreviousSetCard(0xad)
 end
 function c13241004.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,2) end
