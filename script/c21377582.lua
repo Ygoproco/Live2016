@@ -51,7 +51,7 @@ function c21377582.otcon(e,c,minc)
 	local tp=c:GetControler()
 	local mg=Duel.GetMatchingGroup(c21377582.otfilter,tp,LOCATION_ONFIELD,0,nil)
 	return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and mg:GetCount()>=2)
-		or (Duel.CheckTribute(c,1) and mg:GetCount()>=1)
+		or ((not Duel.CheckTribute or Duel.CheckTribute(c,1)) and mg:GetCount()>=1)
 end
 function c21377582.otop(e,tp,eg,ep,ev,re,r,rp,c)
 	local mg=Duel.GetMatchingGroup(c21377582.otfilter,tp,LOCATION_ONFIELD,0,nil)
