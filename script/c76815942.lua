@@ -52,7 +52,13 @@ function c76815942.ffilter(c)
 	return c:IsFusionSetCard(0x1f8) or c:IsFusionCode(8491961)
 end
 function c76815942.matval(c)
-	if (c:IsOriginalSetCard(0x1f8) or c:GetOriginalCode()==8491961) and c:IsType(TYPE_XYZ) then
+	local b
+	if Card.IsOriginalSetCard then
+		b=c:IsOriginalSetCard(0x1f8)
+	else
+		b=c:IsSetCard(0x1f8)
+	end
+	if (b or c:GetOriginalCode()==8491961) and c:IsType(TYPE_XYZ) then
 		return c:GetOverlayCount()
 	end
 	return 0
