@@ -39,7 +39,12 @@ function c76647978.filter2(c,e,tp,mg)
 	return c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(mg,nil)
 end
 function c76647978.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local mg=Duel.GetFusionMaterial(tp):Filter(Card.IsOnField,nil)
+	local mg=nil
+	if Duel.GetFusionMaterial then
+		mg=Duel.GetFusionMaterial(tp):Filter(Card.IsOnField,nil)
+	else
+		mg=Duel.GetMatchingGroup(Card.IsCanBeFusionMaterial,tp,LOCATION_MZONE,0,nil)
+	end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-2
 		and mg:IsExists(c76647978.filter0,1,nil,e,tp,mg) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
@@ -56,7 +61,12 @@ function c76647978.filter4(c,e,tp,mc)
 end
 function c76647978.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<-1 then return end
-	local mg=Duel.GetFusionMaterial(tp):Filter(Card.IsOnField,nil)
+	local mg=nil
+	if Duel.GetFusionMaterial then
+		mg=Duel.GetFusionMaterial(tp):Filter(Card.IsOnField,nil)
+	else
+		mg=Duel.GetMatchingGroup(Card.IsCanBeFusionMaterial,tp,LOCATION_MZONE,0,nil)
+	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FMATERIAL)
 	local g1=mg:FilterSelect(tp,c76647978.filter3,1,1,nil,e,tp,mg)
 	if g1:GetCount()==0 then return end
