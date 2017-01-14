@@ -1,5 +1,7 @@
 Auxiliary={}
 aux=Auxiliary
+POS_FACEUP_DEFENCE=POS_FACEUP_DEFENSE
+POS_FACEDOWN_DEFENCE=POS_FACEDOWN_DEFENSE
 
 function Auxiliary.Stringid(code,id)
 	return code*16+id
@@ -1721,6 +1723,11 @@ end
 --filter for necro_valley test
 function Auxiliary.nvfilter(c)
 	return not c:IsHasEffect(EFFECT_NECRO_VALLEY)
+end
+function Auxiliary.NecroValleyFilter(f)
+	return	function(target,...)
+				return f(target,...) and not target:IsHasEffect(EFFECT_NECRO_VALLEY)
+			end
 end
 
 --Function to check the summon method used for the card. Credit goes to Cute-Nekomimi

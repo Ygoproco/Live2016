@@ -1,6 +1,6 @@
 --古代の歯車機械
 --Ancient Gear Gadget
---Scripted by Eerie Code
+--Scripted by Eerie Code; fixed by senpaizuri3
 function c18486927.initial_effect(c)
 	--
 	local e1=Effect.CreateEffect(c)
@@ -44,7 +44,7 @@ function c18486927.limop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetCode(EFFECT_CANNOT_ACTIVATE)
 	e1:SetTargetRange(0,1)
 	e1:SetValue(c18486927.aclimit)
-	e1:SetTarget(c18486927.accon)
+	e1:SetCondition(c18486927.accon)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	e1:SetLabel(t)
 	Duel.RegisterEffect(e1,tp)
@@ -62,10 +62,6 @@ function c18486927.nmfil(c)
 end
 function c18486927.nmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	--local opt=Duel.SelectOption(tp,c18486927.gn[1],c18486927.gn[2],c18486927.gn[3],c18486927.gn[4],c18486927.gn[5],c18486927.gn[6],c18486927.gn[7],c18486927.gn[8],c18486927.gn[9],c18486927.gn[10])+1
-	--local nm=c18486927.gc[opt]
-	--e:SetLabel(nm)
-	--Duel.SetTargetParam(nm)
 	local ac=0
 	local lp=true
 	while lp do
@@ -73,7 +69,6 @@ function c18486927.nmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 		local tk=Duel.CreateToken(tp,ac)
 		if c18486927.nmfil(tk) then lp=false end
 	end
-	--Debug.Message("Fusion Tag: "..ac)
 	Duel.SetTargetParam(ac)
 	e:SetLabel(ac)
 	Duel.SetOperationInfo(0,CATEGORY_ANNOUNCE,nil,0,tp,ANNOUNCE_CARD)
