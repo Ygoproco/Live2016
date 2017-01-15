@@ -25,7 +25,7 @@ function c49430782.initial_effect(c)
 	e3:SetCategory(CATEGORY_SUMMON)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_SZONE)
-	e3:SetCountLimit(1,100912205)
+	e3:SetCountLimit(1,49430783)
 	e3:SetTarget(c49430782.sumtg)
 	e3:SetOperation(c49430782.sumop)
 	c:RegisterEffect(e3)
@@ -36,7 +36,7 @@ function c49430782.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e4:SetCode(EVENT_TO_GRAVE)
-	e4:SetCountLimit(1,100912305)
+	e4:SetCountLimit(1,49430784)
 	e4:SetCondition(c49430782.descon)
 	e4:SetTarget(c49430782.destg)
 	e4:SetOperation(c49430782.desop)
@@ -61,15 +61,15 @@ function c49430782.checkop(e,tp,eg,ep,ev,re,r,rp)
 		if tc:IsPreviousLocation(LOCATION_ONFIELD) and (tc:IsSetCard(0x1f9) or tc:IsCode(30539496,34079868,82321037,87765315,96746083)) then
 			local typ=bit.band(tc:GetOriginalType(),0x7)
 			if (typ==TYPE_MONSTER and Duel.GetFlagEffect(0,49430782)==0)
-				or (typ==TYPE_SPELL and Duel.GetFlagEffect(0,100912205)==0)
-				or (typ==TYPE_TRAP and Duel.GetFlagEffect(0,100912305)==0) then
+				or (typ==TYPE_SPELL and Duel.GetFlagEffect(0,49430783)==0)
+				or (typ==TYPE_TRAP and Duel.GetFlagEffect(0,49430784)==0) then
 				c49430782.counter=c49430782.counter+1
 				if typ==TYPE_MONSTER then
 					Duel.RegisterFlagEffect(0,49430782,RESET_PHASE+PHASE_END,0,1)
 				elseif typ==TYPE_SPELL then
-					Duel.RegisterFlagEffect(0,100912205,RESET_PHASE+PHASE_END,0,1)
+					Duel.RegisterFlagEffect(0,49430783,RESET_PHASE+PHASE_END,0,1)
 				else
-					Duel.RegisterFlagEffect(0,100912305,RESET_PHASE+PHASE_END,0,1)
+					Duel.RegisterFlagEffect(0,49430784,RESET_PHASE+PHASE_END,0,1)
 				end
 			end
 		end
