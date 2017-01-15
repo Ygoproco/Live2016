@@ -19,7 +19,7 @@ function c94160895.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetCode(EVENT_DESTROYED)
-	e2:SetCountLimit(1,100912207)
+	e2:SetCountLimit(1,94160896)
 	e2:SetCondition(c94160895.thcon)
 	e2:SetTarget(c94160895.thtg)
 	e2:SetOperation(c94160895.thop)
@@ -34,7 +34,7 @@ function c94160895.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local loc=LOCATION_MZONE+LOCATION_HAND
 	if ft<0 then loc=LOCATION_MZONE end
 	local loc2=0
-	if Duel.IsPlayerAffectedByEffect(tp,100912046) then loc2=LOCATION_MZONE end
+	if Duel.IsPlayerAffectedByEffect(tp,88581108) then loc2=LOCATION_MZONE end
 	local g=Duel.GetMatchingGroup(c94160895.desfilter,tp,loc,loc2,c)
 	if chk==0 then return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 		and g:GetCount()>=2 and g:IsExists(Card.IsAttribute,1,nil,ATTRIBUTE_WIND)
@@ -51,7 +51,7 @@ function c94160895.spop(e,tp,eg,ep,ev,re,r,rp)
 	local loc=LOCATION_MZONE+LOCATION_HAND
 	if ft<0 then loc=LOCATION_MZONE end
 	local loc2=0
-	if Duel.IsPlayerAffectedByEffect(tp,100912046) then loc2=LOCATION_MZONE end
+	if Duel.IsPlayerAffectedByEffect(tp,88581108) then loc2=LOCATION_MZONE end
 	local g=Duel.GetMatchingGroup(c94160895.desfilter,tp,loc,loc2,c)
 	if g:GetCount()<2 or not g:IsExists(Card.IsAttribute,1,nil,ATTRIBUTE_WIND) then return end
 	local g1=nil local g2=nil

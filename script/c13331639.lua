@@ -85,16 +85,32 @@ function c13331639.initial_effect(c)
 end
 c13331639.miracle_synchro_fusion=true
 function c13331639.fusfilter1(c)
-	return c:IsRace(RACE_DRAGON) and c:IsFusionType(TYPE_FUSION)
+	if Card.IsFusionType then
+		return c:IsRace(RACE_DRAGON) and c:IsFusionType(TYPE_FUSION)
+	else
+		return c:IsRace(RACE_DRAGON) and c:IsType(TYPE_FUSION)
+	end
 end
 function c13331639.fusfilter2(c)
-	return c:IsRace(RACE_DRAGON) and c:IsFusionType(TYPE_SYNCHRO)
+	if Card.IsFusionType then
+		return c:IsRace(RACE_DRAGON) and c:IsFusionType(TYPE_SYNCHRO)
+	else
+		return c:IsRace(RACE_DRAGON) and c:IsType(TYPE_SYNCHRO)
+	end
 end
 function c13331639.fusfilter3(c)
-	return c:IsRace(RACE_DRAGON) and c:IsFusionType(TYPE_XYZ)
+	if Card.IsFusionType then
+		return c:IsRace(RACE_DRAGON) and c:IsFusionType(TYPE_XYZ)
+	else
+		return c:IsRace(RACE_DRAGON) and c:IsType(TYPE_XYZ)
+	end
 end
 function c13331639.fusfilter4(c)
-	return c:IsRace(RACE_DRAGON) and c:IsFusionType(TYPE_PENDULUM)
+	if Card.IsFusionType then
+		return c:IsRace(RACE_DRAGON) and c:IsFusionType(TYPE_PENDULUM)
+	else
+		return c:IsRace(RACE_DRAGON) and c:IsType(TYPE_PENDULUM)
+	end
 end
 c13331639.filters={c13331639.fusfilter1,c13331639.fusfilter2,c13331639.fusfilter3,c13331639.fusfilter4}
 -- TO BE REMOVED ONCE THE UTILITIES ARE UPDATED

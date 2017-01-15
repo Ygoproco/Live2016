@@ -1,4 +1,4 @@
---ＳＲアクマグネ
+--SRアクマグネ
 --Speedroid Fiendmagnet
 --Scripted by Eerie Code
 function c62899696.initial_effect(c)
@@ -109,10 +109,14 @@ function c62899696.spop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
+function c62899696.resetfilter(c)
+	return c:GetFlagEffect(62899696)>0
+end
 function c62899696.resetop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(c62899696.smcon2,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	local g=Duel.GetMatchingGroup(c62899696.resetfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	local tc=g:GetFirst()
 	while tc do
 		tc:ResetFlagEffect(62899696)
+		tc=g:GetNext()
 	end
 end
