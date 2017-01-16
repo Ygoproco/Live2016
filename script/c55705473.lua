@@ -59,7 +59,7 @@ function c55705473.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
 function c55705473.spop(e,tp,eg,ep,ev,re,r,rp)
-	local ct=2
+	local ct=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ct=1 end
 	ct=math.min(ct,Duel.GetLocationCount(tp,LOCATION_MZONE))
 	if ct<=0 then return end
