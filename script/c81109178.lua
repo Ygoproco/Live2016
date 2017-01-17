@@ -65,7 +65,7 @@ function c81109178.ctop(e,tp,eg,ep,ev,re,r,rp)
 	e:GetHandler():AddCounter(0x142,1)
 end
 function c81109178.damtg2(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
+	if chk==0 then return e:GetHandler():GetCounter(0x142)>0 end
 	local ct=e:GetHandler():GetCounter(0x142)
 	Duel.SetTargetPlayer(1-tp)
 	Duel.SetTargetParam(ct)
