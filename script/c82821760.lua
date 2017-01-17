@@ -67,6 +67,19 @@ function c82821760.sprcon(e,c)
 		and Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>0
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 end
+function c82821760.descon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():GetCounter(0x1f)==0
+end
+function c82821760.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
+end
+function c82821760.desop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsFaceup() and c:IsRelateToEffect(e) then
+		Duel.Destroy(c,REASON_EFFECT)
+	end
+end
 function c82821760.cttg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,3,0,0x1f)
