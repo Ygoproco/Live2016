@@ -14,7 +14,7 @@ function c450000351.initial_effect(c)
 end
 function c450000351.filter(c)
 	return c:IsFaceup() and c:IsLocation(LOCATION_MZONE)
-		and c:IsSetCard(0x4721)
+		and c:IsSetCard(0x800)
 end
 function c450000351.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c450000351.filter,1,nil)
