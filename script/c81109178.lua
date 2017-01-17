@@ -74,7 +74,7 @@ end
 function c81109178.damop2(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	local c=e:GetHandler()
-	local ct=c:GetCounter(0x142)
+	local ct=c:GetCounter(0x142)*300
 	if ct>0 then
 		c:RemoveCounter(tp,0x142,ct,REASON_EFFECT)
 		Duel.Damage(p,ct,REASON_EFFECT)
