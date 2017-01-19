@@ -63,12 +63,12 @@ function c100213060.initial_effect(c)
 		ge0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		ge0:SetCode(EVENT_PHASE_START+PHASE_DRAW)
 		ge0:SetOperation(c100213060.clear)
-		--Duel.RegisterEffect(ge0,0)
+		Duel.RegisterEffect(ge0,0)
 	end
 end
 function c100213060.checkop(e,tp,eg,ep,ev,re,r,rp)
-	local ex1,g1,gc1,dp1,dv1=Duel.GetOperationInfo(0,CATEGORY_DICE)
-	local ex2,g2,gc2,dp2,dv2=Duel.GetOperationInfo(0,CATEGORY_COIN)
+	local ex1,g1,gc1,dp1,dv1=Duel.GetOperationInfo(ev,CATEGORY_DICE)
+	local ex2,g2,gc2,dp2,dv2=Duel.GetOperationInfo(ev,CATEGORY_COIN)
 	if ex1 then
 		if dp1==PLAYER_ALL then
 			c100213060[0]=c100213060[0]+dv1
@@ -85,7 +85,7 @@ function c100213060.checkop(e,tp,eg,ep,ev,re,r,rp)
 			c100213060[dp2]=c100213060[dp2]+dv2
 		end
 	end
-	Duel.RaiseSingleEvent(e:GetHandler(),EVENT_CUSTOM+100213060,re,r,rp,0,0)
+	Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+100213060,re,r,rp,0,0)
 end
 function c100213060.checkop2(e,tp,eg,ep,ev,re,r,rp)
 	if ep==PLAYER_ALL then
@@ -94,7 +94,7 @@ function c100213060.checkop2(e,tp,eg,ep,ev,re,r,rp)
 	else
 		c100213060[ep]=c100213060[ep]+ev
 	end
-	Duel.RaiseSingleEvent(e:GetHandler(),EVENT_CUSTOM+100213060,re,r,rp,0,0)
+	Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+100213060,re,r,rp,0,0)
 end
 function c100213060.checkop3(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
