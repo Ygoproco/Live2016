@@ -77,6 +77,6 @@ function c81109178.damop2(e,tp,eg,ep,ev,re,r,rp)
 	local ct=c:GetCounter(0x142)
 	if ct>0 then
 		c:RemoveCounter(tp,0x142,ct,REASON_EFFECT)
-		Duel.Damage(p,ct,REASON_EFFECT)
+		Duel.Damage(p,ct*300,REASON_EFFECT)
 	end
 end
