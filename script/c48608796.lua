@@ -70,5 +70,5 @@ function c48608796.indop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e3,tp)
 end
 function c48608796.indtg(e,c)
-	return c:IsSetCard(0x1f8) or c:IsCode(8491961)
+	return c:IsSetCard(0xf7) or c:IsCode(8491961)
 end

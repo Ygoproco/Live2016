@@ -49,14 +49,14 @@ function c76815942.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c76815942.ffilter(c)
-	return c:IsFusionSetCard(0x1f8) or c:IsFusionCode(8491961)
+	return c:IsFusionSetCard(0xf7) or c:IsFusionCode(8491961)
 end
 function c76815942.matval(c)
 	local b
 	if Card.IsOriginalSetCard then
-		b=c:IsOriginalSetCard(0x1f8)
+		b=c:IsOriginalSetCard(0xf7)
 	else
-		b=c:IsSetCard(0x1f8)
+		b=c:IsSetCard(0xf7)
 	end
 	if (b or c:GetOriginalCode()==8491961) and c:IsType(TYPE_XYZ) then
 		return c:GetOverlayCount()
