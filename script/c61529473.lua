@@ -85,7 +85,7 @@ function c61529473.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return not e:GetHandler():IsStatus(STATUS_CHAINING) end
 end
 function c61529473.tgfilter(c)
-	return c:IsFaceup() and (c:IsSetCard(0x1f9) or c:IsCode(30539496,34079868,82321037,87765315,96746083))
+	return c:IsFaceup() and (c:IsSetCard(0xf9) or c:IsCode(30539496,34079868,82321037,87765315,96746083))
 end
 function c61529473.atktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()
@@ -126,7 +126,7 @@ function c61529473.sumcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()~=tp and (ph==PHASE_MAIN1 or ph==PHASE_MAIN2)
 end
 function c61529473.sumfilter(c)
-	return (c:IsSetCard(0x1f9) or c:IsCode(30539496,34079868,82321037,87765315,96746083)) and c:IsSummonable(true,nil,1)
+	return (c:IsSetCard(0xf9) or c:IsCode(30539496,34079868,82321037,87765315,96746083)) and c:IsSummonable(true,nil,1)
 end
 function c61529473.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c61529473.sumfilter,tp,LOCATION_HAND,0,1,nil)

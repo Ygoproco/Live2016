@@ -67,7 +67,7 @@ function c34302287.efilter(c,e)
 	return c:IsFaceup() and c:IsType(TYPE_NORMAL) and c:IsCanBeEffectTarget(e)
 end
 function c34302287.eqfilter(c,g)
-	return c:IsFaceup() and c:IsType(TYPE_EQUIP) and c:IsSetCard(0x1fc) and g:IsExists(c34302287.eqcheck,1,nil,c)
+	return c:IsFaceup() and c:IsType(TYPE_EQUIP) and c:IsSetCard(0xfa) and g:IsExists(c34302287.eqcheck,1,nil,c)
 end
 function c34302287.eqcheck(c,ec)
 	return ec:CheckEquipTarget(c)

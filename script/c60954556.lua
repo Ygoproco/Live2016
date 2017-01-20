@@ -79,7 +79,7 @@ function c60954556.xyzcon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_XYZ)==SUMMON_TYPE_XYZ
 end
 function c60954556.xyzfilter(c)
-	return (c:IsSetCard(0x1f8) or c:IsCode(8491961)) and c:IsType(TYPE_MONSTER)
+	return (c:IsSetCard(0xf7) or c:IsCode(8491961)) and c:IsType(TYPE_MONSTER)
 end
 function c60954556.xyztg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and c60954556.xyzfilter(chkc) end
