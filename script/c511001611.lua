@@ -41,7 +41,7 @@ function c511001611.activate(e,tp,eg,ep,ev,re,r,rp)
 	local nt=Duel.GetMatchingGroup(c511001611.afilter,tp,LOCATION_EXTRA,0,nil)
 	local spg=Duel.GetMatchingGroup(c511001611.spfilterchk,tp,LOCATION_EXTRA,0,nil,e,tp,nt)
 	local spg2=Duel.GetMatchingGroup(c511001611.spfilterchk2,tp,LOCATION_EXTRA,0,nil,e,tp,nt)
-	if spg:GetCount()<=0 or spg:GetCount()<=0 then return end
+	if spg:GetCount()<=0 and spg2:GetCount()<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
 	local sg=nt:Select(tp,1,99,nil)
 	while not Duel.IsExistingMatchingCard(c511001611.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,sg,sg:GetSum(c511001611.numfilter)) do
