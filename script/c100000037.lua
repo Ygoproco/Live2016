@@ -1,4 +1,4 @@
-﻿--カブレラ・ストーン
+--カブレラ・ストーン
 function c100000037.initial_effect(c)
 	--self destroy
 	local e1=Effect.CreateEffect(c)
