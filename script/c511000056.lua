@@ -21,15 +21,19 @@ function c511000056.spfilter(c,e,tp,code)
 end
 function c511000056.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local nt=Duel.GetMatchingGroup(c511000056.filter2,tp,LOCATION_MZONE,0,nil)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-2
+	local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-2 and not Duel.IsPlayerAffectedByEffect(tp,59822133) 
+		and (not ect or ect>=2) and Duel.IsExistingMatchingCard(c511000056.filter1,tp,LOCATION_MZONE,0,1,nil,nt) 
 		and Duel.IsExistingMatchingCard(c511000056.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,2403771)
 		and	Duel.IsExistingMatchingCard(c511000056.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,25862681)
-		and Duel.IsExistingMatchingCard(c511000056.filter1,tp,LOCATION_MZONE,0,1,nil,nt)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,2,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,0,0)
 end
 function c511000056.activate(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=1 or Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
+	local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
+	if ect~=nil and ect<2 then return end
 	local nt=Duel.GetMatchingGroup(c511000056.filter2,tp,LOCATION_MZONE,0,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(tp,c511000056.filter1,tp,LOCATION_MZONE,0,1,1,nil,nt)

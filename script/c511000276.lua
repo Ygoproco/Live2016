@@ -22,12 +22,15 @@ function c511000276.filter(c,e,tp)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511000276.tg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>3 and not Duel.IsPlayerAffectedByEffect(tp,59822133) 
-		and Duel.IsExistingMatchingCard(c511000276.filter,tp,LOCATION_EXTRA,0,4,nil,e,tp) end
+		and Duel.IsExistingMatchingCard(c511000276.filter,tp,LOCATION_EXTRA,0,4,nil,e,tp) and (not ect or ect>=4) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
 function c511000276.op(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=3 or Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
+	local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
+	if ect~=nil and ect<4 then return end
 	local g=Duel.GetMatchingGroup(c511000276.filter,tp,LOCATION_EXTRA,0,nil,e,tp)
 	if g:GetCount()<=3 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)

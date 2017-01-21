@@ -1,6 +1,6 @@
 --The Greatest Duo of the Seven Emperors
 function c511001180.initial_effect(c)
---Activate
+	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -13,18 +13,21 @@ end
 function c511001180.atkcon(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
 	local att=Duel.GetAttackTarget()
-	return ep==tp and
-	 (a:IsSetCard(0x1048) or (att and att:IsSetCard(0x1048)))
+	return ep==tp and (a:IsSetCard(0x1048) or (att and att:IsSetCard(0x1048)))
 end
 function c511001180.tgfilter(c,code,e,tp)
 	return c:IsCode(code) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511001180.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c511001180.tgfilter,tp,LOCATION_EXTRA,0,1,nil,20785975,e,tp)
+	local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
+	if chk==0 then return (not ect or ect>=2) and not Duel.IsPlayerAffectedByEffect(tp,59822133) 
+		and Duel.IsExistingMatchingCard(c511001180.tgfilter,tp,LOCATION_EXTRA,0,1,nil,20785975,e,tp)
 		and Duel.IsExistingMatchingCard(c511001180.tgfilter,tp,LOCATION_EXTRA,0,1,nil,67173574,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,0,0)
 end
 function c511001180.tgop(e,tp,eg,ep,ev,re,r,rp)
+	local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) or (ect and ect<2) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local tc1=Duel.SelectMatchingCard(tp,c511001180.tgfilter,tp,LOCATION_EXTRA,0,1,1,nil,20785975,e,tp):GetFirst()
 	local tc2=Duel.SelectMatchingCard(tp,c511001180.tgfilter,tp,LOCATION_EXTRA,0,1,1,nil,67173574,e,tp):GetFirst()

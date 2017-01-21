@@ -35,12 +35,15 @@ function c511001187.spfilter(c,e,tp)
 		and no and no>=101 and no<=107 and c:IsSetCard(0x1048) 
 end
 function c511001187.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>2 and not Duel.IsPlayerAffectedByEffect(tp,59822133) 
-		and Duel.IsExistingMatchingCard(c511001187.spfilter,tp,LOCATION_EXTRA,0,3,nil,e,tp) end
+		and Duel.IsExistingMatchingCard(c511001187.spfilter,tp,LOCATION_EXTRA,0,3,nil,e,tp) and (not ect or ect>=3) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,3,tp,LOCATION_EXTRA)
 end
 function c511001187.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<3 or Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
+	local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
+	if ect~=nil and ect<3 then return end
 	local g=Duel.GetMatchingGroup(c511001187.spfilter,tp,LOCATION_EXTRA,0,nil,e,tp)
 	if g:GetCount()<3 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)

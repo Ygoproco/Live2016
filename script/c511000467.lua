@@ -55,7 +55,7 @@ function c511000467.setop(e,tp,eg,ep,ev,re,r,rp)
 			of=Duel.GetFieldCard(tp,LOCATION_SZONE,5)
 			if fc and Duel.Destroy(fc,REASON_RULE)==0 then Duel.SendtoGrave(tc,REASON_RULE) end
 		else
-			Duel.GetFieldCard(tp,LOCATION_SZONE,5)
+			fc=Duel.GetFieldCard(tp,LOCATION_SZONE,5)
 			if fc and Duel.SendtoGrave(fc,REASON_RULE)==0 then Duel.SendtoGrave(tc,REASON_RULE) end
 		end
 		Duel.MoveSequence(tc,5)

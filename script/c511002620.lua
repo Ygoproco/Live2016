@@ -83,11 +83,14 @@ function c511002620.synfilter(c,mg)
 	return c:IsSynchroSummonable(nil,mg) and mg:CheckWithSumEqual(Card.GetSynchroLevel,c:GetLevel(),mg:GetCount(),mg:GetCount(),c)
 end
 function c511002620.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return c511002620.chk(e,tp) end
+	local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
+	if chk==0 then return (not ect or ect>=2) and c511002620.chk(e,tp) and not Duel.IsPlayerAffectedByEffect(tp,59822133) 
+		and (not ect or ect>=2) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_EXTRA)
 end
 function c511002620.activate(e,tp,eg,ep,ev,re,r,rp)
-	if not c511002620.chk(e,tp) then return end
+	local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
+	if not c511002620.chk(e,tp) or Duel.IsPlayerAffectedByEffect(tp,29724053) or (ect and ect<2) then return end
 	local chkf=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and PLAYER_NONE or tp
 	local mg1=Duel.GetMatchingGroup(c511002620.filter1,tp,LOCATION_MZONE,0,nil,e)
 	local sg1=Duel.GetMatchingGroup(c511002620.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,chkf)

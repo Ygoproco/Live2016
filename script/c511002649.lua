@@ -18,12 +18,15 @@ function c511002649.spfilter(c,e,tp)
 	return c:GetLevel()==10 and c:IsRace(RACE_DRAGON) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c511002649.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>1 and not Duel.IsPlayerAffectedByEffect(tp,59822133) 
-		and Duel.IsExistingMatchingCard(c511002649.spfilter,tp,LOCATION_EXTRA,0,2,nil,e,tp) end
+		and Duel.IsExistingMatchingCard(c511002649.spfilter,tp,LOCATION_EXTRA,0,2,nil,e,tp) and (not ect or ect>=2) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_EXTRA)
 end
 function c511002649.operation(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 or Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
+	local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
+	if ect~=nil and ect<2 then return end
 	local g=Duel.GetMatchingGroup(c511002649.spfilter,tp,LOCATION_EXTRA,0,nil,e,tp)
 	if g:GetCount()<2 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)

@@ -114,14 +114,20 @@ function c511001608.filter(c,e,tp)
 end
 function c511001608.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local ct=e:GetHandler():GetOverlayCount()
-	if chk==0 then return ct>0 and e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_EFFECT) and Duel.GetLocationCount(tp,LOCATION_MZONE)>=ct
-		and Duel.IsExistingMatchingCard(c511001608.filter,tp,LOCATION_EXTRA,0,ct,nil,e,tp) end
+	local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
+	if chk==0 then return (not ect or ect>=ct) and ct>0 and e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_EFFECT) 
+		and Duel.GetLocationCount(tp,LOCATION_MZONE)>=ct and Duel.IsExistingMatchingCard(c511001608.filter,tp,LOCATION_EXTRA,0,ct,nil,e,tp) 
+		and (not Duel.IsPlayerAffectedByEffect(tp,59822133) or ct<2) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,ct,tp,LOCATION_EXTRA)
 end
 function c511001608.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local ct=c:GetOverlayCount()
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<ct then return end
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if ct>ft then return end
+	if ct>1 and Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
+	local ect=c29724053 and Duel.IsPlayerAffectedByEffect(tp,29724053) and c29724053[tp]
+	if ect~=nil and ct>ect then return end
 	local g=Duel.GetMatchingGroup(c511001608.filter,tp,LOCATION_EXTRA,0,nil,e,tp)
 	if g:GetCount()<ct then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
