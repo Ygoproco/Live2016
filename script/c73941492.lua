@@ -68,7 +68,12 @@ function c73941492.initial_effect(c)
 	e4:SetOperation(c73941492.synop)
 	c:RegisterEffect(e4)
 	--fusion and xyz custom not implemented
-	--local e5=Effect.CreateEffect(c)
+	--for all 3 filters, to be updated
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_SINGLE)
+	e5:SetCode(73941492)
+	e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	c:RegisterEffect(e5)
 	--local e6=Effect.CreateEffect(c)
 	--spsummon success
 	local e7=Effect.CreateEffect(c)
@@ -81,6 +86,9 @@ function c73941492.initial_effect(c)
 	e7:SetTarget(c73941492.sptg)
 	e7:SetOperation(c73941492.spop)
 	c:RegisterEffect(e7)
+end
+function c73941492.fuslimitfilter(c)
+	return c:IsSetCard(0x98) and c:IsType(TYPE_PENDULUM)
 end
 function c73941492.xyzfil(c,xyzc,lv)
 	return c:IsSetCard(0x98) and c:IsXyzLevel(xyzc,lv) and c:IsType(TYPE_PENDULUM)
