@@ -1,5 +1,6 @@
 --Destiny Draw
 --Scripted by Edo9300
+--fixed by MLD
 function c511004000.initial_effect(c)
 	--activate
 	local e1=Effect.CreateEffect(c)	
@@ -8,24 +9,22 @@ function c511004000.initial_effect(c)
 	e1:SetCode(EVENT_PREDRAW)
 	e1:SetCountLimit(1)
 	e1:SetRange(0xff)
-	e1:SetCondition(c511004000.con)
 	e1:SetOperation(c511004000.op)
 	c:RegisterEffect(e1)
 	--Destiny Draw
 	local e2=Effect.CreateEffect(c)
 	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e2:SetCode(EVENT_PREDRAW)
 	e2:SetRange(LOCATION_REMOVED)
-	e2:SetCountLimit(1,511004000+EFFECT_COUNT_CODE_DUEL)
 	e2:SetCondition(c511004000.drcon)
-	e2:SetTarget(c511004000.drtg)
 	e2:SetOperation(c511004000.drop)
 	c:RegisterEffect(e2)
 	--protection
 	local e3=Effect.CreateEffect(c)
 	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetRange(LOCATION_REMOVED)
 	e3:SetCode(EFFECT_CANNOT_TO_GRAVE)
 	c:RegisterEffect(e3)
 	local e4=e3:Clone()
@@ -37,13 +36,21 @@ function c511004000.initial_effect(c)
 	local e6=e3:Clone()
 	e6:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	c:RegisterEffect(e6)
+	local e7=e3:Clone()
+	e7:SetCode(EFFECT_IMMUNE_EFFECT)
+	c:RegisterEffect(e7)
+	if not c511004000.global_check then
+		c511004000.global_check=true
+		c511004000[0]=nil
+		c511004000[1]=nil
+	end
 end
-function c511004000.con(e,tp,eg,ep,ev,re,r,rp)
-    return Duel.GetTurnCount()==1
+function c511004000.cfilter(c,code)
+	return c:GetOriginalCode()==code
 end
 function c511004000.op(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_REMOVED,0,1,nil,511004000) then
+	if Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_REMOVED,0,1,e:GetHandler(),511004000) then
 		Duel.DisableShuffleCheck()
 		Duel.SendtoDeck(c,nil,-2,REASON_RULE)
 	else
@@ -52,48 +59,31 @@ function c511004000.op(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():GetPreviousLocation()==LOCATION_HAND then
 		Duel.Draw(tp,1,REASON_RULE)
 	end
+	local g=Duel.GetFieldGroup(tp,LOCATION_DECK+LOCATION_HAND,0)
+	g:Remove(c511004000.cfilter,nil,511004000)
+	if c511004000[tp]==nil then
+		c511004000[tp]=Group.CreateGroup()
+		c511004000[tp]:KeepAlive()
+		local i=0
+		while i<5 and g:GetCount()>0 and Duel.SelectYesNo(tp,529) do
+			local tc=g:Select(tp,1,1,nil):GetFirst()
+			local sg=g:Filter(c511004000.cfilter,nil,tc:GetOriginalCode())
+			c511004000[tp]:Merge(sg)
+			g:Sub(sg)
+			i=i+1
+		end
+	end
 end
 function c511004000.drcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetLP(tp)<=Duel.GetLP(1-tp)/2 and Duel.GetFieldGroupCount(e:GetHandler():GetControler(),LOCATION_MZONE,0)==0
 		and	Duel.GetFieldGroupCount(e:GetHandler():GetControler(),0,LOCATION_MZONE)>0
 end
-function c511004000.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if Duel.GetTurnPlayer()~=tp then return end
-	if chk==0 then return true end
-	local dt=Duel.GetDrawCount(tp)
-	if dt~=0 then
-		_replace_count=0
-		_replace_max=dt
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_FIELD)
-		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-		e1:SetCode(EFFECT_DRAW_COUNT)
-		e1:SetTargetRange(1,0)
-		e1:SetReset(RESET_PHASE+PHASE_DRAW)
-		e1:SetValue(0)
-		Duel.RegisterEffect(e1,tp)
-	end
-end
 function c511004000.drop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	_replace_count=_replace_count+1
-	if _replace_count>_replace_max or not c:IsRelateToEffect(e) then return end
-	local g1=Duel.GetMatchingGroup(nil,tp,LOCATION_DECK,0,nil)
-	if g1:GetCount()>5 then
-	local g=Duel.SelectMatchingCard(tp,nil,tp,LOCATION_DECK,0,5,5,nil)
-	while g:GetCount()>0 do
-	local sg=g:RandomSelect(tp,1):GetFirst()
-		Duel.MoveSequence(sg,0)
-	g:RemoveCard(sg)
+	local g=c511004000[tp]:Filter(Card.IsLocation,nil,LOCATION_DECK)
+	if g:GetCount()>0 and Duel.GetFlagEffect(tp,511004000)==0 and Duel.SelectYesNo(tp,65) then
+		Duel.RegisterFlagEffect(tp,511004000,nil,0,1)
+		Duel.Hint(HINT_CARD,0,511004000)
+		local tc=g:RandomSelect(tp,1):GetFirst()
+		Duel.MoveSequence(tc,0)
 	end
-	Duel.Draw(tp,1,REASON_RULE)
-	Duel.ShuffleDeck(tp)
-	else
-	local g=Duel.SelectMatchingCard(tp,nil,tp,LOCATION_DECK,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.MoveSequence(g:GetFirst(),0)
-	Duel.Draw(tp,1,REASON_RULE)
-	Duel.ShuffleDeck(tp)
-	end
-end
 end
