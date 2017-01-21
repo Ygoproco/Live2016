@@ -5,7 +5,7 @@ function c511000817.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
-	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_CANNOT_DISABLE)
 	e1:SetRange(LOCATION_EXTRA)
 	e1:SetCondition(c511000817.syncon)
 	e1:SetOperation(c511000817.synop)
@@ -179,50 +179,65 @@ end
 function c511000817.sumlimit(e,c,sump,sumtype,sumpos,targetp)
 	return bit.band(sumpos,POS_FACEDOWN)>0
 end
-function c511000817.matfilter1(c,syncard)
-	return c:IsSetCard(0x301) and c:IsType(TYPE_TUNER) and c:IsFaceup() and c:IsCanBeSynchroMaterial(syncard)
+function c511000817.tmatfilter(c,syncard)
+	return c:IsSetCard(0x301) and c:IsType(TYPE_TUNER) and (c:IsLocation(LOCATION_HAND) or c:IsFaceup()) and c:IsCanBeSynchroMaterial(syncard)
 end
-function c511000817.matfilter2(c,syncard)	
-	return c:IsFaceup() and c:IsCanBeSynchroMaterial(syncard) and not c:IsType(TYPE_TUNER)
+function c511000817.ntmatfilter(c,syncard)	
+	return (c:IsLocation(LOCATION_HAND) or c:IsFaceup()) and c:IsCanBeSynchroMaterial(syncard) and c:IsNotTuner()
 end
-function c511000817.synfilter1(c,g1,g2)
-	local tlv=c:GetLevel()	
-	if c:GetFlagEffect(100000147)==0 then	
-	return g1:IsExists(c511000817.synfilter3,1,nil,tlv)
+function c511000817.synfilter1(c,lv,tuner,syncard,pe,tc,ft)
+	if c:GetFlagEffect(100000147)==0 then
+		return tuner:IsExists(c511000817.synfilter2,1,c,true,0,c,syncard,pe,tc,ft)
 	else
-	return g1:IsExists(c511000817.synfilter3,1,nil,12-tlv)
-	end	
+		return tuner:IsExists(c511000817.synfilter2,1,c,false,12,c,syncard,pe,tc,ft)
+	end
 end
-function c511000817.synfilter3(c,lv)
-	return c:GetLevel()==lv
+function c511000817.synfilter2(c,add,lv,nontuner,syncard,pe,tc,ft)
+	if ft<=0 and not Group.FromCards(nontuner,c):IsExists(Card.IsLocation,1,nil,LOCATION_MZONE) then return false end
+	if pe and not Group.FromCards(nontuner,c):IsContains(pe:GetOwner()) then return false end
+	if tc and not Group.FromCards(nontuner,c):IsContains(tc) then return false end
+	if c.tuner_filter and not c.tuner_filter(nontuner) then return false end
+	if nontuner.tuner_filter and not nontuner.tuner_filter(c) then return false end
+	if not c:IsHasEffect(EFFECT_HAND_SYNCHRO) and nontuner:IsLocation(LOCATION_HAND) then return false end
+	if not nontuner:IsHasEffect(EFFECT_HAND_SYNCHRO) and c:IsLocation(LOCATION_HAND) then return false end
+	if (nontuner:IsHasEffect(EFFECT_HAND_SYNCHRO) or c:IsHasEffect(EFFECT_HAND_SYNCHRO)) and c:IsLocation(LOCATION_HAND) 
+		and nontuner:IsLocation(LOCATION_HAND) then return false end
+	local ntlv=nontuner:GetSynchroLevel(syncard)
+	local lv1=bit.band(ntlv,0xffff)
+	local lv2=bit.rshift(ntlv,16)
+	if add then
+		return c:GetSynchroLevel(syncard)==lv+lv1 or c:GetSynchroLevel(syncard)==lv+lv2
+	else
+		return c:GetSynchroLevel(syncard)==lv-lv1 or c:GetSynchroLevel(syncard)==lv-lv2
+	end
 end
-function c511000817.syncon(e,c,tuner)
+function c511000817.syncon(e,c,tuner,mg)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<-1 then return false end
-	local g1=Duel.GetMatchingGroup(c511000817.matfilter1,tp,LOCATION_MZONE,LOCATION_MZONE,nil,c)
-	local g2=Duel.GetMatchingGroup(c511000817.matfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,nil,c)
-	return g2:IsExists(c511000817.synfilter1,1,nil,g1,g2)
+	local pe=Duel.IsPlayerAffectedByEffect(tp,EFFECT_MUST_BE_SMATERIAL)
+	local tunerg=Duel.GetMatchingGroup(c511000817.tmatfilter,tp,LOCATION_MZONE+LOCATION_HAND,LOCATION_MZONE,nil,c)
+	local nontuner=Duel.GetMatchingGroup(c511000817.ntmatfilter,tp,LOCATION_MZONE+LOCATION_HAND,LOCATION_MZONE,nil,c)
+	return nontuner:IsExists(c511000817.synfilter1,1,nil,nil,tunerg,c,pe,tuner,Duel.GetLocationCount(tp,LOCATION_MZONE))
 end
-function c511000817.synop(e,tp,eg,ep,ev,re,r,rp,c,tuner)
+function c511000817.synop(e,tp,eg,ep,ev,re,r,rp,c,tuner,mg)
+	local pe=Duel.IsPlayerAffectedByEffect(tp,EFFECT_MUST_BE_SMATERIAL)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	local g=Group.CreateGroup()
-	local g1=Duel.GetMatchingGroup(c511000817.matfilter1,tp,LOCATION_MZONE,LOCATION_MZONE,nil,c)
-	local g2=Duel.GetMatchingGroup(c511000817.matfilter2,tp,LOCATION_MZONE,LOCATION_MZONE,nil,c)
+	local tun=Duel.GetMatchingGroup(c511000817.tmatfilter,tp,LOCATION_MZONE+LOCATION_HAND,LOCATION_MZONE,nil,c)
+	local nont=Duel.GetMatchingGroup(c511000817.ntmatfilter,tp,LOCATION_MZONE+LOCATION_HAND,LOCATION_MZONE,nil,c)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
-	local m3=g2:FilterSelect(tp,c511000817.synfilter1,1,1,nil,g1,g2)
-	local mt1=m3:GetFirst()
-	g:AddCard(mt1)
-	local lv1=mt1:GetLevel()
+	local nontmat=nont:FilterSelect(tp,c511000817.synfilter1,1,1,nil,nil,tun,c,pe,tuner,ft)
+	local mat1=nontmat:GetFirst()
+	g:AddCard(mat1)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SMATERIAL)
-	if mt1:GetFlagEffect(100000147)==0 then	
-		local t1=g1:FilterSelect(tp,c511000817.synfilter3,1,1,nil,lv1)
-		g:Merge(t1)
-	else 
-		local t1=g1:FilterSelect(tp,c511000817.synfilter3,1,1,nil,12-lv1)
-		g:Merge(t1)
+	local t
+	if mat1:GetFlagEffect(100000147)==0 then
+		t=tun:FilterSelect(tp,c511000817.synfilter2,1,1,mat1,true,0,mat1,c,pe,tuner,ft)
+	else
+		t=tun:FilterSelect(tp,c511000817.synfilter2,1,1,mat1,false,12,mat1,c,pe,tuner,ft)
 	end
+	g:Merge(t)
 	c:SetMaterial(g)
-	Duel.Hint(HINT_MESSAGE,1-tp,aux.Stringid(511000817,0))
 	Duel.SendtoGrave(g,REASON_MATERIAL+REASON_SYNCHRO)
 end
 function c511000817.cfilter(c,tp)
