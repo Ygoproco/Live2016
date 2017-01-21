@@ -29,7 +29,7 @@ function c100000010.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Release(e:GetHandler(),REASON_COST)
 end
 function c100000010.filter(c)
-	return (c:IsSetCard(0x4a) or c:IsCode(74530899)) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return (c:IsSetCard(0x4a) or c:IsCode(74530899) or c:IsCode(8967776)) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c100000010.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c100000010.filter,tp,LOCATION_DECK,0,1,nil) end

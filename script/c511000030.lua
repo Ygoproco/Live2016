@@ -22,7 +22,7 @@ function c511000030.cfilter2(c,tp)
 	return c:IsType(TYPE_SYNCHRO) and c:IsControler(1-tp)
 end
 function c511000030.cfilter(c)
-	return c:IsFaceup() and (c:IsSetCard(0x4a) or c:IsCode(74530899))
+	return c:IsFaceup() and (c:IsSetCard(0x4a) or c:IsCode(74530899) or c:IsCode(8967776))
 end
 function c511000030.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c511000030.cfilter,tp,LOCATION_MZONE,0,1,nil)
