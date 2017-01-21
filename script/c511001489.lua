@@ -1,4 +1,4 @@
---The Legendary Fisherman III
+--伝説のフィッシャーマン三世
 function c511001489.initial_effect(c)
 	--special summon
 	local e1=Effect.CreateEffect(c)
@@ -31,12 +31,15 @@ function c511001489.initial_effect(c)
 	--indes
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE)
-	e4:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+	e4:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
 	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCondition(c511001489.econ)
 	e4:SetValue(1)
 	c:RegisterEffect(e4)
+	local e5=e4:Clone()
+	e5:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+	c:RegisterEffect(e5)
 end
 function c511001489.hspcon(e,c)
 	if c==nil then return true end
