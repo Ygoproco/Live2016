@@ -29,7 +29,7 @@ function c511002016.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c511002016.cfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function c511002016.damval(e,re,val,r,rp,rc)
-	if re and bit.band(r,REASON_EFFECT)~=0 then return 0
+	if bit.band(r,REASON_EFFECT)~=0 and rp~=e:GetOwnerPlayer() then return 0
 	else return val end
 end
 function c511002016.sdcon(e)
