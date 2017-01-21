@@ -67,6 +67,7 @@ end
 function c513000047.spop(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if not e:GetHandler():IsRelateToEffect(e) or ft<=0 then return end
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c513000047.spfilter,tp,LOCATION_HAND,0,1,ft,nil,e,tp)
 	if g:GetCount()>0 then
